@@ -4,11 +4,22 @@ namespace CoreEngine.API.Middleware;
 
 public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
 {
+    private readonly IWebHostEnvironment _environment;
+
+    public HangfireAuthorizationFilter(IWebHostEnvironment environment)
+    {
+        _environment = environment;
+    }
+
     public bool Authorize(DashboardContext context)
     {
         var httpContext = context.GetHttpContext();
 
-        // Check if user is authenticated
+        // Allow unrestricted access in Development mode
+        if (_environment.IsDevelopment())
+            return true;
+
+        // In production, require authentication and permission
         if (!httpContext.User.Identity?.IsAuthenticated ?? true)
             return false;
 

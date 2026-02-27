@@ -129,8 +129,16 @@ export default function BackgroundJobsPage() {
           View detailed job execution history, queues, and statistics in the Hangfire dashboard.
         </Text>
         <PermissionGate permissions={['BackgroundJob.Read']}>
+          <div style={{ background: '#f5f5f7', padding: 16, borderRadius: 8, marginBottom: 16 }}>
+            <Text type="secondary" style={{ fontSize: 13 }}>
+              Access the Hangfire Dashboard directly at:{' '}
+              <a href="http://localhost:5034/hangfire" target="_blank" rel="noopener noreferrer" style={{ color: '#0071e3' }}>
+                http://localhost:5034/hangfire
+              </a>
+            </Text>
+          </div>
           <iframe
-            src="/hangfire"
+            src="http://localhost:5034/hangfire"
             style={{
               width: '100%',
               height: '600px',
