@@ -24,4 +24,11 @@ export const authApi = {
   logout: async (refreshToken: string): Promise<void> => {
     await apiClient.post('/auth/logout', { refreshToken });
   },
+
+  changePassword: async (currentPassword: string, newPassword: string): Promise<void> => {
+    await apiClient.post('/auth/change-password', {
+      currentPassword,
+      newPassword,
+    });
+  },
 };

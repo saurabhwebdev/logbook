@@ -1,6 +1,7 @@
 using CoreEngine.Application.Features.Auth.Commands.Login;
 using CoreEngine.Application.Features.Auth.Commands.Logout;
 using CoreEngine.Application.Features.Auth.Commands.RefreshToken;
+using CoreEngine.Application.Features.Auth.Commands.ChangePassword;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -24,6 +25,13 @@ public class AuthController : BaseApiController
 
     [HttpPost("logout")]
     public async Task<IActionResult> Logout(LogoutCommand command)
+    {
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
     {
         await Mediator.Send(command);
         return NoContent();

@@ -1,7 +1,10 @@
-import { Typography, Card, Descriptions, Tag, Avatar, Flex, Divider } from 'antd';
-import { UserOutlined, MailOutlined, BankOutlined, TeamOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+import { Typography, Card, Descriptions, Tag, Avatar, Flex, Divider, Button, Form, Input, message, Modal } from 'antd';
+import { UserOutlined, MailOutlined, BankOutlined, TeamOutlined, LockOutlined, KeyOutlined } from '@ant-design/icons';
+import { useMutation } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenantTheme } from '../contexts/ThemeContext';
+import { authApi } from '../api/authApi';
 
 const { Text } = Typography;
 
@@ -9,6 +12,28 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const { theme } = useTenantTheme();
   const primaryColor = theme?.primaryColor || '#0071e3';
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [form] = Form.useForm();
+
+  const changePasswordMutation = useMutation({
+    mutationFn: ({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }) =>
+      authApi.changePassword(currentPassword, newPassword),
+    onSuccess: () => {
+      message.success('Password changed successfully');
+      setIsPasswordModalOpen(false);
+      form.resetFields();
+    },
+    onError: (error: any) => {
+      message.error(error.response?.data?.detail || 'Failed to change password');
+    },
+  });
+
+  const handlePasswordChange = (values: any) => {
+    changePasswordMutation.mutate({
+      currentPassword: values.currentPassword,
+      newPassword: values.newPassword,
+    });
+  };
 
   if (!user) {
     return null;
@@ -26,6 +51,9 @@ export default function ProfilePage() {
             View your account information and assigned roles.
           </Text>
         </div>
+        <Button icon={<LockOutlined />} onClick={() => setIsPasswordModalOpen(true)}>
+          Change Password
+        </Button>
       </Flex>
 
       {/* Profile card */}
@@ -152,6 +180,78 @@ export default function ProfilePage() {
           )}
         </Flex>
       </Card>
+
+      {/* Change Password Modal */}
+      <Modal
+        title={
+          <Flex align="center" gap={8}>
+            <KeyOutlined style={{ color: primaryColor }} />
+            <span>Change Password</span>
+          </Flex>
+        }
+        open={isPasswordModalOpen}
+        onCancel={() => {
+          setIsPasswordModalOpen(false);
+          form.resetFields();
+        }}
+        footer={null}
+        width={480}
+      >
+        <Form form={form} layout="vertical" onFinish={handlePasswordChange} style={{ marginTop: 20 }}>
+          <Form.Item
+            name="currentPassword"
+            label="Current Password"
+            rules={[{ required: true, message: 'Please enter your current password' }]}
+          >
+            <Input.Password size="large" prefix={<LockOutlined />} placeholder="Enter current password" />
+          </Form.Item>
+
+          <Form.Item
+            name="newPassword"
+            label="New Password"
+            rules={[
+              { required: true, message: 'Please enter a new password' },
+              { min: 8, message: 'Password must be at least 8 characters' },
+              {
+                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/,
+                message: 'Password must contain uppercase, lowercase, number, and special character',
+              },
+            ]}
+          >
+            <Input.Password size="large" prefix={<KeyOutlined />} placeholder="Enter new password" />
+          </Form.Item>
+
+          <Form.Item
+            name="confirmPassword"
+            label="Confirm New Password"
+            dependencies={['newPassword']}
+            rules={[
+              { required: true, message: 'Please confirm your new password' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('newPassword') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Passwords do not match'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password size="large" prefix={<KeyOutlined />} placeholder="Confirm new password" />
+          </Form.Item>
+
+          <Form.Item style={{ marginBottom: 0, marginTop: 24 }}>
+            <Flex gap={8} justify="flex-end">
+              <Button onClick={() => { setIsPasswordModalOpen(false); form.resetFields(); }}>
+                Cancel
+              </Button>
+              <Button type="primary" htmlType="submit" loading={changePasswordMutation.isPending}>
+                Change Password
+              </Button>
+            </Flex>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }
