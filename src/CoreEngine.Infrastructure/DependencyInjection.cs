@@ -42,6 +42,7 @@ public static class DependencyInjection
         services.AddSingleton<IDateTimeService, DateTimeService>();
         services.AddScoped<ITenantContext, TenantContext>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddSingleton<IFileStorageService, LocalFileStorageService>();
 
         // HTTP context accessor (required by CurrentUserService)
         services.AddHttpContextAccessor();

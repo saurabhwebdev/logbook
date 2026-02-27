@@ -132,6 +132,71 @@ export interface StateDefinitionsResponse {
   transitions: StateTransitionDefinition[];
 }
 
+// Phase 3 types
+export interface FileMetadata {
+  id: string;
+  fileName: string;
+  originalFileName: string;
+  contentType: string;
+  fileSize: number;
+  description: string | null;
+  category: string | null;
+  uploadedByName: string | null;
+  createdAt: string;
+}
+
+export interface ReportDefinition {
+  id: string;
+  name: string;
+  description: string | null;
+  entityType: string;
+  exportFormat: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ApiKeyInfo {
+  id: string;
+  name: string;
+  keyPrefix: string;
+  expiresAt: string | null;
+  isActive: boolean;
+  lastUsedAt: string | null;
+  scopes: string | null;
+  createdAt: string;
+}
+
+export interface ApiKeyCreateResponse {
+  id: string;
+  rawKey: string;
+}
+
+export interface WebhookInfo {
+  id: string;
+  name: string;
+  endpointUrl: string;
+  eventTypes: string;
+  isActive: boolean;
+  lastTriggeredAt: string | null;
+  failureCount: number;
+  createdAt: string;
+}
+
+export interface WebhookCreateResponse {
+  id: string;
+  secret: string;
+}
+
+export interface DemoTask {
+  id: string;
+  title: string;
+  description: string | null;
+  currentState: string;
+  assignedTo: string | null;
+  priority: string;
+  createdAt: string;
+}
+
 export interface PaginatedResult<T> {
   items: T[];
   pageNumber: number;

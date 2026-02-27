@@ -71,6 +71,37 @@ public static class Permissions
         public const string Manage = "BackgroundJob.Manage";
     }
 
+    // Phase 3
+    public static class Files
+    {
+        public const string Upload = "File.Upload";
+        public const string Read = "File.Read";
+        public const string Delete = "File.Delete";
+    }
+
+    public static class Reports
+    {
+        public const string Create = "Report.Create";
+        public const string Read = "Report.Read";
+        public const string Export = "Report.Export";
+        public const string Delete = "Report.Delete";
+    }
+
+    public static class ApiIntegration
+    {
+        public const string Read = "ApiIntegration.Read";
+        public const string Manage = "ApiIntegration.Manage";
+    }
+
+    public static class DemoTasks
+    {
+        public const string Create = "DemoTask.Create";
+        public const string Read = "DemoTask.Read";
+        public const string Update = "DemoTask.Update";
+        public const string Delete = "DemoTask.Delete";
+        public const string Transition = "DemoTask.Transition";
+    }
+
     /// <summary>
     /// Collects all permission strings via reflection for seeding.
     /// </summary>

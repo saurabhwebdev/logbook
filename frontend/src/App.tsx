@@ -16,6 +16,10 @@ import SettingsPage from './pages/SettingsPage';
 import FeatureFlagsPage from './pages/FeatureFlagsPage';
 import NotificationsPage from './pages/NotificationsPage';
 import StateMachinePage from './pages/StateMachinePage';
+import FilesPage from './pages/FilesPage';
+import ReportsPage from './pages/ReportsPage';
+import ApiIntegrationPage from './pages/ApiIntegrationPage';
+import DemoTasksPage from './pages/DemoTasksPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -91,6 +95,10 @@ export default function App() {
                   <Route path="feature-flags" element={<FeatureFlagsPage />} />
                   <Route path="notifications" element={<NotificationsPage />} />
                   <Route path="state-machine" element={<StateMachinePage />} />
+                  <Route path="files" element={<FilesPage />} />
+                  <Route path="reports" element={<ReportsPage />} />
+                  <Route path="api-integration" element={<ApiIntegrationPage />} />
+                  <Route path="demo-tasks" element={<DemoTasksPage />} />
                 </Route>
               </Route>
             </Routes>

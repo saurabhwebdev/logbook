@@ -73,9 +73,10 @@ Instead of building everything from scratch or coupling to a single framework (l
 ### Phase 3 — Domain Proof + Integration
 | # | Module | Status | Implementation |
 |---|--------|--------|----------------|
-| 7 | **File Management** | Phase 3 | IStorageProvider abstraction (local/Azure/S3). Metadata, access control, versioning. |
-| 9 | **Reporting** | Phase 3 | Saved reports, CSV/Excel export (ClosedXML), dashboard widget data API. |
-| 10 | **API Integration** | Phase 3 | API key auth, rate limiting (built-in ASP.NET Core), webhooks with HMAC signing and retry. |
+| 7 | **File Management** | DONE | IFileStorageService abstraction (local disk now, pluggable to Azure/S3). Upload/download/delete with metadata (category, description). Multipart form upload with 50MB limit. |
+| 9 | **Reporting** | DONE | Report definition entity with entity type, columns JSON, export format (Excel/CSV). CRUD API. ClosedXML NuGet added for export (Phase 4 will add actual export execution). |
+| 10 | **API Integration** | DONE | API key management (BCrypt-hashed, prefix-only stored, raw shown once). Webhook subscriptions with HMAC signing secret (shown once). Event type filtering, failure tracking. |
+| — | **State Machine Demo** | DONE | DemoTask entity as proof-of-concept. Full lifecycle: Draft → Open → InProgress → Review → Done/Cancelled. Uses Phase 2 state machine definitions. Transition dropdown, history timeline. |
 
 ### Phase 4 — Harden & Extend
 | # | Module | Status | Implementation |
@@ -113,7 +114,7 @@ frontend/src/
 ├── components/     # PermissionGate, ProtectedRoute
 ├── contexts/       # AuthContext (JWT + permissions)
 ├── layouts/        # AuthLayout (split-panel login), MainLayout (sidebar + topbar)
-├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants
+├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants, Settings, FeatureFlags, Notifications, StateMachine, Files, Reports, ApiIntegration, DemoTasks
 └── types/          # TypeScript interfaces for all domain models
 ```
 

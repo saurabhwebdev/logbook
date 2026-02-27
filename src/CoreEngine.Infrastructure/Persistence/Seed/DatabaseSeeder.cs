@@ -141,6 +141,21 @@ public static class DatabaseSeeder
             Permissions.StateMachine.Transition,
             Permissions.BackgroundJobs.Read,
             Permissions.BackgroundJobs.Manage,
+            // Phase 3
+            Permissions.Files.Upload,
+            Permissions.Files.Read,
+            Permissions.Files.Delete,
+            Permissions.Reports.Create,
+            Permissions.Reports.Read,
+            Permissions.Reports.Export,
+            Permissions.Reports.Delete,
+            Permissions.ApiIntegration.Read,
+            Permissions.ApiIntegration.Manage,
+            Permissions.DemoTasks.Create,
+            Permissions.DemoTasks.Read,
+            Permissions.DemoTasks.Update,
+            Permissions.DemoTasks.Delete,
+            Permissions.DemoTasks.Transition,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);

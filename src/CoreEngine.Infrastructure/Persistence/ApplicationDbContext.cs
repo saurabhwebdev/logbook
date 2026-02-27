@@ -45,6 +45,13 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<StateTransitionDefinition> StateTransitionDefinitions => Set<StateTransitionDefinition>();
     public DbSet<StateTransitionLog> StateTransitionLogs => Set<StateTransitionLog>();
 
+    // Phase 3
+    public DbSet<FileMetadata> FileMetadata => Set<FileMetadata>();
+    public DbSet<ReportDefinition> ReportDefinitions => Set<ReportDefinition>();
+    public DbSet<ApiKey> ApiKeys => Set<ApiKey>();
+    public DbSet<WebhookSubscription> WebhookSubscriptions => Set<WebhookSubscription>();
+    public DbSet<DemoTask> DemoTasks => Set<DemoTask>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

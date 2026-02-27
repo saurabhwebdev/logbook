@@ -23,5 +23,12 @@ public interface IApplicationDbContext
     DbSet<StateTransitionDefinition> StateTransitionDefinitions { get; }
     DbSet<StateTransitionLog> StateTransitionLogs { get; }
 
+    // Phase 3
+    DbSet<FileMetadata> FileMetadata { get; }
+    DbSet<ReportDefinition> ReportDefinitions { get; }
+    DbSet<ApiKey> ApiKeys { get; }
+    DbSet<WebhookSubscription> WebhookSubscriptions { get; }
+    DbSet<DemoTask> DemoTasks { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

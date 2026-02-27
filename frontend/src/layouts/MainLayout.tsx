@@ -21,6 +21,10 @@ import {
   FlagOutlined,
   BellOutlined,
   NodeIndexOutlined,
+  FolderOutlined,
+  BarChartOutlined,
+  ApiOutlined,
+  ExperimentOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -115,6 +119,39 @@ export default function MainLayout() {
         key: '/state-machine',
         icon: <NodeIndexOutlined />,
         label: 'State Machine',
+      });
+    }
+
+    // Phase 3 navigation
+    if (hasPermission('File.Read')) {
+      items.push({
+        key: '/files',
+        icon: <FolderOutlined />,
+        label: 'Files',
+      });
+    }
+
+    if (hasPermission('Report.Read')) {
+      items.push({
+        key: '/reports',
+        icon: <BarChartOutlined />,
+        label: 'Reports',
+      });
+    }
+
+    if (hasPermission('ApiIntegration.Read')) {
+      items.push({
+        key: '/api-integration',
+        icon: <ApiOutlined />,
+        label: 'API Integration',
+      });
+    }
+
+    if (hasPermission('DemoTask.Read')) {
+      items.push({
+        key: '/demo-tasks',
+        icon: <ExperimentOutlined />,
+        label: 'Tasks (Demo)',
       });
     }
 
