@@ -3,12 +3,15 @@ import { Typography, Table, Flex, Input, Modal, Form, Select, message } from 'an
 import type { ColumnsType } from 'antd/es/table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { configurationApi } from '../api/configurationApi';
+import { useTenantTheme } from '../contexts/ThemeContext';
 import type { SystemConfiguration } from '../types';
 
 const { Text } = Typography;
 const { Search } = Input;
 
 export default function SettingsPage() {
+  const { theme } = useTenantTheme();
+  const primaryColor = theme?.primaryColor || '#0071e3';
   const [search, setSearch] = useState('');
   const [editingConfig, setEditingConfig] = useState<SystemConfiguration | null>(null);
   const [form] = Form.useForm();
@@ -119,7 +122,7 @@ export default function SettingsPage() {
       render: (_, record) => (
         <a
           onClick={() => handleEdit(record)}
-          style={{ fontSize: 13, color: '#0071e3', fontWeight: 500 }}
+          style={{ fontSize: 13, color: primaryColor, fontWeight: 500 }}
         >
           Edit
         </a>

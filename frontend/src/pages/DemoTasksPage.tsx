@@ -6,27 +6,30 @@ import type { MenuProps } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { demoTasksApi } from '../api/demoTasksApi';
+import { useTenantTheme } from '../contexts/ThemeContext';
 import type { DemoTask, TransitionLog, StateTransitionDefinition } from '../types';
 
 const { Text } = Typography;
 
-const stateColors: Record<string, string> = {
-  Draft: '#86868b',
-  Open: '#0071e3',
-  InProgress: '#ff9500',
-  Review: '#af52de',
-  Done: '#34c759',
-  Cancelled: '#ff3b30',
-};
-
-const priorityColors: Record<string, string> = {
-  Low: '#86868b',
-  Medium: '#0071e3',
-  High: '#ff9500',
-  Critical: '#ff3b30',
-};
-
 export default function DemoTasksPage() {
+  const { theme } = useTenantTheme();
+  const primaryColor = theme?.primaryColor || '#0071e3';
+
+  const stateColors: Record<string, string> = {
+    Draft: '#86868b',
+    Open: primaryColor,
+    InProgress: '#ff9500',
+    Review: '#af52de',
+    Done: '#34c759',
+    Cancelled: '#ff3b30',
+  };
+
+  const priorityColors: Record<string, string> = {
+    Low: '#86868b',
+    Medium: primaryColor,
+    High: '#ff9500',
+    Critical: '#ff3b30',
+  };
   const [createOpen, setCreateOpen] = useState(false);
   const [historyTaskId, setHistoryTaskId] = useState<string | null>(null);
   const [form] = Form.useForm();
@@ -144,7 +147,7 @@ export default function DemoTasksPage() {
                 }}
                 trigger={['click']}
               >
-                <Button type="text" size="small" icon={<ThunderboltOutlined />} style={{ color: '#0071e3' }} />
+                <Button type="text" size="small" icon={<ThunderboltOutlined />} style={{ color: primaryColor }} />
               </Dropdown>
             )}
             <Button type="text" size="small" icon={<HistoryOutlined />} onClick={() => setHistoryTaskId(r.id)} />

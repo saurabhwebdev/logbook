@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useAuth } from '../contexts/AuthContext';
+import { useTenantTheme } from '../contexts/ThemeContext';
 import { dashboardApi } from '../api/dashboardApi';
 import type { RecentActivity } from '../api/dashboardApi';
 
@@ -83,6 +84,8 @@ const actionLabels: Record<string, string> = {
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const { theme } = useTenantTheme();
+  const primaryColor = theme?.primaryColor || '#0071e3';
   const navigate = useNavigate();
 
   const { data, isLoading, isError } = useQuery({
@@ -113,7 +116,7 @@ export default function DashboardPage() {
       <Spin spinning={isLoading}>
         <Row gutter={[20, 20]}>
           <Col xs={24} sm={12} lg={6}>
-            <StatCard label="Users" value={data?.userCount ?? 0} icon={<UserOutlined />} color="#0071e3" onClick={() => navigate('/users')} />
+            <StatCard label="Users" value={data?.userCount ?? 0} icon={<UserOutlined />} color={primaryColor} onClick={() => navigate('/users')} />
           </Col>
           <Col xs={24} sm={12} lg={6}>
             <StatCard label="Roles" value={data?.roleCount ?? 0} icon={<TeamOutlined />} color="#34c759" onClick={() => navigate('/roles')} />
@@ -125,7 +128,7 @@ export default function DashboardPage() {
             <StatCard label="Audit Events" value={data?.auditLogCount ?? 0} icon={<FileSearchOutlined />} color="#af52de" onClick={() => navigate('/audit-logs')} />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <StatCard label="Files" value={data?.fileCount ?? 0} icon={<FolderOutlined />} color="#0071e3" onClick={() => navigate('/files')} />
+            <StatCard label="Files" value={data?.fileCount ?? 0} icon={<FolderOutlined />} color={primaryColor} onClick={() => navigate('/files')} />
           </Col>
           <Col xs={24} sm={12} lg={6}>
             <StatCard label="Reports" value={data?.reportCount ?? 0} icon={<BarChartOutlined />} color="#ff3b30" onClick={() => navigate('/reports')} />

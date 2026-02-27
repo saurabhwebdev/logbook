@@ -3,11 +3,14 @@ import type { ColumnsType } from 'antd/es/table';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { stateMachineApi } from '../api/stateMachineApi';
+import { useTenantTheme } from '../contexts/ThemeContext';
 import type { StateDefinition, StateTransitionDefinition } from '../types';
 
 const { Text } = Typography;
 
 export default function StateMachinePage() {
+  const { theme } = useTenantTheme();
+  const primaryColor = theme?.primaryColor || '#0071e3';
   const { data, isLoading } = useQuery({
     queryKey: ['statemachine', 'Task'],
     queryFn: () => stateMachineApi.getDefinitions('Task'),
@@ -97,7 +100,7 @@ export default function StateMachinePage() {
       key: 'triggerName',
       width: 140,
       render: (value: string) => (
-        <span style={{ fontWeight: 500, fontSize: 13, color: '#0071e3' }}>{value}</span>
+        <span style={{ fontWeight: 500, fontSize: 13, color: primaryColor }}>{value}</span>
       ),
     },
     {

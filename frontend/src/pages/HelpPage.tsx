@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { helpApi } from '../api/helpApi';
 import { useAuth } from '../contexts/AuthContext';
+import { useTenantTheme } from '../contexts/ThemeContext';
 import type { HelpArticle } from '../types';
 
 const { Text } = Typography;
@@ -14,6 +15,8 @@ export default function HelpPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { hasPermission } = useAuth();
+  const { theme } = useTenantTheme();
+  const primaryColor = theme?.primaryColor || '#0071e3';
   const [searchText, setSearchText] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>(undefined);
 
@@ -94,7 +97,7 @@ export default function HelpPage() {
                   transition: 'border-color 0.2s',
                 }}
                 onClick={() => navigate(`/help/${article.slug}`)}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#0071e3')}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = primaryColor)}
                 onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#e5e5ea')}
               >
                 <Flex justify="space-between" align="flex-start">

@@ -23,6 +23,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { usersApi } from '../api/usersApi';
+import { useTenantTheme } from '../contexts/ThemeContext';
 import type { User } from '../types';
 import PermissionGate from '../components/PermissionGate';
 
@@ -31,6 +32,8 @@ const { Text } = Typography;
 export default function UsersPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { theme } = useTenantTheme();
+  const primaryColor = theme?.primaryColor || '#0071e3';
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -94,7 +97,7 @@ export default function UsersPage() {
           <Avatar
             size={34}
             style={{
-              background: '#0071e3',
+              background: primaryColor,
               fontSize: 13,
               fontWeight: 600,
             }}
@@ -162,7 +165,7 @@ export default function UsersPage() {
             key={role}
             style={{
               background: '#f0f5ff',
-              color: '#0071e3',
+              color: primaryColor,
               border: 'none',
               fontWeight: 500,
             }}

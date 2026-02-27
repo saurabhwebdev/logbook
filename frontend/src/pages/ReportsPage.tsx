@@ -5,11 +5,14 @@ import type { ColumnsType } from 'antd/es/table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { reportsApi } from '../api/reportsApi';
+import { useTenantTheme } from '../contexts/ThemeContext';
 import type { ReportDefinition } from '../types';
 
 const { Text } = Typography;
 
 export default function ReportsPage() {
+  const { theme } = useTenantTheme();
+  const primaryColor = theme?.primaryColor || '#0071e3';
   const [createOpen, setCreateOpen] = useState(false);
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
@@ -103,7 +106,7 @@ export default function ReportsPage() {
       width: 100,
       render: (_, record) => (
         <Flex gap={4}>
-          <Button type="text" size="small" icon={<DownloadOutlined />} style={{ color: '#0071e3' }} onClick={() => exportMutation.mutate(record.id)} loading={exportMutation.isPending} />
+          <Button type="text" size="small" icon={<DownloadOutlined />} style={{ color: primaryColor }} onClick={() => exportMutation.mutate(record.id)} loading={exportMutation.isPending} />
           <Popconfirm title="Delete this report?" onConfirm={() => deleteMutation.mutate(record.id)} okText="Delete" okButtonProps={{ danger: true }}>
             <Button type="text" size="small" icon={<DeleteOutlined />} danger />
           </Popconfirm>

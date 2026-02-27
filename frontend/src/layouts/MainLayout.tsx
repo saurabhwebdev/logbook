@@ -7,6 +7,7 @@ import {
   Typography,
   Flex,
   ConfigProvider,
+  Breadcrumb,
 } from 'antd';
 import {
   DashboardOutlined,
@@ -223,6 +224,45 @@ export default function MainLayout() {
     return match ? match[0] : '/';
   }, [location.pathname]);
 
+  const breadcrumbItems = useMemo(() => {
+    const path = location.pathname;
+    if (path === '/') return [{ title: 'Dashboard' }];
+
+    const segments = path.split('/').filter(Boolean);
+    const items = [{ title: 'Home' }];
+
+    // Map route segments to readable names
+    const routeNames: Record<string, string> = {
+      users: 'Users',
+      roles: 'Roles',
+      departments: 'Departments',
+      'audit-logs': 'Audit Logs',
+      tenants: 'Tenants',
+      settings: 'Settings',
+      'feature-flags': 'Feature Flags',
+      notifications: 'Notifications',
+      'state-machine': 'State Machine',
+      files: 'Files',
+      reports: 'Reports',
+      'api-integration': 'API Integration',
+      'demo-tasks': 'Tasks',
+      theming: 'Theming',
+      help: 'Help Center',
+      new: 'New',
+      edit: 'Edit',
+    };
+
+    segments.forEach((segment) => {
+      // Skip IDs (UUIDs or numeric IDs)
+      if (/^[0-9a-f-]{36}$/.test(segment) || /^\d+$/.test(segment)) return;
+
+      const name = routeNames[segment] || segment;
+      items.push({ title: name });
+    });
+
+    return items;
+  }, [location.pathname]);
+
   const userMenuItems: MenuProps['items'] = [
     {
       key: 'info',
@@ -385,14 +425,8 @@ export default function MainLayout() {
             zIndex: 10,
           }}
         >
-          {/* Left side — tenant badge */}
-          <Flex align="center" gap={8}>
-            {user?.tenantName && (
-              <Text style={{ fontSize: 13, color: '#86868b', fontWeight: 500 }}>
-                {user.tenantName}
-              </Text>
-            )}
-          </Flex>
+          {/* Left side — breadcrumb */}
+          <Breadcrumb items={breadcrumbItems} style={{ fontSize: 13 }} />
 
           {/* Right side — help + user dropdown */}
           <Flex align="center" gap={16}>

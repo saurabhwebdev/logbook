@@ -10,20 +10,23 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { notificationsApi } from '../api/notificationsApi';
+import { useTenantTheme } from '../contexts/ThemeContext';
 import type { Notification as AppNotification } from '../types';
 
 const { Text } = Typography;
 
 dayjs.extend(relativeTime);
 
-const typeConfig: Record<string, { icon: React.ReactNode; color: string }> = {
-  Info: { icon: <InfoCircleOutlined />, color: '#0071e3' },
-  Success: { icon: <CheckCircleOutlined />, color: '#34c759' },
-  Warning: { icon: <WarningOutlined />, color: '#ff9500' },
-  Error: { icon: <CloseCircleOutlined />, color: '#ff3b30' },
-};
-
 export default function NotificationsPage() {
+  const { theme } = useTenantTheme();
+  const primaryColor = theme?.primaryColor || '#0071e3';
+
+  const typeConfig: Record<string, { icon: React.ReactNode; color: string }> = {
+    Info: { icon: <InfoCircleOutlined />, color: primaryColor },
+    Success: { icon: <CheckCircleOutlined />, color: '#34c759' },
+    Warning: { icon: <WarningOutlined />, color: '#ff9500' },
+    Error: { icon: <CloseCircleOutlined />, color: '#ff3b30' },
+  };
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -91,7 +94,7 @@ export default function NotificationsPage() {
                   width: 6,
                   height: 6,
                   borderRadius: '50%',
-                  background: '#0071e3',
+                  background: primaryColor,
                   flexShrink: 0,
                 }}
               />

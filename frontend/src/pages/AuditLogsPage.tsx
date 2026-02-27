@@ -15,18 +15,21 @@ import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 import { auditLogsApi } from '../api/auditLogsApi';
+import { useTenantTheme } from '../contexts/ThemeContext';
 import type { AuditLog } from '../types';
 
 const { Text } = Typography;
 const { RangePicker } = DatePicker;
 
-const actionConfig: Record<string, { color: string; bg: string }> = {
-  Create: { color: '#34c759', bg: '#f0fdf4' },
-  Update: { color: '#0071e3', bg: '#f0f5ff' },
-  Delete: { color: '#ff3b30', bg: '#fef2f2' },
-};
-
 export default function AuditLogsPage() {
+  const { theme } = useTenantTheme();
+  const primaryColor = theme?.primaryColor || '#0071e3';
+
+  const actionConfig: Record<string, { color: string; bg: string }> = {
+    Create: { color: '#34c759', bg: '#f0fdf4' },
+    Update: { color: primaryColor, bg: '#f0f5ff' },
+    Delete: { color: '#ff3b30', bg: '#fef2f2' },
+  };
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null] | null>(null);
