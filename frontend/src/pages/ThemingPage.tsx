@@ -90,7 +90,7 @@ export default function ThemingPage() {
 
           <div style={{ padding: 16, background: '#f5f5f7', borderRadius: 8 }}>
             <Text style={{ fontSize: 12, color: '#86868b' }}>
-              Preview: Changes will take effect after saving and refreshing the page. The primary color affects buttons and links. The sidebar color changes the navigation background.
+              Preview: Changes will take effect immediately after saving. The primary color affects buttons and links. The sidebar color changes the navigation background.
             </Text>
           </div>
         </div>

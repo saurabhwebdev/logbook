@@ -30,9 +30,8 @@ import {
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
-import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
-import { themeApi } from '../api/themeApi';
+import { useTenantTheme } from '../contexts/ThemeContext';
 import HelpDrawer from '../components/HelpDrawer';
 
 const { Sider, Content } = Layout;
@@ -66,12 +65,7 @@ export default function MainLayout() {
   const [helpOpen, setHelpOpen] = useState(false);
   const { user, logout, hasPermission } = useAuth();
 
-  const themeQuery = useQuery({
-    queryKey: ['tenantTheme'],
-    queryFn: themeApi.getTheme,
-  });
-
-  const tenantTheme = themeQuery.data;
+  const { theme: tenantTheme } = useTenantTheme();
   const sidebarBg = tenantTheme?.sidebarColor || '#ffffff';
   const tenantLogo = tenantTheme?.logoUrl;
   const navigate = useNavigate();
