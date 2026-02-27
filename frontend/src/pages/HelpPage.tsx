@@ -106,7 +106,9 @@ export default function HelpPage() {
                       {article.title}
                     </Text>
                     {article.category && (
-                      <Tag color="blue" style={{ fontSize: 11, marginBottom: 8 }}>{article.category}</Tag>
+                      <Tag style={{ fontSize: 11, marginBottom: 8, background: `${primaryColor}15`, color: primaryColor, border: 'none' }}>
+                        {article.category}
+                      </Tag>
                     )}
                     {!article.isPublished && (
                       <Tag color="orange" style={{ fontSize: 11, marginBottom: 8 }}>Draft</Tag>
