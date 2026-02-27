@@ -52,6 +52,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<WebhookSubscription> WebhookSubscriptions => Set<WebhookSubscription>();
     public DbSet<DemoTask> DemoTasks => Set<DemoTask>();
 
+    // Help Module
+    public DbSet<HelpArticle> HelpArticles => Set<HelpArticle>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

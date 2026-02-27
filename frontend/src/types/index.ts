@@ -197,6 +197,21 @@ export interface DemoTask {
   createdAt: string;
 }
 
+// Help Module
+export interface HelpArticle {
+  id: string;
+  title: string;
+  slug: string;
+  moduleKey: string | null;
+  content: string;
+  category: string | null;
+  sortOrder: number;
+  isPublished: boolean;
+  tags: string | null;
+  createdAt: string;
+  modifiedAt: string | null;
+}
+
 export interface PaginatedResult<T> {
   items: T[];
   pageNumber: number;

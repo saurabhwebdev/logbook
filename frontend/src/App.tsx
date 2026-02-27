@@ -21,6 +21,9 @@ import ReportsPage from './pages/ReportsPage';
 import ApiIntegrationPage from './pages/ApiIntegrationPage';
 import DemoTasksPage from './pages/DemoTasksPage';
 import ThemingPage from './pages/ThemingPage';
+import HelpPage from './pages/HelpPage';
+import HelpArticleViewPage from './pages/HelpArticleViewPage';
+import HelpFormPage from './pages/HelpFormPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -101,6 +104,10 @@ export default function App() {
                   <Route path="api-integration" element={<ApiIntegrationPage />} />
                   <Route path="demo-tasks" element={<DemoTasksPage />} />
                   <Route path="theming" element={<ThemingPage />} />
+                  <Route path="help" element={<HelpPage />} />
+                  <Route path="help/new" element={<HelpFormPage />} />
+                  <Route path="help/:slug" element={<HelpArticleViewPage />} />
+                  <Route path="help/:id/edit" element={<HelpFormPage />} />
                 </Route>
               </Route>
             </Routes>

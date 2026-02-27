@@ -156,6 +156,11 @@ public static class DatabaseSeeder
             Permissions.DemoTasks.Update,
             Permissions.DemoTasks.Delete,
             Permissions.DemoTasks.Transition,
+            // Help Module
+            Permissions.Help.Create,
+            Permissions.Help.Read,
+            Permissions.Help.Update,
+            Permissions.Help.Delete,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -191,7 +196,8 @@ public static class DatabaseSeeder
         var userPermissionFilter = new HashSet<string>
         {
             Permissions.Users.Read,
-            Permissions.Departments.Read
+            Permissions.Departments.Read,
+            Permissions.Help.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);
@@ -258,6 +264,9 @@ public static class DatabaseSeeder
 
         // 5. Seed Phase 2 defaults
         await SeedPhase2Defaults(context);
+
+        // 6. Seed Help articles
+        await SeedHelpArticles(context);
     }
 
     private static async Task SeedPhase2Defaults(ApplicationDbContext context)
@@ -305,6 +314,7 @@ public static class DatabaseSeeder
                 new FeatureFlag { Name = "AuditLog.DetailedDiff", Description = "Show detailed field-level diffs in audit logs", IsEnabled = true, TenantId = DefaultTenantId },
                 new FeatureFlag { Name = "StateMachine.Enabled", Description = "Enable state machine transitions", IsEnabled = true, TenantId = DefaultTenantId },
                 new FeatureFlag { Name = "BackgroundJobs.Enabled", Description = "Enable background job processing", IsEnabled = true, TenantId = DefaultTenantId },
+                new FeatureFlag { Name = "Help.Enabled", Description = "Enable the help center and contextual help", IsEnabled = true, TenantId = DefaultTenantId },
             };
 
             foreach (var flag in defaultFlags)
@@ -364,5 +374,364 @@ public static class DatabaseSeeder
             context.StateTransitionDefinitions.AddRange(transitions);
             await context.SaveChangesAsync();
         }
+    }
+
+    private static async Task SeedHelpArticles(ApplicationDbContext context)
+    {
+        var existing = await context.HelpArticles
+            .IgnoreQueryFilters()
+            .Where(h => h.TenantId == DefaultTenantId)
+            .AnyAsync();
+
+        if (existing) return;
+
+        var articles = new[]
+        {
+            new HelpArticle
+            {
+                Title = "Dashboard Overview",
+                Slug = "dashboard",
+                ModuleKey = "Dashboard",
+                Category = "Getting Started",
+                SortOrder = 0,
+                IsPublished = true,
+                Tags = "dashboard,overview,stats",
+                TenantId = DefaultTenantId,
+                Content = @"# Dashboard
+
+The Dashboard provides a real-time overview of your system.
+
+## Stats Cards
+- **Users** — Total registered users in your tenant
+- **Roles** — Number of configured roles
+- **Departments** — Active departments
+- **Audit Events** — Total audit log entries
+- **Files** — Uploaded files count
+- **Reports** — Saved report definitions
+- **Active Tasks** — Demo tasks not yet completed
+- **Feature Flags** — Enabled feature flags
+- **API Keys** — Active API keys
+
+## Recent Activity
+The bottom section shows the last 5 audit log entries — who did what and when."
+            },
+            new HelpArticle
+            {
+                Title = "Managing Users",
+                Slug = "users",
+                ModuleKey = "Users",
+                Category = "Admin Guide",
+                SortOrder = 1,
+                IsPublished = true,
+                Tags = "users,accounts,roles,permissions",
+                TenantId = DefaultTenantId,
+                Content = @"# Users
+
+Manage user accounts for your tenant.
+
+## Creating a User
+1. Click **New User**
+2. Fill in email, password, first/last name
+3. Assign one or more roles
+4. Optionally assign to a department
+
+## Editing a User
+Click the **Edit** button in the actions column. You can change name, status, roles, and department.
+
+## User Status
+- **Active** — Can log in and use the system
+- **Inactive** — Account disabled, cannot log in
+
+## Permissions
+Users inherit permissions from their assigned roles. The permission format is `Module.Action` (e.g., `User.Create`, `Report.Read`)."
+            },
+            new HelpArticle
+            {
+                Title = "Roles & Permissions",
+                Slug = "roles",
+                ModuleKey = "Roles",
+                Category = "Admin Guide",
+                SortOrder = 2,
+                IsPublished = true,
+                Tags = "roles,permissions,rbac,security",
+                TenantId = DefaultTenantId,
+                Content = @"# Roles & Permissions
+
+CoreEngine uses **Role-Based Access Control (RBAC)** with flat permissions.
+
+## Default Roles
+- **SuperAdmin** — All permissions, full system access
+- **Admin** — Administrative access to most modules
+- **User** — Basic read-only access
+
+## Permission Format
+Permissions follow the `Module.Action` pattern:
+- `User.Create`, `User.Read`, `User.Update`, `User.Delete`
+- `Report.Read`, `Report.Export`
+- `Help.Create`, `Help.Read`, etc.
+
+## Creating Custom Roles
+1. Go to **Roles** page
+2. Click **New Role**
+3. Name the role and select permissions
+4. Assign users to the role"
+            },
+            new HelpArticle
+            {
+                Title = "Departments",
+                Slug = "departments",
+                ModuleKey = "Departments",
+                Category = "Admin Guide",
+                SortOrder = 3,
+                IsPublished = true,
+                Tags = "departments,organization,structure",
+                TenantId = DefaultTenantId,
+                Content = @"# Departments
+
+Organize users into departments for reporting and organizational structure.
+
+## Creating a Department
+1. Click **New Department**
+2. Enter name and optional code
+3. Optionally select a parent department for hierarchy
+
+## Assigning Users
+Users can be assigned to departments during user creation or editing."
+            },
+            new HelpArticle
+            {
+                Title = "Audit Logs",
+                Slug = "audit-logs",
+                ModuleKey = "AuditLogs",
+                Category = "Admin Guide",
+                SortOrder = 4,
+                IsPublished = true,
+                Tags = "audit,logs,tracking,compliance",
+                TenantId = DefaultTenantId,
+                Content = @"# Audit Logs
+
+Every create, update, and delete operation is automatically logged.
+
+## What's Tracked
+- **Entity Name** — Which entity was modified (User, Role, etc.)
+- **Action** — Create, Update, or Delete
+- **Old/New Values** — Field-level diff showing what changed
+- **User** — Who made the change
+- **IP Address** — Where the request came from
+- **Timestamp** — When it happened
+
+## Filtering
+Use the filters to narrow down by entity type, action, or date range. Audit logs are **immutable** — they cannot be deleted."
+            },
+            new HelpArticle
+            {
+                Title = "Feature Flags",
+                Slug = "feature-flags",
+                ModuleKey = "FeatureFlags",
+                Category = "Admin Guide",
+                SortOrder = 5,
+                IsPublished = true,
+                Tags = "feature flags,toggles,configuration",
+                TenantId = DefaultTenantId,
+                Content = @"# Feature Flags
+
+Toggle features on or off per tenant without code deployment.
+
+## Default Flags
+- **Notifications.Email** — Email sending (off by default)
+- **Notifications.InApp** — In-app notifications (on)
+- **AuditLog.DetailedDiff** — Field-level audit diffs (on)
+- **StateMachine.Enabled** — State transitions (on)
+- **Help.Enabled** — Help center (on)
+
+## Usage
+Click the toggle switch to enable/disable a feature. Changes take effect immediately."
+            },
+            new HelpArticle
+            {
+                Title = "Settings & Configuration",
+                Slug = "settings",
+                ModuleKey = "Settings",
+                Category = "Admin Guide",
+                SortOrder = 6,
+                IsPublished = true,
+                Tags = "settings,configuration,system",
+                TenantId = DefaultTenantId,
+                Content = @"# Settings
+
+Manage system configuration values per tenant.
+
+## Categories
+- **General** — App name, page size
+- **Email** — Sender address and display name
+- **Security** — Session timeout, password requirements
+
+## Editing
+Click the **Edit** button next to any setting to change its value. Settings are stored as key-value pairs with type information."
+            },
+            new HelpArticle
+            {
+                Title = "File Management",
+                Slug = "files",
+                ModuleKey = "Files",
+                Category = "User Guide",
+                SortOrder = 7,
+                IsPublished = true,
+                Tags = "files,upload,download,storage",
+                TenantId = DefaultTenantId,
+                Content = @"# File Management
+
+Upload, download, and manage files with metadata.
+
+## Uploading Files
+1. Click **Upload File**
+2. Select a file (max 50MB)
+3. Add optional description and category
+4. Click **Upload**
+
+## Storage
+Files are stored on local disk by default. The `IFileStorageService` abstraction allows switching to Azure Blob Storage or AWS S3.
+
+## Downloading
+Click the file name or download icon to download."
+            },
+            new HelpArticle
+            {
+                Title = "Reports",
+                Slug = "reports",
+                ModuleKey = "Reports",
+                Category = "User Guide",
+                SortOrder = 8,
+                IsPublished = true,
+                Tags = "reports,export,excel,csv",
+                TenantId = DefaultTenantId,
+                Content = @"# Reports
+
+Define and export data reports.
+
+## Creating a Report
+1. Click **New Report**
+2. Choose entity type (User, Department, Role, AuditLog, DemoTask)
+3. Select export format (Excel or CSV)
+4. Define columns as JSON array
+
+## Exporting
+Click the **Download** button to generate and download the report. Excel files use ClosedXML for professional formatting."
+            },
+            new HelpArticle
+            {
+                Title = "API Integration",
+                Slug = "api-integration",
+                ModuleKey = "ApiIntegration",
+                Category = "Developer Guide",
+                SortOrder = 9,
+                IsPublished = true,
+                Tags = "api,keys,webhooks,integration",
+                TenantId = DefaultTenantId,
+                Content = @"# API Integration
+
+Manage API keys and webhook subscriptions for external integrations.
+
+## API Keys
+- Generate keys for external system access
+- Keys are shown **once** at creation — store securely
+- Set expiration dates and scopes
+- Deactivate keys without deleting them
+
+## Webhooks
+- Subscribe to events (e.g., `user.created`, `task.completed`)
+- Each webhook gets an **HMAC signing secret** for verification
+- Track delivery failures and last triggered time"
+            },
+            new HelpArticle
+            {
+                Title = "State Machine & Tasks",
+                Slug = "state-machine",
+                ModuleKey = "StateMachine",
+                Category = "Developer Guide",
+                SortOrder = 10,
+                IsPublished = true,
+                Tags = "state machine,workflow,transitions,lifecycle",
+                TenantId = DefaultTenantId,
+                Content = @"# State Machine
+
+Define entity lifecycles with states and transitions.
+
+## How It Works
+1. **States** define where an entity can be (Draft, Open, InProgress, etc.)
+2. **Transitions** define allowed moves between states
+3. **Triggers** are named actions (Submit, Start, Approve, Cancel)
+
+## Demo Tasks
+The Tasks (Demo) page shows a working example:
+- **Draft** → Submit → **Open** → Start → **InProgress** → Request Review → **Review** → Approve → **Done**
+- Tasks can be **Cancelled** from Open or InProgress states
+
+## Adding Your Own
+Define new entity types with states and transitions in the State Machine page. Then use the transition API from your domain module."
+            },
+            new HelpArticle
+            {
+                Title = "Theming & Branding",
+                Slug = "theming",
+                ModuleKey = "Theming",
+                Category = "Admin Guide",
+                SortOrder = 11,
+                IsPublished = true,
+                Tags = "theming,branding,colors,logo",
+                TenantId = DefaultTenantId,
+                Content = @"# Theming
+
+Customize your tenant's visual branding.
+
+## Options
+- **Logo URL** — URL to your organization's logo (displayed in sidebar)
+- **Primary Color** — Affects buttons and accent colors
+- **Sidebar Color** — Background color of the navigation sidebar
+
+## How to Use
+1. Go to the **Theming** page
+2. Set your logo URL, primary color, and sidebar color
+3. Click **Save Changes**
+4. Changes apply immediately across the application"
+            },
+            new HelpArticle
+            {
+                Title = "Multi-Tenancy",
+                Slug = "tenants",
+                ModuleKey = "Tenants",
+                Category = "Admin Guide",
+                SortOrder = 12,
+                IsPublished = true,
+                Tags = "tenants,multi-tenancy,isolation",
+                TenantId = DefaultTenantId,
+                Content = @"# Multi-Tenancy
+
+CoreEngine supports full data isolation between tenants.
+
+## How It Works
+- Every entity inherits from `TenantScopedEntity` which adds a `TenantId`
+- EF Core **global query filters** automatically filter data by tenant
+- The `TenantResolutionMiddleware` resolves the current tenant from JWT claims, headers, or subdomain
+
+## Tenant Resolution Order
+1. **JWT Claim** — `tenantId` claim from the access token
+2. **X-Tenant-Id Header** — Explicit header for API calls
+3. **Subdomain** — `tenant1.yourdomain.com`
+4. **Default** — Falls back to the default tenant
+
+## Creating Tenants
+SuperAdmin users can create new tenants from the Tenants page."
+            },
+        };
+
+        foreach (var article in articles)
+        {
+            article.CreatedAt = DateTime.UtcNow;
+            article.CreatedBy = AppConstants.SystemUser;
+        }
+
+        context.HelpArticles.AddRange(articles);
+        await context.SaveChangesAsync();
     }
 }

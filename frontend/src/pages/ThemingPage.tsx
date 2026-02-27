@@ -28,7 +28,7 @@ export default function ThemingPage() {
   const saveMutation = useMutation({
     mutationFn: themeApi.updateTheme,
     onSuccess: () => {
-      message.success('Theme saved. Refresh to see changes.');
+      message.success('Theme saved successfully.');
       queryClient.invalidateQueries({ queryKey: ['tenantTheme'] });
     },
     onError: () => message.error('Failed to save theme'),
@@ -36,9 +36,9 @@ export default function ThemingPage() {
 
   const handleSave = () => {
     saveMutation.mutate({
-      logoUrl: logoUrl || undefined,
-      primaryColor: primaryColor || undefined,
-      sidebarColor: sidebarColor || undefined,
+      logoUrl: logoUrl || null,
+      primaryColor: primaryColor || null,
+      sidebarColor: sidebarColor || null,
     });
   };
 

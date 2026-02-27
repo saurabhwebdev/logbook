@@ -13,7 +13,7 @@ export const themeApi = {
     return response.data;
   },
 
-  updateTheme: async (data: { logoUrl?: string; primaryColor?: string; sidebarColor?: string }): Promise<void> => {
+  updateTheme: async (data: { logoUrl: string | null; primaryColor: string | null; sidebarColor: string | null }): Promise<void> => {
     await apiClient.put('/tenants/theme', data);
   },
 };

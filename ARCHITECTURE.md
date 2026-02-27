@@ -87,6 +87,11 @@ Instead of building everything from scratch or coupling to a single framework (l
 | — | **Report Export** | DONE | Excel export via ClosedXML (.xlsx) and CSV export. Entity-type-based data querying (User, Department, Role, AuditLog, DemoTask). Column selection from report definition. |
 | 12 | **Localization** | SKIPPED | Not needed for initial framework — teams start English-only. Can be added later. |
 
+### Help Module
+| # | Module | Status | Implementation |
+|---|--------|--------|----------------|
+| — | **Help Center** | DONE | DB-driven per-tenant help articles with markdown content. Full CRUD (HelpArticle entity with Title, Slug, ModuleKey, Content, Category, SortOrder, IsPublished, Tags). Contextual HelpDrawer triggered by `?` icon in top bar — auto-resolves module from current route. Help Center page with search/filter, card grid, article viewer with markdown rendering. Admin form with live markdown preview. 13 seed articles covering all modules. Feature-flag toggleable (`Help.Enabled`). Uses `react-markdown` for rendering. |
+
 ---
 
 ## Key Patterns
@@ -116,7 +121,7 @@ frontend/src/
 ├── components/     # PermissionGate, ProtectedRoute
 ├── contexts/       # AuthContext (JWT + permissions)
 ├── layouts/        # AuthLayout (split-panel login), MainLayout (sidebar + topbar)
-├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants, Settings, FeatureFlags, Notifications, StateMachine, Files, Reports, ApiIntegration, DemoTasks, Theming
+├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants, Settings, FeatureFlags, Notifications, StateMachine, Files, Reports, ApiIntegration, DemoTasks, Theming, Help
 └── types/          # TypeScript interfaces for all domain models
 ```
 

@@ -102,6 +102,15 @@ public static class Permissions
         public const string Transition = "DemoTask.Transition";
     }
 
+    // Help Module
+    public static class Help
+    {
+        public const string Create = "Help.Create";
+        public const string Read = "Help.Read";
+        public const string Update = "Help.Update";
+        public const string Delete = "Help.Delete";
+    }
+
     /// <summary>
     /// Collects all permission strings via reflection for seeding.
     /// </summary>

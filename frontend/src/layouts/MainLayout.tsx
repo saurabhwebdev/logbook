@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import {
   Layout,
   Menu,
@@ -26,12 +26,14 @@ import {
   ApiOutlined,
   ExperimentOutlined,
   FormatPainterOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
 import { themeApi } from '../api/themeApi';
+import HelpDrawer from '../components/HelpDrawer';
 
 const { Sider, Content } = Layout;
 const { Text } = Typography;
@@ -39,14 +41,34 @@ const { Text } = Typography;
 const SIDEBAR_WIDTH = 240;
 const SIDEBAR_COLLAPSED_WIDTH = 72;
 
+// Map routes to module keys for contextual help
+const ROUTE_MODULE_MAP: Record<string, string> = {
+  '/': 'Dashboard',
+  '/users': 'Users',
+  '/roles': 'Roles',
+  '/departments': 'Departments',
+  '/audit-logs': 'AuditLogs',
+  '/tenants': 'Tenants',
+  '/settings': 'Settings',
+  '/feature-flags': 'FeatureFlags',
+  '/notifications': 'Notifications',
+  '/state-machine': 'StateMachine',
+  '/files': 'Files',
+  '/reports': 'Reports',
+  '/api-integration': 'ApiIntegration',
+  '/demo-tasks': 'DemoTasks',
+  '/theming': 'Theming',
+  '/help': 'Help',
+};
+
 export default function MainLayout() {
   const [collapsed, setCollapsed] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const { user, logout, hasPermission } = useAuth();
 
   const themeQuery = useQuery({
     queryKey: ['tenantTheme'],
     queryFn: themeApi.getTheme,
-    staleTime: 5 * 60 * 1000,
   });
 
   const tenantTheme = themeQuery.data;
@@ -54,6 +76,15 @@ export default function MainLayout() {
   const tenantLogo = tenantTheme?.logoUrl;
   const navigate = useNavigate();
   const location = useLocation();
+
+  const currentModuleKey = useMemo(() => {
+    const path = location.pathname;
+    if (path === '/') return 'Dashboard';
+    const match = path.match(/^\/[^/]+/);
+    return match ? (ROUTE_MODULE_MAP[match[0]] || 'Dashboard') : 'Dashboard';
+  }, [location.pathname]);
+
+  const openHelp = useCallback(() => setHelpOpen(true), []);
 
   const menuItems = useMemo(() => {
     const items: MenuProps['items'] = [
@@ -174,6 +205,15 @@ export default function MainLayout() {
         key: '/theming',
         icon: <FormatPainterOutlined />,
         label: 'Theming',
+      });
+    }
+
+    // Help Module
+    if (hasPermission('Help.Read')) {
+      items.push({
+        key: '/help',
+        icon: <QuestionCircleOutlined />,
+        label: 'Help Center',
       });
     }
 
@@ -356,7 +396,14 @@ export default function MainLayout() {
             )}
           </Flex>
 
-          {/* Right side — user dropdown */}
+          {/* Right side — help + user dropdown */}
+          <Flex align="center" gap={16}>
+          <QuestionCircleOutlined
+            onClick={openHelp}
+            style={{ fontSize: 18, color: '#86868b', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#0071e3')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '#86868b')}
+          />
           <Dropdown
             menu={{ items: userMenuItems, onClick: handleUserMenuClick }}
             placement="bottomRight"
@@ -378,6 +425,7 @@ export default function MainLayout() {
               </Avatar>
             </Flex>
           </Dropdown>
+          </Flex>
         </Flex>
 
         {/* Page content */}
@@ -390,6 +438,8 @@ export default function MainLayout() {
           <Outlet />
         </Content>
       </Layout>
+
+      <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} moduleKey={currentModuleKey} />
     </Layout>
   );
 }

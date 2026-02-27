@@ -30,5 +30,8 @@ public interface IApplicationDbContext
     DbSet<WebhookSubscription> WebhookSubscriptions { get; }
     DbSet<DemoTask> DemoTasks { get; }
 
+    // Help Module
+    DbSet<HelpArticle> HelpArticles { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
