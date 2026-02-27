@@ -48,8 +48,10 @@ public static class Permissions
 
     public static class FeatureFlags
     {
+        public const string Create = "FeatureFlag.Create";
         public const string Read = "FeatureFlag.Read";
         public const string Update = "FeatureFlag.Update";
+        public const string Delete = "FeatureFlag.Delete";
     }
 
     public static class Notifications
