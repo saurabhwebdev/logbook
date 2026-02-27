@@ -70,6 +70,7 @@ export default function MainLayout() {
   const { theme: tenantTheme } = useTenantTheme();
   const sidebarBg = tenantTheme?.sidebarColor || '#ffffff';
   const sidebarTextColor = tenantTheme?.sidebarTextColor || '#6e6e73';
+  const primaryColor = tenantTheme?.primaryColor || '#0071e3';
   const tenantLogo = tenantTheme?.logoUrl;
   const navigate = useNavigate();
   const location = useLocation();
@@ -360,7 +361,7 @@ export default function MainLayout() {
                 height: 32,
                 minWidth: 32,
                 borderRadius: 8,
-                background: 'linear-gradient(135deg, #0071e3, #00a1ff)',
+                background: primaryColor,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -438,20 +439,33 @@ export default function MainLayout() {
           }}
         >
           {/* Left side — breadcrumb */}
-          <Breadcrumb
-            items={breadcrumbItems.map(item => ({
-              ...item,
-              onClick: item.href ? () => navigate(item.href!) : undefined,
-            }))}
-            style={{ fontSize: 13, cursor: 'pointer' }}
-          />
+          <ConfigProvider
+            theme={{
+              components: {
+                Breadcrumb: {
+                  linkColor: primaryColor,
+                  linkHoverColor: primaryColor,
+                  itemColor: '#1d1d1f',
+                  separatorColor: '#c7c7cc',
+                },
+              },
+            }}
+          >
+            <Breadcrumb
+              items={breadcrumbItems.map(item => ({
+                ...item,
+                onClick: item.href ? () => navigate(item.href!) : undefined,
+              }))}
+              style={{ fontSize: 13, cursor: 'pointer' }}
+            />
+          </ConfigProvider>
 
           {/* Right side — help + user dropdown */}
           <Flex align="center" gap={16}>
           <QuestionCircleOutlined
             onClick={openHelp}
             style={{ fontSize: 18, color: '#86868b', cursor: 'pointer', transition: 'color 0.2s' }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#0071e3')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = primaryColor)}
             onMouseLeave={(e) => (e.currentTarget.style.color = '#86868b')}
           />
           <Dropdown
@@ -466,7 +480,7 @@ export default function MainLayout() {
               <Avatar
                 size={32}
                 style={{
-                  background: '#0071e3',
+                  background: primaryColor,
                   fontSize: 13,
                   fontWeight: 600,
                 }}
@@ -483,9 +497,28 @@ export default function MainLayout() {
           style={{
             padding: 28,
             minHeight: 'calc(100vh - 56px)',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          <Outlet />
+          {/* Subtle background glow */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '10%',
+              left: '50%',
+              width: '80%',
+              height: '60%',
+              transform: 'translate(-50%, 0)',
+              background: `radial-gradient(ellipse at center, ${primaryColor}08, transparent 70%)`,
+              filter: 'blur(80px)',
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          />
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <Outlet />
+          </div>
         </Content>
       </Layout>
 
