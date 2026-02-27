@@ -5,6 +5,7 @@ export interface TenantTheme {
   logoUrl: string | null;
   primaryColor: string | null;
   sidebarColor: string | null;
+  sidebarTextColor: string | null;
 }
 
 export const themeApi = {
@@ -13,7 +14,7 @@ export const themeApi = {
     return response.data;
   },
 
-  updateTheme: async (data: { logoUrl: string | null; primaryColor: string | null; sidebarColor: string | null }): Promise<void> => {
+  updateTheme: async (data: { logoUrl: string | null; primaryColor: string | null; sidebarColor: string | null; sidebarTextColor: string | null }): Promise<void> => {
     await apiClient.put('/tenants/theme', data);
   },
 };

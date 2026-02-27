@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoreEngine.Application.Features.Tenants.Commands.UpdateTenantTheme;
 
-public record UpdateTenantThemeCommand(string? LogoUrl, string? PrimaryColor, string? SidebarColor) : IRequest;
+public record UpdateTenantThemeCommand(string? LogoUrl, string? PrimaryColor, string? SidebarColor, string? SidebarTextColor) : IRequest;
 
 public class UpdateTenantThemeCommandHandler : IRequestHandler<UpdateTenantThemeCommand>
 {
@@ -29,6 +29,7 @@ public class UpdateTenantThemeCommandHandler : IRequestHandler<UpdateTenantTheme
         tenant.LogoUrl = request.LogoUrl;
         tenant.PrimaryColor = request.PrimaryColor;
         tenant.SidebarColor = request.SidebarColor;
+        tenant.SidebarTextColor = request.SidebarTextColor;
         await _context.SaveChangesAsync(ct);
     }
 }

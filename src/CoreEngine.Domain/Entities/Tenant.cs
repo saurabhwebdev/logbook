@@ -14,6 +14,7 @@ public class Tenant : BaseEntity
     public string? LogoUrl { get; set; }
     public string? PrimaryColor { get; set; }
     public string? SidebarColor { get; set; }
+    public string? SidebarTextColor { get; set; }
 
     // Navigation
     public ICollection<User> Users { get; set; } = new List<User>();

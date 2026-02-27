@@ -6,6 +6,7 @@ import {
   Avatar,
   Typography,
   Flex,
+  ConfigProvider,
 } from 'antd';
 import {
   DashboardOutlined,
@@ -67,6 +68,7 @@ export default function MainLayout() {
 
   const { theme: tenantTheme } = useTenantTheme();
   const sidebarBg = tenantTheme?.sidebarColor || '#ffffff';
+  const sidebarTextColor = tenantTheme?.sidebarTextColor || '#6e6e73';
   const tenantLogo = tenantTheme?.logoUrl;
   const navigate = useNavigate();
   const location = useLocation();
@@ -320,7 +322,7 @@ export default function MainLayout() {
             </div>
           )}
           {!collapsed && (
-            <Text style={{ fontWeight: 700, fontSize: 16, color: '#1d1d1f', letterSpacing: -0.3 }}>
+            <Text style={{ fontWeight: 700, fontSize: 16, color: sidebarTextColor, letterSpacing: -0.3 }}>
               {tenantTheme?.tenantName || 'CoreEngine'}
             </Text>
           )}
@@ -328,13 +330,15 @@ export default function MainLayout() {
 
         {/* Navigation */}
         <div style={{ padding: '12px 0', flex: 1 }}>
-          <Menu
-            mode="inline"
-            selectedKeys={[selectedKey]}
-            items={menuItems}
-            onClick={handleMenuClick}
-            style={{ border: 'none', background: 'transparent' }}
-          />
+          <ConfigProvider theme={{ components: { Menu: { itemColor: sidebarTextColor, itemBg: 'transparent', subMenuItemBg: 'transparent' } } }}>
+            <Menu
+              mode="inline"
+              selectedKeys={[selectedKey]}
+              items={menuItems}
+              onClick={handleMenuClick}
+              style={{ border: 'none', background: 'transparent' }}
+            />
+          </ConfigProvider>
         </div>
 
         {/* Sidebar footer — collapse toggle */}
@@ -345,7 +349,7 @@ export default function MainLayout() {
             height: 48,
             borderTop: '1px solid #f2f2f7',
             cursor: 'pointer',
-            color: '#86868b',
+            color: sidebarTextColor,
             transition: 'color 0.2s',
           }}
           onClick={() => setCollapsed(!collapsed)}

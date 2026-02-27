@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoreEngine.Application.Features.Tenants.Queries.GetTenantTheme;
 
-public record TenantThemeDto(string TenantName, string? LogoUrl, string? PrimaryColor, string? SidebarColor);
+public record TenantThemeDto(string TenantName, string? LogoUrl, string? PrimaryColor, string? SidebarColor, string? SidebarTextColor);
 
 public record GetTenantThemeQuery : IRequest<TenantThemeDto>;
 
@@ -27,8 +27,8 @@ public class GetTenantThemeQueryHandler : IRequestHandler<GetTenantThemeQuery, T
             .FirstOrDefaultAsync(t => t.Id == _tenantContext.TenantId, ct);
 
         if (tenant is null)
-            return new TenantThemeDto("CoreEngine", null, null, null);
+            return new TenantThemeDto("CoreEngine", null, null, null, null);
 
-        return new TenantThemeDto(tenant.Name, tenant.LogoUrl, tenant.PrimaryColor, tenant.SidebarColor);
+        return new TenantThemeDto(tenant.Name, tenant.LogoUrl, tenant.PrimaryColor, tenant.SidebarColor, tenant.SidebarTextColor);
     }
 }

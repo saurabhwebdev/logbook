@@ -63,6 +63,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       ...data,
       primaryColor: normalizeColor(data.primaryColor),
       sidebarColor: normalizeColor(data.sidebarColor),
+      sidebarTextColor: normalizeColor(data.sidebarTextColor),
     };
   }, [data]);
 
