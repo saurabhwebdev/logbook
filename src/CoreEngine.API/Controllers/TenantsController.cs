@@ -1,7 +1,10 @@
 using CoreEngine.API.Filters;
 using CoreEngine.Application.Common.Interfaces;
+using CoreEngine.Application.Features.Tenants.Commands.UpdateTenantTheme;
+using CoreEngine.Application.Features.Tenants.Queries.GetTenantTheme;
 using CoreEngine.Domain.Entities;
 using CoreEngine.Shared.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -68,6 +71,19 @@ public class TenantsController : BaseApiController
 
         await _context.SaveChangesAsync();
 
+        return NoContent();
+    }
+
+    [HttpGet("theme")]
+    [AllowAnonymous]
+    public async Task<ActionResult<TenantThemeDto>> GetTheme()
+        => Ok(await Mediator.Send(new GetTenantThemeQuery()));
+
+    [HttpPut("theme")]
+    [RequirePermission("Tenant.Update")]
+    public async Task<ActionResult> UpdateTheme([FromBody] UpdateTenantThemeCommand command)
+    {
+        await Mediator.Send(command);
         return NoContent();
     }
 }

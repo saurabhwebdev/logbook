@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Typography, Table, Flex, Button, Modal, Form, Input, Select, message, Popconfirm } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -36,6 +36,12 @@ export default function ReportsPage() {
       message.success('Report deleted');
       queryClient.invalidateQueries({ queryKey: ['reports'] });
     },
+  });
+
+  const exportMutation = useMutation({
+    mutationFn: reportsApi.export,
+    onSuccess: () => message.success('Report exported'),
+    onError: () => message.error('Export failed'),
   });
 
   const handleCreate = () => {
@@ -94,11 +100,14 @@ export default function ReportsPage() {
     {
       title: '',
       key: 'actions',
-      width: 60,
+      width: 100,
       render: (_, record) => (
-        <Popconfirm title="Delete this report?" onConfirm={() => deleteMutation.mutate(record.id)} okText="Delete" okButtonProps={{ danger: true }}>
-          <Button type="text" size="small" icon={<DeleteOutlined />} danger />
-        </Popconfirm>
+        <Flex gap={4}>
+          <Button type="text" size="small" icon={<DownloadOutlined />} style={{ color: '#0071e3' }} onClick={() => exportMutation.mutate(record.id)} loading={exportMutation.isPending} />
+          <Popconfirm title="Delete this report?" onConfirm={() => deleteMutation.mutate(record.id)} okText="Delete" okButtonProps={{ danger: true }}>
+            <Button type="text" size="small" icon={<DeleteOutlined />} danger />
+          </Popconfirm>
+        </Flex>
       ),
     },
   ];

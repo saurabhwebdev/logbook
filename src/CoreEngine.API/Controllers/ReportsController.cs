@@ -1,6 +1,7 @@
 using CoreEngine.API.Filters;
 using CoreEngine.Application.Features.Reports.Commands.CreateReport;
 using CoreEngine.Application.Features.Reports.Commands.DeleteReport;
+using CoreEngine.Application.Features.Reports.Commands.ExportReport;
 using CoreEngine.Application.Features.Reports.Queries.GetReports;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,5 +27,13 @@ public class ReportsController : BaseApiController
     {
         await Mediator.Send(new DeleteReportCommand(id));
         return NoContent();
+    }
+
+    [HttpGet("{id:guid}/export")]
+    [RequirePermission("Report.Export")]
+    public async Task<IActionResult> Export(Guid id)
+    {
+        var result = await Mediator.Send(new ExportReportCommand(id));
+        return File(result.FileContents, result.ContentType, result.FileName);
     }
 }

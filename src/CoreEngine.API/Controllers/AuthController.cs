@@ -3,6 +3,7 @@ using CoreEngine.Application.Features.Auth.Commands.Logout;
 using CoreEngine.Application.Features.Auth.Commands.RefreshToken;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace CoreEngine.API.Controllers;
 
@@ -10,11 +11,13 @@ namespace CoreEngine.API.Controllers;
 public class AuthController : BaseApiController
 {
     [AllowAnonymous]
+    [EnableRateLimiting("auth")]
     [HttpPost("login")]
     public async Task<ActionResult<LoginResponse>> Login(LoginCommand command)
         => Ok(await Mediator.Send(command));
 
     [AllowAnonymous]
+    [EnableRateLimiting("auth")]
     [HttpPost("refresh")]
     public async Task<ActionResult<LoginResponse>> Refresh(RefreshTokenCommand command)
         => Ok(await Mediator.Send(command));

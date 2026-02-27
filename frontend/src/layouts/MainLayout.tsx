@@ -25,10 +25,13 @@ import {
   BarChartOutlined,
   ApiOutlined,
   ExperimentOutlined,
+  FormatPainterOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
+import { themeApi } from '../api/themeApi';
 
 const { Sider, Content } = Layout;
 const { Text } = Typography;
@@ -39,6 +42,16 @@ const SIDEBAR_COLLAPSED_WIDTH = 72;
 export default function MainLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const { user, logout, hasPermission } = useAuth();
+
+  const themeQuery = useQuery({
+    queryKey: ['tenantTheme'],
+    queryFn: themeApi.getTheme,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const tenantTheme = themeQuery.data;
+  const sidebarBg = tenantTheme?.sidebarColor || '#ffffff';
+  const tenantLogo = tenantTheme?.logoUrl;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -155,6 +168,15 @@ export default function MainLayout() {
       });
     }
 
+    // Phase 4 navigation
+    if (hasPermission('Tenant.Update')) {
+      items.push({
+        key: '/theming',
+        icon: <FormatPainterOutlined />,
+        label: 'Theming',
+      });
+    }
+
     return items;
   }, [hasPermission]);
 
@@ -222,7 +244,7 @@ export default function MainLayout() {
           left: 0,
           top: 0,
           bottom: 0,
-          background: '#ffffff',
+          background: sidebarBg,
           borderRight: '1px solid #e5e5ea',
           zIndex: 20,
         }}
@@ -241,27 +263,31 @@ export default function MainLayout() {
           }}
           onClick={() => navigate('/')}
         >
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              minWidth: 32,
-              borderRadius: 8,
-              background: 'linear-gradient(135deg, #0071e3, #00a1ff)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontWeight: 700,
-              fontSize: 14,
-              letterSpacing: -0.5,
-            }}
-          >
-            CE
-          </div>
+          {tenantLogo ? (
+            <img src={tenantLogo} alt="Logo" style={{ width: 32, height: 32, minWidth: 32, borderRadius: 8, objectFit: 'contain' }} />
+          ) : (
+            <div
+              style={{
+                width: 32,
+                height: 32,
+                minWidth: 32,
+                borderRadius: 8,
+                background: 'linear-gradient(135deg, #0071e3, #00a1ff)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fff',
+                fontWeight: 700,
+                fontSize: 14,
+                letterSpacing: -0.5,
+              }}
+            >
+              CE
+            </div>
+          )}
           {!collapsed && (
             <Text style={{ fontWeight: 700, fontSize: 16, color: '#1d1d1f', letterSpacing: -0.3 }}>
-              CoreEngine
+              {tenantTheme?.tenantName || 'CoreEngine'}
             </Text>
           )}
         </Flex>

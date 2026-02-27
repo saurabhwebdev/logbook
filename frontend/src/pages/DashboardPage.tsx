@@ -4,18 +4,18 @@ import {
   TeamOutlined,
   ApartmentOutlined,
   FileSearchOutlined,
+  FolderOutlined,
+  BarChartOutlined,
+  ExperimentOutlined,
   FlagOutlined,
-  BellOutlined,
+  ApiOutlined,
 } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 import { useAuth } from '../contexts/AuthContext';
-import { usersApi } from '../api/usersApi';
-import { rolesApi } from '../api/rolesApi';
-import { departmentsApi } from '../api/departmentsApi';
-import { auditLogsApi } from '../api/auditLogsApi';
-import { featureFlagsApi } from '../api/featureFlagsApi';
-import { notificationsApi } from '../api/notificationsApi';
+import { dashboardApi } from '../api/dashboardApi';
+import type { RecentActivity } from '../api/dashboardApi';
 
 const { Text } = Typography;
 
@@ -75,55 +75,23 @@ function StatCard({ label, value, icon, color, onClick }: StatCardProps) {
   );
 }
 
+const actionLabels: Record<string, string> = {
+  Created: 'created',
+  Updated: 'updated',
+  Deleted: 'deleted',
+};
+
 export default function DashboardPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const usersQuery = useQuery({
-    queryKey: ['users', 'count'],
-    queryFn: () => usersApi.getUsers({ pageNumber: 1, pageSize: 1 }),
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['dashboardStats'],
+    queryFn: dashboardApi.getStats,
   });
-
-  const rolesQuery = useQuery({
-    queryKey: ['roles'],
-    queryFn: () => rolesApi.getRoles(),
-  });
-
-  const departmentsQuery = useQuery({
-    queryKey: ['departments'],
-    queryFn: () => departmentsApi.getDepartments(),
-  });
-
-  const auditLogsQuery = useQuery({
-    queryKey: ['auditLogs', 'count'],
-    queryFn: () => auditLogsApi.getAuditLogs({ pageNumber: 1, pageSize: 1 }),
-  });
-
-  const featureFlagsQuery = useQuery({
-    queryKey: ['featureFlags'],
-    queryFn: () => featureFlagsApi.getAll(),
-  });
-
-  const notificationsQuery = useQuery({
-    queryKey: ['notifications', 'dashboard'],
-    queryFn: () => notificationsApi.getMy(true),
-  });
-
-  const isLoading =
-    usersQuery.isLoading ||
-    rolesQuery.isLoading ||
-    departmentsQuery.isLoading ||
-    auditLogsQuery.isLoading;
-
-  const hasError =
-    usersQuery.isError ||
-    rolesQuery.isError ||
-    departmentsQuery.isError ||
-    auditLogsQuery.isError;
 
   return (
     <div>
-      {/* Page header */}
       <div style={{ marginBottom: 28 }}>
         <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>
           Dashboard
@@ -133,7 +101,7 @@ export default function DashboardPage() {
         </Text>
       </div>
 
-      {hasError && (
+      {isError && (
         <Alert
           message="Some data could not be loaded."
           type="warning"
@@ -145,60 +113,69 @@ export default function DashboardPage() {
       <Spin spinning={isLoading}>
         <Row gutter={[20, 20]}>
           <Col xs={24} sm={12} lg={6}>
-            <StatCard
-              label="Total Users"
-              value={usersQuery.data?.totalCount ?? 0}
-              icon={<UserOutlined />}
-              color="#0071e3"
-              onClick={() => navigate('/users')}
-            />
+            <StatCard label="Users" value={data?.userCount ?? 0} icon={<UserOutlined />} color="#0071e3" onClick={() => navigate('/users')} />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <StatCard
-              label="Roles"
-              value={rolesQuery.data?.length ?? 0}
-              icon={<TeamOutlined />}
-              color="#34c759"
-              onClick={() => navigate('/roles')}
-            />
+            <StatCard label="Roles" value={data?.roleCount ?? 0} icon={<TeamOutlined />} color="#34c759" onClick={() => navigate('/roles')} />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <StatCard
-              label="Departments"
-              value={departmentsQuery.data?.length ?? 0}
-              icon={<ApartmentOutlined />}
-              color="#ff9500"
-              onClick={() => navigate('/departments')}
-            />
+            <StatCard label="Departments" value={data?.departmentCount ?? 0} icon={<ApartmentOutlined />} color="#ff9500" onClick={() => navigate('/departments')} />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <StatCard
-              label="Audit Events"
-              value={auditLogsQuery.data?.totalCount ?? 0}
-              icon={<FileSearchOutlined />}
-              color="#af52de"
-              onClick={() => navigate('/audit-logs')}
-            />
+            <StatCard label="Audit Events" value={data?.auditLogCount ?? 0} icon={<FileSearchOutlined />} color="#af52de" onClick={() => navigate('/audit-logs')} />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <StatCard
-              label="Feature Flags"
-              value={featureFlagsQuery.data?.length ?? 0}
-              icon={<FlagOutlined />}
-              color="#ff3b30"
-              onClick={() => navigate('/feature-flags')}
-            />
+            <StatCard label="Files" value={data?.fileCount ?? 0} icon={<FolderOutlined />} color="#0071e3" onClick={() => navigate('/files')} />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <StatCard
-              label="Unread Notifications"
-              value={notificationsQuery.data?.length ?? 0}
-              icon={<BellOutlined />}
-              color="#ff9500"
-              onClick={() => navigate('/notifications')}
-            />
+            <StatCard label="Reports" value={data?.reportCount ?? 0} icon={<BarChartOutlined />} color="#ff3b30" onClick={() => navigate('/reports')} />
+          </Col>
+          <Col xs={24} sm={12} lg={6}>
+            <StatCard label="Active Tasks" value={data?.activeTaskCount ?? 0} icon={<ExperimentOutlined />} color="#ff9500" onClick={() => navigate('/demo-tasks')} />
+          </Col>
+          <Col xs={24} sm={12} lg={6}>
+            <StatCard label="Feature Flags On" value={data?.enabledFeatureFlagCount ?? 0} icon={<FlagOutlined />} color="#34c759" onClick={() => navigate('/feature-flags')} />
+          </Col>
+          <Col xs={24} sm={12} lg={6}>
+            <StatCard label="Active API Keys" value={data?.activeApiKeyCount ?? 0} icon={<ApiOutlined />} color="#af52de" onClick={() => navigate('/api-integration')} />
           </Col>
         </Row>
+
+        {/* Recent Activity */}
+        {(data?.recentActivity ?? []).length > 0 && (
+          <div style={{ marginTop: 28 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 600, color: '#1d1d1f', marginBottom: 16 }}>Recent Activity</h3>
+            <div style={{ background: '#ffffff', borderRadius: 12, border: '1px solid #e5e5ea', overflow: 'hidden' }}>
+              {(data?.recentActivity ?? []).map((activity: RecentActivity, index: number) => (
+                <div
+                  key={index}
+                  style={{
+                    padding: '14px 20px',
+                    borderBottom: index < (data?.recentActivity ?? []).length - 1 ? '1px solid #f2f2f7' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div>
+                    <span style={{ fontSize: 13, color: '#1d1d1f', fontWeight: 500 }}>
+                      {activity.entityName}
+                    </span>
+                    <span style={{ fontSize: 13, color: '#86868b', marginLeft: 6 }}>
+                      {actionLabels[activity.action] || activity.action}
+                    </span>
+                    <code style={{ fontSize: 11, background: '#f5f5f7', padding: '1px 6px', borderRadius: 4, marginLeft: 8, color: '#6e6e73' }}>
+                      {activity.entityId.length > 12 ? activity.entityId.substring(0, 8) + '...' : activity.entityId}
+                    </code>
+                  </div>
+                  <Text style={{ fontSize: 12, color: '#86868b' }}>
+                    {dayjs(activity.timestamp).format('MMM D, h:mm A')}
+                  </Text>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </Spin>
     </div>
   );

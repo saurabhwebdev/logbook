@@ -15,6 +15,9 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUserService _currentUserService;
 
+    private const int MaxFailedAttempts = 5;
+    private const int LockoutMinutes = 15;
+
     public LoginCommandHandler(
         IApplicationDbContext context,
         IPasswordHasher passwordHasher,
@@ -43,6 +46,20 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
         if (user is null)
             throw new NotFoundException("Invalid email or password.");
 
+        // Check if account is temporarily locked out
+        if (user.LockoutEndAt.HasValue && user.LockoutEndAt > DateTime.UtcNow)
+        {
+            var remaining = (int)Math.Ceiling((user.LockoutEndAt.Value - DateTime.UtcNow).TotalMinutes);
+            throw new ForbiddenAccessException($"Account locked. Try again in {remaining} minute(s).");
+        }
+
+        // Clear expired lockout
+        if (user.LockoutEndAt.HasValue && user.LockoutEndAt <= DateTime.UtcNow)
+        {
+            user.LockoutEndAt = null;
+            user.FailedLoginAttempts = 0;
+        }
+
         // Edge case: locked or inactive users cannot login
         if (user.Status == UserStatus.Locked)
             throw new ForbiddenAccessException("Your account has been locked. Contact your administrator.");
@@ -52,7 +69,21 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 
         // Verify password
         if (!_passwordHasher.Verify(request.Password, user.PasswordHash))
+        {
+            user.FailedLoginAttempts++;
+            if (user.FailedLoginAttempts >= MaxFailedAttempts)
+            {
+                user.LockoutEndAt = DateTime.UtcNow.AddMinutes(LockoutMinutes);
+                await _context.SaveChangesAsync(cancellationToken);
+                throw new ForbiddenAccessException($"Too many failed attempts. Account locked for {LockoutMinutes} minutes.");
+            }
+            await _context.SaveChangesAsync(cancellationToken);
             throw new NotFoundException("Invalid email or password.");
+        }
+
+        // Successful login — reset counters
+        user.FailedLoginAttempts = 0;
+        user.LockoutEndAt = null;
 
         // Collect permissions from all roles
         var permissions = user.UserRoles

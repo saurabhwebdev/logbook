@@ -20,6 +20,7 @@ import FilesPage from './pages/FilesPage';
 import ReportsPage from './pages/ReportsPage';
 import ApiIntegrationPage from './pages/ApiIntegrationPage';
 import DemoTasksPage from './pages/DemoTasksPage';
+import ThemingPage from './pages/ThemingPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,6 +100,7 @@ export default function App() {
                   <Route path="reports" element={<ReportsPage />} />
                   <Route path="api-integration" element={<ApiIntegrationPage />} />
                   <Route path="demo-tasks" element={<DemoTasksPage />} />
+                  <Route path="theming" element={<ThemingPage />} />
                 </Route>
               </Route>
             </Routes>

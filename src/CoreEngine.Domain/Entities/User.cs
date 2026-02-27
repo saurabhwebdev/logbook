@@ -14,6 +14,10 @@ public class User : TenantScopedEntity
     public UserStatus Status { get; set; } = UserStatus.Active;
     public DateTime? LastLoginAt { get; set; }
 
+    // Security
+    public int FailedLoginAttempts { get; set; }
+    public DateTime? LockoutEndAt { get; set; }
+
     // Navigation
     public Tenant Tenant { get; set; } = default!;
     public Department? Department { get; set; }

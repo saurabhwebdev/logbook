@@ -35,6 +35,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasConversion<int>();
 
+        builder.Property(u => u.FailedLoginAttempts)
+            .HasDefaultValue(0);
+
         // Unique index on (TenantId, Email) excluding soft-deleted rows
         builder.HasIndex(u => new { u.TenantId, u.Email })
             .IsUnique()

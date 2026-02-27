@@ -33,6 +33,10 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
             .IsRequired()
             .HasDefaultValue(true);
 
+        builder.Property(t => t.LogoUrl).HasMaxLength(500);
+        builder.Property(t => t.PrimaryColor).HasMaxLength(20);
+        builder.Property(t => t.SidebarColor).HasMaxLength(20);
+
         // Soft-delete query filter is applied globally in ApplicationDbContext.ApplyGlobalQueryFilters
         // Do NOT add an explicit HasQueryFilter here — EF Core only supports one filter per entity
         // and the dynamic one in ApplicationDbContext already handles ISoftDeletable types.

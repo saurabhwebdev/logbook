@@ -81,9 +81,11 @@ Instead of building everything from scratch or coupling to a single framework (l
 ### Phase 4 — Harden & Extend
 | # | Module | Status | Implementation |
 |---|--------|--------|----------------|
-| 12 | **Localization** | Phase 4 | Microsoft.Extensions.Localization with DB provider. Currency formatting, timezone conversion (UTC storage). |
-| 13 | **Theming** | Phase 4 | Per-tenant branding (logo, colors). CSS custom properties. Email template overrides. |
-| 14 | **Security (advanced)** | Phase 4 | Field-level encryption (AES-256), activity monitoring, brute force protection, session management. |
+| 13 | **Theming** | DONE | Per-tenant branding: LogoUrl, PrimaryColor, SidebarColor on Tenant entity. AllowAnonymous GET theme endpoint. Dynamic sidebar colors and logo in MainLayout. Theming admin page with color pickers. |
+| 14 | **Security (advanced)** | DONE | Account lockout (5 failed attempts → 15 min lock). ASP.NET Core fixed-window rate limiting (10 req/min on auth endpoints, 429 response). FailedLoginAttempts + LockoutEndAt fields on User. |
+| — | **Dashboard (real data)** | DONE | Single aggregation query counting all modules (Users, Roles, Departments, AuditLogs, Files, Reports, DemoTasks, FeatureFlags, ApiKeys). 9 stat cards + recent activity timeline. |
+| — | **Report Export** | DONE | Excel export via ClosedXML (.xlsx) and CSV export. Entity-type-based data querying (User, Department, Role, AuditLog, DemoTask). Column selection from report definition. |
+| 12 | **Localization** | SKIPPED | Not needed for initial framework — teams start English-only. Can be added later. |
 
 ---
 
@@ -114,7 +116,7 @@ frontend/src/
 ├── components/     # PermissionGate, ProtectedRoute
 ├── contexts/       # AuthContext (JWT + permissions)
 ├── layouts/        # AuthLayout (split-panel login), MainLayout (sidebar + topbar)
-├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants, Settings, FeatureFlags, Notifications, StateMachine, Files, Reports, ApiIntegration, DemoTasks
+├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants, Settings, FeatureFlags, Notifications, StateMachine, Files, Reports, ApiIntegration, DemoTasks, Theming
 └── types/          # TypeScript interfaces for all domain models
 ```
 

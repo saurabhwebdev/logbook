@@ -1,4 +1,4 @@
-import { Typography, Table, Tag, Flex } from 'antd';
+import { Typography, Table, Flex } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
