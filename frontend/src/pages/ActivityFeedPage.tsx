@@ -1,4 +1,4 @@
-import { Typography, Timeline, Empty, Spin, Flex, Card } from 'antd';
+import { Typography, Timeline, Spin, Flex, Card } from 'antd';
 import {
   PlusCircleOutlined,
   EditOutlined,
@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { auditLogsApi } from '../api/auditLogsApi';
 import { useTenantTheme } from '../contexts/ThemeContext';
+import EmptyState from '../components/EmptyState';
 import type { UserActivity } from '../types';
 
 const { Text } = Typography;
@@ -160,9 +161,10 @@ export default function ActivityFeedPage() {
             <Spin />
           </Flex>
         ) : !activities || activities.length === 0 ? (
-          <Empty
-            description="No activity yet"
-            style={{ padding: 40 }}
+          <EmptyState
+            title="No activity yet"
+            description="Your recent actions and changes will appear here once you start interacting with the system."
+            size={180}
           />
         ) : (
           <div style={{ padding: '32px 24px' }}>

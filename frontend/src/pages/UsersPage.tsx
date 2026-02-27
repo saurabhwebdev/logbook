@@ -23,15 +23,18 @@ import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { usersApi } from '../api/usersApi';
 import { useTenantTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 import type { User } from '../types';
 import PermissionGate from '../components/PermissionGate';
 import UserAvatar from '../components/UserAvatar';
+import EmptyState from '../components/EmptyState';
 
 const { Text } = Typography;
 
 export default function UsersPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { hasPermission } = useAuth();
   const { theme } = useTenantTheme();
   const primaryColor = theme?.primaryColor || '#0071e3';
 
@@ -272,6 +275,28 @@ export default function UsersPage() {
           dataSource={data?.items ?? []}
           loading={isLoading}
           onChange={handleTableChange}
+          locale={{
+            emptyText: (
+              <EmptyState
+                title={searchDebounce ? "No users found" : "No users yet"}
+                description={
+                  searchDebounce
+                    ? "No users match your search criteria. Try adjusting your search terms."
+                    : "Get started by creating your first user account."
+                }
+                size={180}
+                action={
+                  !searchDebounce && hasPermission('User.Create')
+                    ? {
+                        label: 'Add First User',
+                        onClick: () => navigate('/users/new'),
+                        icon: <PlusOutlined />,
+                      }
+                    : undefined
+                }
+              />
+            ),
+          }}
           pagination={{
             current: page,
             pageSize,

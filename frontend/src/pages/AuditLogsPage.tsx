@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 import { auditLogsApi } from '../api/auditLogsApi';
 import { useTenantTheme } from '../contexts/ThemeContext';
+import EmptyState from '../components/EmptyState';
 import type { AuditLog } from '../types';
 
 const { Text } = Typography;
@@ -243,6 +244,19 @@ export default function AuditLogsPage() {
           dataSource={data?.items ?? []}
           loading={isLoading}
           onChange={handleTableChange}
+          locale={{
+            emptyText: (
+              <EmptyState
+                title={dateRange || entityName || action || userId ? "No audit logs found" : "No audit logs yet"}
+                description={
+                  dateRange || entityName || action || userId
+                    ? "No audit logs match your current filters. Try adjusting your search criteria."
+                    : "Audit logs will appear here as users make changes across the system. All create, update, and delete operations are automatically tracked."
+                }
+                size={180}
+              />
+            ),
+          }}
           expandable={{
             expandedRowRender,
             rowExpandable: (record) => record.oldValues !== null || record.newValues !== null,

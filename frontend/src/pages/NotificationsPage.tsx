@@ -1,4 +1,4 @@
-import { Typography, List, Button, Flex, Empty, Spin, message } from 'antd';
+import { Typography, List, Button, Flex, Spin, message } from 'antd';
 import {
   CheckOutlined,
   CheckCircleOutlined,
@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { notificationsApi } from '../api/notificationsApi';
 import { useTenantTheme } from '../contexts/ThemeContext';
+import EmptyState from '../components/EmptyState';
 import type { Notification as AppNotification } from '../types';
 
 const { Text } = Typography;
@@ -146,9 +147,10 @@ export default function NotificationsPage() {
             <Spin />
           </Flex>
         ) : (data ?? []).length === 0 ? (
-          <Empty
-            description="No notifications"
-            style={{ padding: 60 }}
+          <EmptyState
+            title="No notifications"
+            description="You're all caught up! Notifications about important updates and events will appear here."
+            size={180}
           />
         ) : (
           <List

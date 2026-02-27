@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { demoTasksApi } from '../api/demoTasksApi';
 import { useTenantTheme } from '../contexts/ThemeContext';
+import EmptyState from '../components/EmptyState';
 import type { DemoTask, TransitionLog, StateTransitionDefinition } from '../types';
 
 const { Text } = Typography;
@@ -171,7 +172,27 @@ export default function DemoTasksPage() {
       </Flex>
 
       <div style={{ background: '#ffffff', borderRadius: 12, border: '1px solid #e5e5ea', overflow: 'hidden' }}>
-        <Table<DemoTask> rowKey="id" columns={columns} dataSource={data ?? []} loading={isLoading} pagination={{ showSizeChanger: true, style: { padding: '0 16px' } }} />
+        <Table<DemoTask>
+          rowKey="id"
+          columns={columns}
+          dataSource={data ?? []}
+          loading={isLoading}
+          locale={{
+            emptyText: (
+              <EmptyState
+                title="No tasks yet"
+                description="Create your first task to see the state machine in action. Tasks can transition through different states like Draft, Open, In Progress, Review, Done, and Cancelled."
+                size={180}
+                action={{
+                  label: 'Create First Task',
+                  onClick: () => setCreateOpen(true),
+                  icon: <PlusOutlined />,
+                }}
+              />
+            ),
+          }}
+          pagination={{ showSizeChanger: true, style: { padding: '0 16px' } }}
+        />
       </div>
 
       {/* Create Modal */}

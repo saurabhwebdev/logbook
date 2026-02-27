@@ -1,4 +1,4 @@
-import { Flex, Button, Spin, Empty, Tag } from 'antd';
+import { Flex, Button, Spin, Tag } from 'antd';
 import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import Markdown from 'react-markdown';
 import { helpApi } from '../api/helpApi';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenantTheme } from '../contexts/ThemeContext';
+import EmptyState from '../components/EmptyState';
 
 export default function HelpArticleViewPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -37,7 +38,16 @@ export default function HelpArticleViewPage() {
 
       <Spin spinning={isLoading}>
         {!article && !isLoading ? (
-          <Empty description="Article not found." />
+          <EmptyState
+            title="Article not found"
+            description="The help article you're looking for doesn't exist or may have been removed."
+            size={180}
+            action={{
+              label: 'Back to Help Center',
+              onClick: () => navigate('/help'),
+              icon: <ArrowLeftOutlined />,
+            }}
+          />
         ) : article ? (
           <div style={{ background: '#ffffff', borderRadius: 12, border: '1px solid #e5e5ea', padding: 32, maxWidth: 800 }}>
             <h1 style={{ fontSize: 24, fontWeight: 700, color: '#1d1d1f', margin: 0, marginBottom: 8 }}>

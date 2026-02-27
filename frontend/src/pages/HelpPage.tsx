@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Typography, Flex, Input, Select, Empty, Spin, Tag, Button } from 'antd';
+import { Typography, Flex, Input, Select, Spin, Tag, Button } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { helpApi } from '../api/helpApi';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenantTheme } from '../contexts/ThemeContext';
+import EmptyState from '../components/EmptyState';
 import type { HelpArticle } from '../types';
 
 const { Text } = Typography;
@@ -82,7 +83,24 @@ export default function HelpPage() {
 
       <Spin spinning={isLoading}>
         {filtered.length === 0 && !isLoading ? (
-          <Empty description="No help articles found." />
+          <EmptyState
+            title={searchText || categoryFilter ? "No articles found" : "No help articles yet"}
+            description={
+              searchText || categoryFilter
+                ? "Try adjusting your search filters to find what you're looking for."
+                : "Help articles and documentation will appear here. Create your first article to get started."
+            }
+            size={180}
+            action={
+              hasPermission('Help.Create') && !searchText && !categoryFilter
+                ? {
+                    label: 'Create First Article',
+                    onClick: () => navigate('/help/new'),
+                    icon: <PlusOutlined />,
+                  }
+                : undefined
+            }
+          />
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 16 }}>
             {filtered.map((article: HelpArticle) => (
