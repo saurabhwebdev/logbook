@@ -9,7 +9,6 @@ import {
   Modal,
   message,
   Flex,
-  Avatar,
 } from 'antd';
 import {
   PlusOutlined,
@@ -26,6 +25,7 @@ import { usersApi } from '../api/usersApi';
 import { useTenantTheme } from '../contexts/ThemeContext';
 import type { User } from '../types';
 import PermissionGate from '../components/PermissionGate';
+import UserAvatar from '../components/UserAvatar';
 
 const { Text } = Typography;
 
@@ -94,16 +94,12 @@ export default function UsersPage() {
       key: 'name',
       render: (_, record) => (
         <Flex align="center" gap={12}>
-          <Avatar
+          <UserAvatar
+            firstName={record.firstName}
+            lastName={record.lastName}
+            profilePhotoUrl={record.profilePhotoUrl}
             size={34}
-            style={{
-              background: primaryColor,
-              fontSize: 13,
-              fontWeight: 600,
-            }}
-          >
-            {record.firstName[0]}{record.lastName[0]}
-          </Avatar>
+          />
           <div>
             <div style={{ fontWeight: 500, color: '#1d1d1f', fontSize: 13 }}>
               {record.firstName} {record.lastName}

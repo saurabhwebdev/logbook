@@ -116,6 +116,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
                 Email: user.Email,
                 FirstName: user.FirstName,
                 LastName: user.LastName,
+                ProfilePhotoUrl: user.ProfilePhotoUrl,
                 TenantId: user.TenantId,
                 TenantName: user.Tenant.Name,
                 Roles: roleNames,

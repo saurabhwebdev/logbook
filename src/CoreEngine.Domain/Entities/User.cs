@@ -10,6 +10,7 @@ public class User : TenantScopedEntity
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string? PhoneNumber { get; set; }
+    public string? ProfilePhotoUrl { get; set; }
     public Guid? DepartmentId { get; set; }
     public UserStatus Status { get; set; } = UserStatus.Active;
     public DateTime? LastLoginAt { get; set; }

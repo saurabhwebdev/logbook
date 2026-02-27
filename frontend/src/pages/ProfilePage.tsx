@@ -1,18 +1,20 @@
 import { useState } from 'react';
-import { Typography, Card, Descriptions, Tag, Avatar, Flex, Divider, Button, Form, Input, message, Modal } from 'antd';
-import { UserOutlined, MailOutlined, BankOutlined, TeamOutlined, LockOutlined, KeyOutlined } from '@ant-design/icons';
+import { Typography, Card, Descriptions, Tag, Avatar, Flex, Divider, Button, Form, Input, message, Modal, Upload, Space } from 'antd';
+import { UserOutlined, MailOutlined, BankOutlined, TeamOutlined, LockOutlined, KeyOutlined, CameraOutlined, DeleteOutlined, LoadingOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenantTheme } from '../contexts/ThemeContext';
 import { authApi } from '../api/authApi';
+import { usersApi } from '../api/usersApi';
 
 const { Text } = Typography;
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const { theme } = useTenantTheme();
   const primaryColor = theme?.primaryColor || '#0071e3';
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [form] = Form.useForm();
 
   const changePasswordMutation = useMutation({
@@ -28,10 +30,81 @@ export default function ProfilePage() {
     },
   });
 
+  const uploadPhotoMutation = useMutation({
+    mutationFn: (file: File) => usersApi.uploadProfilePhoto(file),
+    onSuccess: (photoUrl) => {
+      message.success('Profile photo updated successfully');
+      setUploading(false);
+      // Update local storage user data with new photo URL
+      const storedUser = localStorage.getItem('user');
+      if (storedUser && user) {
+        const updatedUser = { ...user, profilePhotoUrl: photoUrl };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        refreshUser();
+      }
+    },
+    onError: (error: any) => {
+      message.error(error.response?.data?.detail || 'Failed to upload photo');
+      setUploading(false);
+    },
+  });
+
+  const deletePhotoMutation = useMutation({
+    mutationFn: () => usersApi.deleteProfilePhoto(),
+    onSuccess: () => {
+      message.success('Profile photo removed successfully');
+      // Update local storage user data to remove photo URL
+      const storedUser = localStorage.getItem('user');
+      if (storedUser && user) {
+        const updatedUser = { ...user, profilePhotoUrl: null };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        refreshUser();
+      }
+    },
+    onError: (error: any) => {
+      message.error(error.response?.data?.detail || 'Failed to remove photo');
+    },
+  });
+
   const handlePasswordChange = (values: any) => {
     changePasswordMutation.mutate({
       currentPassword: values.currentPassword,
       newPassword: values.newPassword,
+    });
+  };
+
+  const beforeUpload = (file: File) => {
+    // Validate file type
+    const isImage = file.type.startsWith('image/');
+    if (!isImage) {
+      message.error('You can only upload image files!');
+      return false;
+    }
+
+    // Validate file size (5MB max)
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      message.error('Image must be smaller than 5MB!');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleUpload = async (options: any) => {
+    const { file } = options;
+    setUploading(true);
+    uploadPhotoMutation.mutate(file);
+  };
+
+  const handleDeletePhoto = () => {
+    Modal.confirm({
+      title: 'Remove profile photo',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you want to remove your profile photo?',
+      okText: 'Remove',
+      okType: 'danger',
+      onOk: () => deletePhotoMutation.mutateAsync(),
     });
   };
 
@@ -65,25 +138,83 @@ export default function ProfilePage() {
           marginBottom: 16,
         }}
       >
-        <Flex align="center" gap={20} style={{ marginBottom: 24 }}>
-          <Avatar
-            size={80}
-            style={{
-              background: primaryColor,
-              fontSize: 28,
-              fontWeight: 600,
-            }}
-          >
-            {user.firstName[0]}{user.lastName[0]}
-          </Avatar>
-          <div>
+        <Flex align="flex-start" gap={24} style={{ marginBottom: 24 }}>
+          <div style={{ position: 'relative' }}>
+            {user.profilePhotoUrl ? (
+              <Avatar
+                size={100}
+                src={user.profilePhotoUrl}
+                style={{
+                  border: '3px solid #f5f5f7',
+                }}
+              />
+            ) : (
+              <Avatar
+                size={100}
+                style={{
+                  background: primaryColor,
+                  fontSize: 36,
+                  fontWeight: 600,
+                }}
+              >
+                {user.firstName[0]}{user.lastName[0]}
+              </Avatar>
+            )}
+            {uploading && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: 100,
+                  height: 100,
+                  borderRadius: '50%',
+                  background: 'rgba(0, 0, 0, 0.5)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <LoadingOutlined style={{ fontSize: 24, color: '#fff' }} />
+              </div>
+            )}
+          </div>
+          <div style={{ flex: 1 }}>
             <h3 style={{ fontSize: 20, fontWeight: 600, color: '#1d1d1f', margin: 0, marginBottom: 4 }}>
               {user.firstName} {user.lastName}
             </h3>
-            <Flex align="center" gap={6} style={{ color: '#86868b', fontSize: 13 }}>
+            <Flex align="center" gap={6} style={{ color: '#86868b', fontSize: 13, marginBottom: 16 }}>
               <MailOutlined />
               <Text style={{ color: '#86868b', fontSize: 13 }}>{user.email}</Text>
             </Flex>
+            <Space size={8}>
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={beforeUpload}
+                customRequest={handleUpload}
+                disabled={uploading || uploadPhotoMutation.isPending}
+              >
+                <Button
+                  icon={<CameraOutlined />}
+                  size="small"
+                  loading={uploading || uploadPhotoMutation.isPending}
+                >
+                  {user.profilePhotoUrl ? 'Change Photo' : 'Upload Photo'}
+                </Button>
+              </Upload>
+              {user.profilePhotoUrl && (
+                <Button
+                  icon={<DeleteOutlined />}
+                  size="small"
+                  danger
+                  onClick={handleDeletePhoto}
+                  loading={deletePhotoMutation.isPending}
+                >
+                  Remove Photo
+                </Button>
+              )}
+            </Space>
           </div>
         </Flex>
 

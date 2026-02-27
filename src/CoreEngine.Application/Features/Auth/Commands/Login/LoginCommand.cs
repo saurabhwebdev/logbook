@@ -16,6 +16,7 @@ public record LoginUserDto(
     string Email,
     string FirstName,
     string LastName,
+    string? ProfilePhotoUrl,
     Guid TenantId,
     string TenantName,
     IReadOnlyList<string> Roles,

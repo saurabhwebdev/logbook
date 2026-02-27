@@ -24,6 +24,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   hasPermission: (permission: string) => boolean;
   hasAnyPermission: (permissions: string[]) => boolean;
+  refreshUser: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -139,6 +140,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [user]
   );
 
+  const refreshUser = useCallback(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedUser: AuthUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch {
+        // Ignore parse errors
+      }
+    }
+  }, []);
+
   const value: AuthContextType = {
     user,
     loading,
@@ -147,6 +160,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     logout,
     hasPermission,
     hasAnyPermission,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

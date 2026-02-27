@@ -3,7 +3,6 @@ import {
   Layout,
   Menu,
   Dropdown,
-  Avatar,
   Typography,
   Flex,
   ConfigProvider,
@@ -35,6 +34,7 @@ import type { MenuProps } from 'antd';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenantTheme } from '../contexts/ThemeContext';
 import HelpDrawer from '../components/HelpDrawer';
+import UserAvatar from '../components/UserAvatar';
 
 const { Sider, Content } = Layout;
 const { Text } = Typography;
@@ -503,16 +503,12 @@ export default function MainLayout() {
               <Text style={{ fontSize: 13, fontWeight: 500, color: '#1d1d1f' }}>
                 {user?.firstName} {user?.lastName}
               </Text>
-              <Avatar
+              <UserAvatar
+                firstName={user?.firstName}
+                lastName={user?.lastName}
+                profilePhotoUrl={user?.profilePhotoUrl}
                 size={32}
-                style={{
-                  background: primaryColor,
-                  fontSize: 13,
-                  fontWeight: 600,
-                }}
-              >
-                {user?.firstName?.[0]}{user?.lastName?.[0]}
-              </Avatar>
+              />
             </Flex>
           </Dropdown>
           </Flex>

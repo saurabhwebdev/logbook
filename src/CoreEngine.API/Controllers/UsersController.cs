@@ -3,6 +3,8 @@ using CoreEngine.Application.Common.Models;
 using CoreEngine.Application.Features.Users.Commands.CreateUser;
 using CoreEngine.Application.Features.Users.Commands.DeleteUser;
 using CoreEngine.Application.Features.Users.Commands.UpdateUser;
+using CoreEngine.Application.Features.Users.Commands.UploadProfilePhoto;
+using CoreEngine.Application.Features.Users.Commands.DeleteProfilePhoto;
 using CoreEngine.Application.Features.Users.Queries.GetUserById;
 using CoreEngine.Application.Features.Users.Queries.GetUsers;
 using CoreEngine.Shared.Constants;
@@ -44,6 +46,23 @@ public class UsersController : BaseApiController
     public async Task<IActionResult> Delete(Guid id)
     {
         await Mediator.Send(new DeleteUserCommand(id));
+        return NoContent();
+    }
+
+    [HttpPost("profile-photo")]
+    [RequestSizeLimit(5_000_000)] // 5MB
+    public async Task<ActionResult<string>> UploadProfilePhoto(IFormFile file)
+    {
+        using var stream = file.OpenReadStream();
+        var command = new UploadProfilePhotoCommand(stream, file.FileName, file.ContentType, file.Length);
+        var url = await Mediator.Send(command);
+        return Ok(url);
+    }
+
+    [HttpDelete("profile-photo")]
+    public async Task<IActionResult> DeleteProfilePhoto()
+    {
+        await Mediator.Send(new DeleteProfilePhotoCommand());
         return NoContent();
     }
 }

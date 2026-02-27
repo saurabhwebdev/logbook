@@ -3,6 +3,7 @@ export interface AuthUser {
   email: string;
   firstName: string;
   lastName: string;
+  profilePhotoUrl?: string | null;
   tenantId: string;
   tenantName: string;
   roles: string[];
@@ -22,6 +23,7 @@ export interface User {
   firstName: string;
   lastName: string;
   phoneNumber: string | null;
+  profilePhotoUrl?: string | null;
   status: string;
   departmentId: string | null;
   departmentName: string | null;

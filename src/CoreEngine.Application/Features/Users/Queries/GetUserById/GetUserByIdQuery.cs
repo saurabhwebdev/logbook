@@ -38,6 +38,7 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserDto
             user.FirstName,
             user.LastName,
             user.PhoneNumber,
+            user.ProfilePhotoUrl,
             user.Status.ToString(),
             user.DepartmentId,
             user.Department?.Name,

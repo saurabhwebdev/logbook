@@ -58,6 +58,7 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, PaginatedList
                 u.FirstName,
                 u.LastName,
                 u.PhoneNumber,
+                u.ProfilePhotoUrl,
                 u.Status.ToString(),
                 u.DepartmentId,
                 u.Department != null ? u.Department.Name : null,

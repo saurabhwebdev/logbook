@@ -6,6 +6,7 @@ public record UserDto(
     string FirstName,
     string LastName,
     string? PhoneNumber,
+    string? ProfilePhotoUrl,
     string Status,
     Guid? DepartmentId,
     string? DepartmentName,
