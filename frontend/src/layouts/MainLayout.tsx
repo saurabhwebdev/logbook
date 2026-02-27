@@ -334,7 +334,7 @@ export default function MainLayout() {
           top: 0,
           bottom: 0,
           background: sidebarBg,
-          borderRight: '1px solid #e5e5ea',
+          boxShadow: '2px 0 6px rgba(0, 0, 0, 0.04)',
           zIndex: 20,
         }}
       >
@@ -432,7 +432,7 @@ export default function MainLayout() {
             height: 56,
             padding: '0 28px',
             background: '#ffffff',
-            borderBottom: '1px solid #e5e5ea',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.03)',
             position: 'sticky',
             top: 0,
             zIndex: 10,
@@ -500,30 +500,50 @@ export default function MainLayout() {
             position: 'relative',
           }}
         >
-          {/* Subtle background glow */}
+          {/* Animated background glow */}
+          <style>
+            {`
+              @keyframes float1 {
+                0%, 100% { transform: translate(-50%, -50%) scale(1); }
+                50% { transform: translate(-45%, -55%) scale(1.1); }
+              }
+              @keyframes float2 {
+                0%, 100% { transform: translate(0, 0) scale(1); }
+                50% { transform: translate(-5%, 5%) scale(1.15); }
+              }
+              .glow-orb-1 {
+                animation: float1 15s ease-in-out infinite;
+              }
+              .glow-orb-2 {
+                animation: float2 18s ease-in-out infinite;
+              }
+            `}
+          </style>
           <div
+            className="glow-orb-1"
             style={{
               position: 'fixed',
               top: '20%',
               left: '50%',
-              width: '800px',
-              height: '800px',
+              width: '900px',
+              height: '900px',
               transform: 'translate(-50%, -50%)',
-              background: `radial-gradient(circle, ${primaryColor}20 0%, ${primaryColor}10 30%, transparent 70%)`,
-              filter: 'blur(60px)',
+              background: `radial-gradient(circle, ${primaryColor}30 0%, ${primaryColor}18 30%, transparent 70%)`,
+              filter: 'blur(70px)',
               pointerEvents: 'none',
               zIndex: 0,
             }}
           />
           <div
+            className="glow-orb-2"
             style={{
               position: 'fixed',
               bottom: '10%',
               right: '10%',
-              width: '600px',
-              height: '600px',
-              background: `radial-gradient(circle, ${primaryColor}15 0%, transparent 60%)`,
-              filter: 'blur(70px)',
+              width: '700px',
+              height: '700px',
+              background: `radial-gradient(circle, ${primaryColor}25 0%, ${primaryColor}12 40%, transparent 70%)`,
+              filter: 'blur(80px)',
               pointerEvents: 'none',
               zIndex: 0,
             }}
