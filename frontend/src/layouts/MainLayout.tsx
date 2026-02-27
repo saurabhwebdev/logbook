@@ -229,9 +229,11 @@ export default function MainLayout() {
     if (path === '/') return [{ title: 'Dashboard' }];
 
     const segments = path.split('/').filter(Boolean);
-    const items = [{ title: 'Home' }];
+    const items: Array<{ title: string; href?: string }> = [
+      { title: 'Home', href: '/' }
+    ];
 
-    // Map route segments to readable names
+    // Map route segments to readable names and paths
     const routeNames: Record<string, string> = {
       users: 'Users',
       roles: 'Roles',
@@ -252,12 +254,22 @@ export default function MainLayout() {
       edit: 'Edit',
     };
 
-    segments.forEach((segment) => {
+    let currentPath = '';
+    segments.forEach((segment, index) => {
       // Skip IDs (UUIDs or numeric IDs)
       if (/^[0-9a-f-]{36}$/.test(segment) || /^\d+$/.test(segment)) return;
 
+      currentPath += `/${segment}`;
       const name = routeNames[segment] || segment;
-      items.push({ title: name });
+
+      // Only make it clickable if it's not the last item
+      const isLast = index === segments.length - 1 ||
+                     (index < segments.length - 1 && /^[0-9a-f-]{36}$/.test(segments[index + 1]));
+
+      items.push({
+        title: name,
+        href: isLast ? undefined : currentPath
+      });
     });
 
     return items;
@@ -426,7 +438,13 @@ export default function MainLayout() {
           }}
         >
           {/* Left side — breadcrumb */}
-          <Breadcrumb items={breadcrumbItems} style={{ fontSize: 13 }} />
+          <Breadcrumb
+            items={breadcrumbItems.map(item => ({
+              ...item,
+              onClick: item.href ? () => navigate(item.href!) : undefined,
+            }))}
+            style={{ fontSize: 13, cursor: 'pointer' }}
+          />
 
           {/* Right side — help + user dropdown */}
           <Flex align="center" gap={16}>

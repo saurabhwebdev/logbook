@@ -5,11 +5,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Markdown from 'react-markdown';
 import { helpApi } from '../api/helpApi';
 import { useAuth } from '../contexts/AuthContext';
+import { useTenantTheme } from '../contexts/ThemeContext';
 
 export default function HelpArticleViewPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { hasPermission } = useAuth();
+  const { theme } = useTenantTheme();
+  const primaryColor = theme?.primaryColor || '#0071e3';
 
   const { data: article, isLoading } = useQuery({
     queryKey: ['helpArticle', slug],
@@ -41,7 +44,11 @@ export default function HelpArticleViewPage() {
               {article.title}
             </h1>
             <Flex gap={8} style={{ marginBottom: 20 }}>
-              {article.category && <Tag color="blue">{article.category}</Tag>}
+              {article.category && (
+                <Tag style={{ background: `${primaryColor}15`, color: primaryColor, border: 'none' }}>
+                  {article.category}
+                </Tag>
+              )}
               {article.moduleKey && <Tag>{article.moduleKey}</Tag>}
               {!article.isPublished && <Tag color="orange">Draft</Tag>}
             </Flex>
