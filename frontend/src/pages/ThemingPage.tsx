@@ -1,35 +1,31 @@
 import { useState, useEffect } from 'react';
 import { Typography, Flex, Button, Input, message, Spin, ColorPicker } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { themeApi } from '../api/themeApi';
+import { useTenantTheme, normalizeColor } from '../contexts/ThemeContext';
 
 const { Text } = Typography;
 
 export default function ThemingPage() {
-  const queryClient = useQueryClient();
+  const { theme, isLoading, refreshTheme } = useTenantTheme();
   const [logoUrl, setLogoUrl] = useState('');
   const [primaryColor, setPrimaryColor] = useState('#0071e3');
   const [sidebarColor, setSidebarColor] = useState('#ffffff');
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['tenantTheme'],
-    queryFn: themeApi.getTheme,
-  });
-
   useEffect(() => {
-    if (data) {
-      setLogoUrl(data.logoUrl || '');
-      setPrimaryColor(data.primaryColor || '#0071e3');
-      setSidebarColor(data.sidebarColor || '#ffffff');
+    if (theme) {
+      setLogoUrl(theme.logoUrl || '');
+      setPrimaryColor(theme.primaryColor || '#0071e3');
+      setSidebarColor(theme.sidebarColor || '#ffffff');
     }
-  }, [data]);
+  }, [theme]);
 
   const saveMutation = useMutation({
     mutationFn: themeApi.updateTheme,
     onSuccess: () => {
       message.success('Theme saved successfully.');
-      queryClient.invalidateQueries({ queryKey: ['tenantTheme'] });
+      refreshTheme();
     },
     onError: () => message.error('Failed to save theme'),
   });
@@ -37,8 +33,8 @@ export default function ThemingPage() {
   const handleSave = () => {
     saveMutation.mutate({
       logoUrl: logoUrl || null,
-      primaryColor: primaryColor || null,
-      sidebarColor: sidebarColor || null,
+      primaryColor: normalizeColor(primaryColor),
+      sidebarColor: normalizeColor(sidebarColor),
     });
   };
 
