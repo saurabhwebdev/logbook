@@ -9,6 +9,7 @@ import {
   Input,
   Select,
   message,
+  Flex,
 } from 'antd';
 import {
   PlusOutlined,
@@ -28,7 +29,7 @@ import type {
 import type { Department } from '../types';
 import PermissionGate from '../components/PermissionGate';
 
-const { Title } = Typography;
+const { Text } = Typography;
 
 interface DepartmentFormValues {
   name: string;
@@ -49,48 +50,34 @@ export default function DepartmentsPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: CreateDepartmentRequest) =>
-      departmentsApi.createDepartment(data),
+    mutationFn: (data: CreateDepartmentRequest) => departmentsApi.createDepartment(data),
     onSuccess: () => {
-      message.success('Department created successfully');
+      message.success('Department created');
       queryClient.invalidateQueries({ queryKey: ['departments'] });
       closeModal();
     },
     onError: (error: AxiosError<{ message?: string; title?: string }>) => {
-      const msg =
-        error.response?.data?.message ||
-        error.response?.data?.title ||
-        'Failed to create department';
-      message.error(msg);
+      message.error(error.response?.data?.message || error.response?.data?.title || 'Failed to create department');
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: UpdateDepartmentRequest;
-    }) => departmentsApi.updateDepartment(id, data),
+    mutationFn: ({ id, data }: { id: string; data: UpdateDepartmentRequest }) =>
+      departmentsApi.updateDepartment(id, data),
     onSuccess: () => {
-      message.success('Department updated successfully');
+      message.success('Department updated');
       queryClient.invalidateQueries({ queryKey: ['departments'] });
       closeModal();
     },
     onError: (error: AxiosError<{ message?: string; title?: string }>) => {
-      const msg =
-        error.response?.data?.message ||
-        error.response?.data?.title ||
-        'Failed to update department';
-      message.error(msg);
+      message.error(error.response?.data?.message || error.response?.data?.title || 'Failed to update department');
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => departmentsApi.deleteDepartment(id),
     onSuccess: () => {
-      message.success('Department deleted successfully');
+      message.success('Department deleted');
       queryClient.invalidateQueries({ queryKey: ['departments'] });
     },
     onError: () => {
@@ -127,12 +114,7 @@ export default function DepartmentsPage() {
       if (editingDept) {
         updateMutation.mutate({
           id: editingDept.id,
-          data: {
-            name: values.name,
-            description: values.description,
-            code: values.code,
-            parentDepartmentId: values.parentDepartmentId,
-          },
+          data: { name: values.name, description: values.description, code: values.code, parentDepartmentId: values.parentDepartmentId },
         });
       } else {
         createMutation.mutate({
@@ -143,21 +125,19 @@ export default function DepartmentsPage() {
         });
       }
     } catch {
-      // form validation failed
+      // validation
     }
   };
 
   const handleDelete = (dept: Department) => {
     if (dept.userCount > 0) {
-      message.warning(
-        'Cannot delete a department that still has users assigned to it.'
-      );
+      message.warning('Cannot delete a department with assigned users.');
       return;
     }
     Modal.confirm({
-      title: 'Delete Department',
+      title: 'Delete department',
       icon: <ExclamationCircleOutlined />,
-      content: `Are you sure you want to delete department "${dept.name}"?`,
+      content: `This will permanently delete "${dept.name}". This action cannot be undone.`,
       okText: 'Delete',
       okType: 'danger',
       onOk: () => deleteMutation.mutateAsync(dept.id),
@@ -166,67 +146,70 @@ export default function DepartmentsPage() {
 
   const columns: ColumnsType<Department> = [
     {
-      title: 'Name',
-      dataIndex: 'name',
+      title: 'Department',
       key: 'name',
+      render: (_, record) => (
+        <div>
+          <div style={{ fontWeight: 500, color: '#1d1d1f', fontSize: 13 }}>
+            {record.name}
+          </div>
+          {record.code && (
+            <div style={{ fontSize: 12, color: '#86868b' }}>{record.code}</div>
+          )}
+        </div>
+      ),
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: 'Code',
-      dataIndex: 'code',
-      key: 'code',
-      render: (value: string | null) => value ?? '-',
-    },
-    {
-      title: 'Parent Department',
+      title: 'Parent',
       dataIndex: 'parentDepartmentName',
       key: 'parentDepartmentName',
-      render: (value: string | null) => value ?? '-',
+      render: (value: string | null) => (
+        <Text style={{ fontSize: 13, color: value ? '#1d1d1f' : '#c7c7cc' }}>
+          {value ?? '--'}
+        </Text>
+      ),
     },
     {
-      title: 'User Count',
+      title: 'Members',
       dataIndex: 'userCount',
       key: 'userCount',
+      width: 100,
+      render: (count: number) => (
+        <Text style={{ fontSize: 13, color: '#6e6e73' }}>{count}</Text>
+      ),
       sorter: (a, b) => a.userCount - b.userCount,
     },
     {
-      title: 'Created At',
+      title: 'Created',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
+      width: 120,
+      render: (value: string) => (
+        <Text style={{ fontSize: 13, color: '#86868b' }}>
+          {dayjs(value).format('MMM D, YYYY')}
+        </Text>
+      ),
       sorter: (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
     },
     {
-      title: 'Actions',
+      title: '',
       key: 'actions',
+      width: 100,
+      align: 'right',
       render: (_, record) => (
-        <Space>
+        <Space size={0}>
           <PermissionGate permission="Department.Update">
-            <Button
-              type="link"
-              icon={<EditOutlined />}
-              onClick={() => openEditModal(record)}
-            >
-              Edit
-            </Button>
+            <Button type="text" size="small" icon={<EditOutlined />} onClick={() => openEditModal(record)} style={{ color: '#86868b' }} />
           </PermissionGate>
           <PermissionGate permission="Department.Delete">
-            <Button
-              type="link"
-              danger
-              icon={<DeleteOutlined />}
-              disabled={record.userCount > 0}
-              onClick={() => handleDelete(record)}
-            >
-              Delete
-            </Button>
+            <Button type="text" size="small" danger icon={<DeleteOutlined />} disabled={record.userCount > 0} onClick={() => handleDelete(record)} />
           </PermissionGate>
         </Space>
       ),
     },
   ];
 
-  // Filter out the currently-editing department from parent choices to prevent self-reference
   const parentOptions = (departmentsQuery.data ?? [])
     .filter((d) => d.id !== editingDept?.id)
     .map((d) => ({ label: d.name, value: d.id }));
@@ -235,74 +218,49 @@ export default function DepartmentsPage() {
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 16,
-        }}
-      >
-        <Title level={3} style={{ margin: 0 }}>
-          Departments
-        </Title>
+      <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
+        <div>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Departments</h2>
+          <Text style={{ fontSize: 13, color: '#86868b' }}>Organize your team into departments.</Text>
+        </div>
         <PermissionGate permission="Department.Create">
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={openCreateModal}
-          >
-            New Department
+          <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
+            Add department
           </Button>
         </PermissionGate>
+      </Flex>
+
+      <div style={{ background: '#ffffff', borderRadius: 12, border: '1px solid #e5e5ea', overflow: 'hidden' }}>
+        <Table<Department>
+          rowKey="id"
+          columns={columns}
+          dataSource={departmentsQuery.data ?? []}
+          loading={departmentsQuery.isLoading}
+          pagination={{ showSizeChanger: true, style: { padding: '0 16px' } }}
+        />
       </div>
 
-      <Table<Department>
-        rowKey="id"
-        columns={columns}
-        dataSource={departmentsQuery.data ?? []}
-        loading={departmentsQuery.isLoading}
-        pagination={{ showSizeChanger: true }}
-      />
-
       <Modal
-        title={editingDept ? 'Edit Department' : 'New Department'}
+        title={editingDept ? 'Edit department' : 'New department'}
         open={modalOpen}
         onOk={handleModalOk}
         onCancel={closeModal}
         confirmLoading={isMutating}
         destroyOnClose
+        okText={editingDept ? 'Save changes' : 'Create'}
       >
-        <Form<DepartmentFormValues>
-          form={form}
-          layout="vertical"
-        >
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Department name is required' }]}
-          >
-            <Input placeholder="Department name" />
+        <Form<DepartmentFormValues> form={form} layout="vertical" requiredMark={false}>
+          <Form.Item name="name" label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Name</Text>} rules={[{ required: true, message: 'Required' }]}>
+            <Input placeholder="e.g. Engineering, Marketing" />
           </Form.Item>
-
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: 'Description is required' }]}
-          >
-            <Input.TextArea rows={2} placeholder="Department description" />
+          <Form.Item name="description" label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Description</Text>} rules={[{ required: true, message: 'Required' }]}>
+            <Input.TextArea rows={2} placeholder="What does this department do?" />
           </Form.Item>
-
-          <Form.Item name="code" label="Code">
-            <Input placeholder="Department code (optional)" />
+          <Form.Item name="code" label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Code</Text>}>
+            <Input placeholder="e.g. ENG, MKT (optional)" />
           </Form.Item>
-
-          <Form.Item name="parentDepartmentId" label="Parent Department">
-            <Select
-              allowClear
-              placeholder="Select parent department (optional)"
-              options={parentOptions}
-            />
+          <Form.Item name="parentDepartmentId" label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Parent department</Text>}>
+            <Select allowClear placeholder="None" options={parentOptions} />
           </Form.Item>
         </Form>
       </Modal>

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ConfigProvider } from 'antd';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import MainLayout from './layouts/MainLayout';
@@ -24,26 +25,70 @@ const queryClient = new QueryClient({
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route element={<ProtectedRoute />}>
-              <Route element={<MainLayout />}>
-                <Route index element={<DashboardPage />} />
-                <Route path="users" element={<UsersPage />} />
-                <Route path="users/new" element={<UserFormPage />} />
-                <Route path="users/:id/edit" element={<UserFormPage />} />
-                <Route path="roles" element={<RolesPage />} />
-                <Route path="departments" element={<DepartmentsPage />} />
-                <Route path="audit-logs" element={<AuditLogsPage />} />
-                <Route path="tenants" element={<TenantsPage />} />
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          colorPrimary: '#0071e3',
+          colorBgContainer: '#ffffff',
+          colorBgLayout: '#f8f9fa',
+          borderRadius: 8,
+          colorBorder: '#e5e5ea',
+          colorBorderSecondary: '#f2f2f7',
+          colorText: '#1d1d1f',
+          colorTextSecondary: '#6e6e73',
+          colorTextTertiary: '#86868b',
+          fontSize: 14,
+          controlHeight: 38,
+        },
+        components: {
+          Menu: {
+            itemBg: 'transparent',
+            itemSelectedBg: '#f0f5ff',
+            itemSelectedColor: '#0071e3',
+            itemHoverBg: '#f5f5f7',
+            itemColor: '#6e6e73',
+            iconSize: 16,
+            itemBorderRadius: 8,
+            itemMarginInline: 8,
+            subMenuItemBg: 'transparent',
+          },
+          Button: {
+            primaryShadow: 'none',
+            defaultShadow: 'none',
+          },
+          Table: {
+            headerBg: 'transparent',
+            rowHoverBg: '#f8f9fa',
+            borderColor: '#f2f2f7',
+          },
+          Card: {
+            paddingLG: 24,
+          },
+        },
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route element={<MainLayout />}>
+                  <Route index element={<DashboardPage />} />
+                  <Route path="users" element={<UsersPage />} />
+                  <Route path="users/new" element={<UserFormPage />} />
+                  <Route path="users/:id/edit" element={<UserFormPage />} />
+                  <Route path="roles" element={<RolesPage />} />
+                  <Route path="departments" element={<DepartmentsPage />} />
+                  <Route path="audit-logs" element={<AuditLogsPage />} />
+                  <Route path="tenants" element={<TenantsPage />} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ConfigProvider>
   );
 }

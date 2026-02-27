@@ -8,7 +8,9 @@ import {
   Space,
   Spin,
   message,
+  Flex,
 } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -17,7 +19,7 @@ import { rolesApi } from '../api/rolesApi';
 import { departmentsApi } from '../api/departmentsApi';
 import type { CreateUserRequest, UpdateUserRequest } from '../types';
 
-const { Title } = Typography;
+const { Text } = Typography;
 
 interface UserFormValues {
   email: string;
@@ -37,30 +39,25 @@ export default function UserFormPage() {
   const queryClient = useQueryClient();
   const [form] = Form.useForm<UserFormValues>();
 
-  // Load user data when editing
   const userQuery = useQuery({
     queryKey: ['users', id],
     queryFn: () => usersApi.getUserById(id!),
     enabled: isEditing,
   });
 
-  // Load roles for the select
   const rolesQuery = useQuery({
     queryKey: ['roles'],
     queryFn: () => rolesApi.getRoles(),
   });
 
-  // Load departments for the select
   const departmentsQuery = useQuery({
     queryKey: ['departments'],
     queryFn: () => departmentsApi.getDepartments(),
   });
 
-  // Populate form when user data loads
   useEffect(() => {
     if (userQuery.data) {
       const user = userQuery.data;
-      // We need to map role names to role IDs
       const roleIds =
         rolesQuery.data
           ?.filter((r) => user.roles.includes(r.name))
@@ -81,7 +78,7 @@ export default function UserFormPage() {
   const createMutation = useMutation({
     mutationFn: (data: CreateUserRequest) => usersApi.createUser(data),
     onSuccess: () => {
-      message.success('User created successfully');
+      message.success('User created');
       queryClient.invalidateQueries({ queryKey: ['users'] });
       navigate('/users');
     },
@@ -97,7 +94,7 @@ export default function UserFormPage() {
   const updateMutation = useMutation({
     mutationFn: (data: UpdateUserRequest) => usersApi.updateUser(id!, data),
     onSuccess: () => {
-      message.success('User updated successfully');
+      message.success('User updated');
       queryClient.invalidateQueries({ queryKey: ['users'] });
       navigate('/users');
     },
@@ -112,17 +109,16 @@ export default function UserFormPage() {
 
   const onFinish = (values: UserFormValues) => {
     if (isEditing) {
-      const updateData: UpdateUserRequest = {
+      updateMutation.mutate({
         firstName: values.firstName,
         lastName: values.lastName,
         phoneNumber: values.phoneNumber,
         departmentId: values.departmentId,
         status: values.status!,
         roleIds: values.roleIds,
-      };
-      updateMutation.mutate(updateData);
+      });
     } else {
-      const createData: CreateUserRequest = {
+      createMutation.mutate({
         email: values.email,
         password: values.password!,
         firstName: values.firstName,
@@ -130,8 +126,7 @@ export default function UserFormPage() {
         phoneNumber: values.phoneNumber,
         departmentId: values.departmentId,
         roleIds: values.roleIds,
-      };
-      createMutation.mutate(createData);
+      });
     }
   };
 
@@ -139,121 +134,156 @@ export default function UserFormPage() {
 
   if (isEditing && userQuery.isLoading) {
     return (
-      <div style={{ textAlign: 'center', padding: 48 }}>
+      <Flex align="center" justify="center" style={{ padding: 80 }}>
         <Spin size="large" />
-      </div>
+      </Flex>
     );
   }
 
   return (
     <div>
-      <Title level={3}>{isEditing ? 'Edit User' : 'New User'}</Title>
+      {/* Page header */}
+      <Flex align="center" gap={12} style={{ marginBottom: 28 }}>
+        <Button
+          type="text"
+          icon={<ArrowLeftOutlined />}
+          onClick={() => navigate('/users')}
+          style={{ color: '#86868b' }}
+        />
+        <div>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>
+            {isEditing ? 'Edit user' : 'New user'}
+          </h2>
+          <Text style={{ fontSize: 13, color: '#86868b' }}>
+            {isEditing ? 'Update user details and role assignments.' : 'Create a new user account.'}
+          </Text>
+        </div>
+      </Flex>
 
-      <Form<UserFormValues>
-        form={form}
-        layout="vertical"
-        onFinish={onFinish}
-        style={{ maxWidth: 600 }}
-        initialValues={{ roleIds: [] }}
+      {/* Form card */}
+      <div
+        style={{
+          background: '#ffffff',
+          borderRadius: 12,
+          border: '1px solid #e5e5ea',
+          padding: '28px 32px',
+          maxWidth: 560,
+        }}
       >
-        <Form.Item
-          name="email"
-          label="Email"
-          rules={[
-            { required: true, message: 'Email is required' },
-            { type: 'email', message: 'Please enter a valid email' },
-          ]}
+        <Form<UserFormValues>
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          initialValues={{ roleIds: [] }}
+          requiredMark={false}
         >
-          <Input disabled={isEditing} placeholder="user@example.com" />
-        </Form.Item>
-
-        {!isEditing && (
           <Form.Item
-            name="password"
-            label="Password"
+            name="email"
+            label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Email</Text>}
             rules={[
-              { required: true, message: 'Password is required' },
-              { min: 8, message: 'Password must be at least 8 characters' },
+              { required: true, message: 'Email is required' },
+              { type: 'email', message: 'Enter a valid email' },
             ]}
           >
-            <Input.Password placeholder="Enter password" />
+            <Input disabled={isEditing} placeholder="user@example.com" />
           </Form.Item>
-        )}
 
-        <Form.Item
-          name="firstName"
-          label="First Name"
-          rules={[{ required: true, message: 'First name is required' }]}
-        >
-          <Input placeholder="First name" />
-        </Form.Item>
+          {!isEditing && (
+            <Form.Item
+              name="password"
+              label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Password</Text>}
+              rules={[
+                { required: true, message: 'Password is required' },
+                { min: 8, message: 'Minimum 8 characters' },
+              ]}
+            >
+              <Input.Password placeholder="Minimum 8 characters" />
+            </Form.Item>
+          )}
 
-        <Form.Item
-          name="lastName"
-          label="Last Name"
-          rules={[{ required: true, message: 'Last name is required' }]}
-        >
-          <Input placeholder="Last name" />
-        </Form.Item>
+          <Flex gap={16}>
+            <Form.Item
+              name="firstName"
+              label={<Text style={{ fontWeight: 500, fontSize: 13 }}>First name</Text>}
+              rules={[{ required: true, message: 'Required' }]}
+              style={{ flex: 1 }}
+            >
+              <Input placeholder="First name" />
+            </Form.Item>
 
-        <Form.Item name="phoneNumber" label="Phone Number">
-          <Input placeholder="Phone number (optional)" />
-        </Form.Item>
+            <Form.Item
+              name="lastName"
+              label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Last name</Text>}
+              rules={[{ required: true, message: 'Required' }]}
+              style={{ flex: 1 }}
+            >
+              <Input placeholder="Last name" />
+            </Form.Item>
+          </Flex>
 
-        <Form.Item name="departmentId" label="Department">
-          <Select
-            allowClear
-            placeholder="Select department"
-            loading={departmentsQuery.isLoading}
-            options={departmentsQuery.data?.map((dept) => ({
-              label: dept.name,
-              value: dept.id,
-            }))}
-          />
-        </Form.Item>
-
-        {isEditing && (
           <Form.Item
-            name="status"
-            label="Status"
-            rules={[{ required: true, message: 'Status is required' }]}
+            name="phoneNumber"
+            label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Phone</Text>}
+          >
+            <Input placeholder="Optional" />
+          </Form.Item>
+
+          <Form.Item
+            name="departmentId"
+            label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Department</Text>}
           >
             <Select
-              placeholder="Select status"
-              options={[
-                { label: 'Active', value: 'Active' },
-                { label: 'Inactive', value: 'Inactive' },
-                { label: 'Locked', value: 'Locked' },
-              ]}
+              allowClear
+              placeholder="Select department"
+              loading={departmentsQuery.isLoading}
+              options={departmentsQuery.data?.map((dept) => ({
+                label: dept.name,
+                value: dept.id,
+              }))}
             />
           </Form.Item>
-        )}
 
-        <Form.Item
-          name="roleIds"
-          label="Roles"
-          rules={[{ required: true, message: 'At least one role is required' }]}
-        >
-          <Select
-            mode="multiple"
-            placeholder="Select roles"
-            loading={rolesQuery.isLoading}
-            options={rolesQuery.data?.map((role) => ({
-              label: role.name,
-              value: role.id,
-            }))}
-          />
-        </Form.Item>
+          {isEditing && (
+            <Form.Item
+              name="status"
+              label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Status</Text>}
+              rules={[{ required: true, message: 'Required' }]}
+            >
+              <Select
+                placeholder="Select status"
+                options={[
+                  { label: 'Active', value: 'Active' },
+                  { label: 'Inactive', value: 'Inactive' },
+                  { label: 'Locked', value: 'Locked' },
+                ]}
+              />
+            </Form.Item>
+          )}
 
-        <Form.Item>
-          <Space>
+          <Form.Item
+            name="roleIds"
+            label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Roles</Text>}
+            rules={[{ required: true, message: 'Select at least one role' }]}
+          >
+            <Select
+              mode="multiple"
+              placeholder="Select roles"
+              loading={rolesQuery.isLoading}
+              options={rolesQuery.data?.map((role) => ({
+                label: role.name,
+                value: role.id,
+              }))}
+            />
+          </Form.Item>
+
+          <Flex gap={12} style={{ marginTop: 8 }}>
             <Button type="primary" htmlType="submit" loading={isSubmitting}>
-              {isEditing ? 'Update' : 'Create'}
+              {isEditing ? 'Save changes' : 'Create user'}
             </Button>
             <Button onClick={() => navigate('/users')}>Cancel</Button>
-          </Space>
-        </Form.Item>
-      </Form>
+          </Flex>
+        </Form>
+      </div>
     </div>
   );
 }

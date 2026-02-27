@@ -1,9 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { Spin, Result, Button } from 'antd';
+import { Spin, Result, Button, Flex } from 'antd';
 import { useAuth } from '../contexts/AuthContext';
 
 interface ProtectedRouteProps {
-  /** Optional permission required to access this route */
   permission?: string;
 }
 
@@ -12,16 +11,13 @@ export default function ProtectedRoute({ permission }: ProtectedRouteProps) {
 
   if (loading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
+      <Flex
+        align="center"
+        justify="center"
+        style={{ height: '100vh', background: '#f8f9fa' }}
       >
         <Spin size="large" />
-      </div>
+      </Flex>
     );
   }
 
@@ -31,16 +27,18 @@ export default function ProtectedRoute({ permission }: ProtectedRouteProps) {
 
   if (permission && !hasPermission(permission)) {
     return (
-      <Result
-        status="403"
-        title="403"
-        subTitle="Sorry, you are not authorized to access this page."
-        extra={
-          <Button type="primary" onClick={() => window.history.back()}>
-            Go Back
-          </Button>
-        }
-      />
+      <Flex align="center" justify="center" style={{ height: '100vh', background: '#f8f9fa' }}>
+        <Result
+          status="403"
+          title="Access denied"
+          subTitle="You don't have permission to view this page."
+          extra={
+            <Button type="primary" onClick={() => window.history.back()}>
+              Go back
+            </Button>
+          }
+        />
+      </Flex>
     );
   }
 

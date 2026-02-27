@@ -1,11 +1,11 @@
-import { Typography, Table, Tag } from 'antd';
+import { Typography, Table, Tag, Flex } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { tenantsApi } from '../api/tenantsApi';
 import type { Tenant } from '../types';
 
-const { Title } = Typography;
+const { Text } = Typography;
 
 export default function TenantsPage() {
   const { data, isLoading } = useQuery({
@@ -15,47 +15,66 @@ export default function TenantsPage() {
 
   const columns: ColumnsType<Tenant> = [
     {
-      title: 'Name',
-      dataIndex: 'name',
+      title: 'Tenant',
       key: 'name',
+      render: (_, record) => (
+        <div>
+          <div style={{ fontWeight: 500, color: '#1d1d1f', fontSize: 13 }}>{record.name}</div>
+          <div style={{ fontSize: 12, color: '#86868b' }}>{record.subdomain}</div>
+        </div>
+      ),
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: 'Subdomain',
-      dataIndex: 'subdomain',
-      key: 'subdomain',
-    },
-    {
-      title: 'Active',
+      title: 'Status',
       dataIndex: 'isActive',
       key: 'isActive',
+      width: 100,
       render: (value: boolean) =>
         value ? (
-          <Tag color="green">Active</Tag>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: '#34c759' }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34c759' }} />
+            Active
+          </span>
         ) : (
-          <Tag color="red">Inactive</Tag>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: '#86868b' }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#86868b' }} />
+            Inactive
+          </span>
         ),
     },
     {
-      title: 'Created At',
+      title: 'Created',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm'),
+      width: 130,
+      render: (value: string) => (
+        <Text style={{ fontSize: 13, color: '#86868b' }}>
+          {dayjs(value).format('MMM D, YYYY')}
+        </Text>
+      ),
       sorter: (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
     },
   ];
 
   return (
     <div>
-      <Title level={3}>Tenants</Title>
+      <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
+        <div>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Tenants</h2>
+          <Text style={{ fontSize: 13, color: '#86868b' }}>Manage multi-tenant organizations.</Text>
+        </div>
+      </Flex>
 
-      <Table<Tenant>
-        rowKey="id"
-        columns={columns}
-        dataSource={data ?? []}
-        loading={isLoading}
-        pagination={{ showSizeChanger: true }}
-      />
+      <div style={{ background: '#ffffff', borderRadius: 12, border: '1px solid #e5e5ea', overflow: 'hidden' }}>
+        <Table<Tenant>
+          rowKey="id"
+          columns={columns}
+          dataSource={data ?? []}
+          loading={isLoading}
+          pagination={{ showSizeChanger: true, style: { padding: '0 16px' } }}
+        />
+      </div>
     </div>
   );
 }

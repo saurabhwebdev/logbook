@@ -1,4 +1,4 @@
-import { Row, Col, Card, Statistic, Typography, Spin, Alert } from 'antd';
+import { Row, Col, Typography, Spin, Alert, Flex } from 'antd';
 import {
   UserOutlined,
   TeamOutlined,
@@ -6,16 +6,74 @@ import {
   FileSearchOutlined,
 } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { usersApi } from '../api/usersApi';
 import { rolesApi } from '../api/rolesApi';
 import { departmentsApi } from '../api/departmentsApi';
 import { auditLogsApi } from '../api/auditLogsApi';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
+
+interface StatCardProps {
+  label: string;
+  value: number;
+  icon: React.ReactNode;
+  color: string;
+  onClick?: () => void;
+}
+
+function StatCard({ label, value, icon, color, onClick }: StatCardProps) {
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        background: '#ffffff',
+        borderRadius: 12,
+        border: '1px solid #e5e5ea',
+        padding: '24px',
+        cursor: onClick ? 'pointer' : 'default',
+        transition: 'border-color 0.2s, transform 0.15s',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = '#d1d1d6';
+        if (onClick) e.currentTarget.style.transform = 'translateY(-1px)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = '#e5e5ea';
+        e.currentTarget.style.transform = 'translateY(0)';
+      }}
+    >
+      <Flex align="center" justify="space-between" style={{ marginBottom: 16 }}>
+        <Text style={{ fontSize: 13, fontWeight: 500, color: '#86868b' }}>
+          {label}
+        </Text>
+        <div
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 10,
+            background: color,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 16,
+            color: '#fff',
+          }}
+        >
+          {icon}
+        </div>
+      </Flex>
+      <div style={{ fontSize: 32, fontWeight: 700, color: '#1d1d1f', lineHeight: 1 }}>
+        {value}
+      </div>
+    </div>
+  );
+}
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const usersQuery = useQuery({
     queryKey: ['users', 'count'],
@@ -34,8 +92,7 @@ export default function DashboardPage() {
 
   const auditLogsQuery = useQuery({
     queryKey: ['auditLogs', 'count'],
-    queryFn: () =>
-      auditLogsApi.getAuditLogs({ pageNumber: 1, pageSize: 1 }),
+    queryFn: () => auditLogsApi.getAuditLogs({ pageNumber: 1, pageSize: 1 }),
   });
 
   const isLoading =
@@ -52,57 +109,62 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <Title level={3}>Dashboard</Title>
-      <Text type="secondary" style={{ fontSize: 16, display: 'block', marginBottom: 24 }}>
-        Welcome back, {user?.firstName}!
-      </Text>
+      {/* Page header */}
+      <div style={{ marginBottom: 28 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>
+          Dashboard
+        </h2>
+        <Text style={{ fontSize: 14, color: '#86868b' }}>
+          Welcome back, {user?.firstName}. Here's an overview of your system.
+        </Text>
+      </div>
 
       {hasError && (
         <Alert
-          message="Some dashboard data could not be loaded."
+          message="Some data could not be loaded."
           type="warning"
           showIcon
-          style={{ marginBottom: 16 }}
+          style={{ marginBottom: 20, borderRadius: 8 }}
         />
       )}
 
       <Spin spinning={isLoading}>
-        <Row gutter={16}>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="Total Users"
-                value={usersQuery.data?.totalCount ?? 0}
-                prefix={<UserOutlined />}
-              />
-            </Card>
+        <Row gutter={[20, 20]}>
+          <Col xs={24} sm={12} lg={6}>
+            <StatCard
+              label="Total Users"
+              value={usersQuery.data?.totalCount ?? 0}
+              icon={<UserOutlined />}
+              color="#0071e3"
+              onClick={() => navigate('/users')}
+            />
           </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="Total Roles"
-                value={rolesQuery.data?.length ?? 0}
-                prefix={<TeamOutlined />}
-              />
-            </Card>
+          <Col xs={24} sm={12} lg={6}>
+            <StatCard
+              label="Roles"
+              value={rolesQuery.data?.length ?? 0}
+              icon={<TeamOutlined />}
+              color="#34c759"
+              onClick={() => navigate('/roles')}
+            />
           </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="Total Departments"
-                value={departmentsQuery.data?.length ?? 0}
-                prefix={<ApartmentOutlined />}
-              />
-            </Card>
+          <Col xs={24} sm={12} lg={6}>
+            <StatCard
+              label="Departments"
+              value={departmentsQuery.data?.length ?? 0}
+              icon={<ApartmentOutlined />}
+              color="#ff9500"
+              onClick={() => navigate('/departments')}
+            />
           </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="Recent Audit Actions"
-                value={auditLogsQuery.data?.totalCount ?? 0}
-                prefix={<FileSearchOutlined />}
-              />
-            </Card>
+          <Col xs={24} sm={12} lg={6}>
+            <StatCard
+              label="Audit Events"
+              value={auditLogsQuery.data?.totalCount ?? 0}
+              icon={<FileSearchOutlined />}
+              color="#af52de"
+              onClick={() => navigate('/audit-logs')}
+            />
           </Col>
         </Row>
       </Spin>

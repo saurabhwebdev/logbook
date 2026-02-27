@@ -5,9 +5,7 @@ import {
   Dropdown,
   Avatar,
   Typography,
-  Tag,
   Flex,
-  theme,
 } from 'antd';
 import {
   DashboardOutlined,
@@ -19,23 +17,23 @@ import {
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  ProfileOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
 import { useAuth } from '../contexts/AuthContext';
 
-const { Header, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 const { Text } = Typography;
+
+const SIDEBAR_WIDTH = 240;
+const SIDEBAR_COLLAPSED_WIDTH = 72;
 
 export default function MainLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const { user, logout, hasPermission } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
 
   const menuItems = useMemo(() => {
     const items: MenuProps['items'] = [
@@ -89,27 +87,37 @@ export default function MainLayout() {
     return items;
   }, [hasPermission]);
 
-  // Determine the active menu key from the current path
   const selectedKey = useMemo(() => {
     const path = location.pathname;
     if (path === '/') return '/';
-    // Match the first segment, e.g. /users/new -> /users
     const match = path.match(/^\/[^/]+/);
     return match ? match[0] : '/';
   }, [location.pathname]);
 
   const userMenuItems: MenuProps['items'] = [
     {
-      key: 'profile',
-      icon: <ProfileOutlined />,
-      label: 'Profile',
+      key: 'info',
+      label: (
+        <div style={{ padding: '4px 0' }}>
+          <div style={{ fontWeight: 600, fontSize: 13, color: '#1d1d1f' }}>
+            {user?.firstName} {user?.lastName}
+          </div>
+          <div style={{ fontSize: 12, color: '#86868b' }}>{user?.email}</div>
+        </div>
+      ),
       disabled: true,
     },
     { type: 'divider' },
     {
+      key: 'settings',
+      icon: <SettingOutlined />,
+      label: 'Settings',
+      disabled: true,
+    },
+    {
       key: 'logout',
       icon: <LogoutOutlined />,
-      label: 'Logout',
+      label: 'Sign out',
       danger: true,
     },
   ];
@@ -124,13 +132,18 @@ export default function MainLayout() {
     }
   };
 
+  const siderWidth = collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_WIDTH;
+
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', background: '#f8f9fa' }}>
+      {/* Sidebar */}
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={setCollapsed}
-        theme="dark"
+        width={SIDEBAR_WIDTH}
+        collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
+        trigger={null}
         style={{
           overflow: 'auto',
           height: '100vh',
@@ -138,86 +151,143 @@ export default function MainLayout() {
           left: 0,
           top: 0,
           bottom: 0,
+          background: '#ffffff',
+          borderRight: '1px solid #e5e5ea',
+          zIndex: 20,
         }}
       >
+        {/* Logo */}
+        <Flex
+          align="center"
+          gap={10}
+          style={{
+            height: 56,
+            padding: collapsed ? '0 20px' : '0 20px',
+            borderBottom: '1px solid #f2f2f7',
+            cursor: 'pointer',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+          }}
+          onClick={() => navigate('/')}
+        >
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              minWidth: 32,
+              borderRadius: 8,
+              background: 'linear-gradient(135deg, #0071e3, #00a1ff)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#fff',
+              fontWeight: 700,
+              fontSize: 14,
+              letterSpacing: -0.5,
+            }}
+          >
+            CE
+          </div>
+          {!collapsed && (
+            <Text style={{ fontWeight: 700, fontSize: 16, color: '#1d1d1f', letterSpacing: -0.3 }}>
+              CoreEngine
+            </Text>
+          )}
+        </Flex>
+
+        {/* Navigation */}
+        <div style={{ padding: '12px 0', flex: 1 }}>
+          <Menu
+            mode="inline"
+            selectedKeys={[selectedKey]}
+            items={menuItems}
+            onClick={handleMenuClick}
+            style={{ border: 'none', background: 'transparent' }}
+          />
+        </div>
+
+        {/* Sidebar footer — collapse toggle */}
         <Flex
           align="center"
           justify="center"
           style={{
-            height: 64,
-            color: '#ffffff',
-            fontSize: collapsed ? 14 : 18,
-            fontWeight: 700,
-            letterSpacing: 1,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
+            height: 48,
+            borderTop: '1px solid #f2f2f7',
+            cursor: 'pointer',
+            color: '#86868b',
+            transition: 'color 0.2s',
           }}
+          onClick={() => setCollapsed(!collapsed)}
         >
-          {collapsed ? 'CE' : 'CoreEngine'}
+          {collapsed ? (
+            <MenuUnfoldOutlined style={{ fontSize: 16 }} />
+          ) : (
+            <MenuFoldOutlined style={{ fontSize: 16 }} />
+          )}
         </Flex>
-        <Menu
-          theme="dark"
-          mode="inline"
-          selectedKeys={[selectedKey]}
-          items={menuItems}
-          onClick={handleMenuClick}
-        />
       </Sider>
 
-      <Layout style={{ marginLeft: collapsed ? 80 : 200, transition: 'margin-left 0.2s' }}>
-        <Header
+      {/* Main content area */}
+      <Layout
+        style={{
+          marginLeft: siderWidth,
+          transition: 'margin-left 0.2s',
+          background: '#f8f9fa',
+          minHeight: '100vh',
+        }}
+      >
+        {/* Top bar */}
+        <Flex
+          align="center"
+          justify="space-between"
           style={{
-            padding: '0 24px',
-            background: colorBgContainer,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            boxShadow: '0 1px 4px rgba(0, 0, 0, 0.08)',
+            height: 56,
+            padding: '0 28px',
+            background: '#ffffff',
+            borderBottom: '1px solid #e5e5ea',
             position: 'sticky',
             top: 0,
             zIndex: 10,
           }}
         >
-          <Flex align="center" gap={16}>
-            <span
-              onClick={() => setCollapsed(!collapsed)}
-              style={{ fontSize: 18, cursor: 'pointer', lineHeight: 1 }}
-            >
-              {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            </span>
-          </Flex>
-
-          <Flex align="center" gap={16}>
+          {/* Left side — tenant badge */}
+          <Flex align="center" gap={8}>
             {user?.tenantName && (
-              <Tag color="blue">{user.tenantName}</Tag>
+              <Text style={{ fontSize: 13, color: '#86868b', fontWeight: 500 }}>
+                {user.tenantName}
+              </Text>
             )}
-            <Dropdown
-              menu={{ items: userMenuItems, onClick: handleUserMenuClick }}
-              placement="bottomRight"
-              trigger={['click']}
-            >
-              <Flex
-                align="center"
-                gap={8}
-                style={{ cursor: 'pointer' }}
-              >
-                <Avatar size="small" icon={<UserOutlined />} />
-                <Text style={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {user?.firstName} {user?.lastName}
-                </Text>
-              </Flex>
-            </Dropdown>
           </Flex>
-        </Header>
 
+          {/* Right side — user dropdown */}
+          <Dropdown
+            menu={{ items: userMenuItems, onClick: handleUserMenuClick }}
+            placement="bottomRight"
+            trigger={['click']}
+          >
+            <Flex align="center" gap={10} style={{ cursor: 'pointer' }}>
+              <Text style={{ fontSize: 13, fontWeight: 500, color: '#1d1d1f' }}>
+                {user?.firstName} {user?.lastName}
+              </Text>
+              <Avatar
+                size={32}
+                style={{
+                  background: '#0071e3',
+                  fontSize: 13,
+                  fontWeight: 600,
+                }}
+              >
+                {user?.firstName?.[0]}{user?.lastName?.[0]}
+              </Avatar>
+            </Flex>
+          </Dropdown>
+        </Flex>
+
+        {/* Page content */}
         <Content
           style={{
-            margin: 24,
-            padding: 24,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-            overflow: 'auto',
-            minHeight: 'calc(100vh - 112px)',
+            padding: 28,
+            minHeight: 'calc(100vh - 56px)',
           }}
         >
           <Outlet />

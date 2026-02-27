@@ -8,6 +8,7 @@ import {
   DatePicker,
   Row,
   Col,
+  Flex,
 } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { useQuery } from '@tanstack/react-query';
@@ -16,13 +17,13 @@ import type { Dayjs } from 'dayjs';
 import { auditLogsApi } from '../api/auditLogsApi';
 import type { AuditLog } from '../types';
 
-const { Title } = Typography;
+const { Text } = Typography;
 const { RangePicker } = DatePicker;
 
-const actionColorMap: Record<string, string> = {
-  Create: 'green',
-  Update: 'blue',
-  Delete: 'red',
+const actionConfig: Record<string, { color: string; bg: string }> = {
+  Create: { color: '#34c759', bg: '#f0fdf4' },
+  Update: { color: '#0071e3', bg: '#f0f5ff' },
+  Delete: { color: '#ff3b30', bg: '#fef2f2' },
 };
 
 export default function AuditLogsPage() {
@@ -53,7 +54,7 @@ export default function AuditLogsPage() {
   };
 
   const formatJson = (value: string | null): string => {
-    if (!value) return 'N/A';
+    if (!value) return '--';
     try {
       return JSON.stringify(JSON.parse(value), null, 2);
     } catch {
@@ -63,77 +64,111 @@ export default function AuditLogsPage() {
 
   const columns: ColumnsType<AuditLog> = [
     {
-      title: 'Timestamp',
+      title: 'Time',
       dataIndex: 'timestamp',
       key: 'timestamp',
-      render: (value: string) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
-      width: 180,
+      width: 160,
+      render: (value: string) => (
+        <Text style={{ fontSize: 13, color: '#6e6e73', fontVariantNumeric: 'tabular-nums' }}>
+          {dayjs(value).format('MMM D, YYYY HH:mm')}
+        </Text>
+      ),
     },
     {
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
-      render: (value: string) => (
-        <Tag color={actionColorMap[value] ?? 'default'}>{value}</Tag>
-      ),
-      width: 100,
+      width: 90,
+      render: (value: string) => {
+        const cfg = actionConfig[value] ?? { color: '#86868b', bg: '#f5f5f7' };
+        return (
+          <Tag style={{ background: cfg.bg, color: cfg.color, border: 'none', fontWeight: 500 }}>
+            {value}
+          </Tag>
+        );
+      },
     },
     {
       title: 'Entity',
       dataIndex: 'entityName',
       key: 'entityName',
-      width: 140,
+      width: 130,
+      render: (value: string) => (
+        <Text style={{ fontSize: 13, fontWeight: 500, color: '#1d1d1f' }}>{value}</Text>
+      ),
     },
     {
       title: 'Entity ID',
       dataIndex: 'entityId',
       key: 'entityId',
       ellipsis: true,
-      width: 280,
+      width: 240,
+      render: (value: string) => (
+        <Text style={{ fontSize: 12, color: '#86868b', fontFamily: 'monospace' }}>{value}</Text>
+      ),
     },
     {
       title: 'User',
       dataIndex: 'userId',
       key: 'userId',
       ellipsis: true,
-      width: 280,
+      width: 240,
+      render: (value: string) => (
+        <Text style={{ fontSize: 12, color: '#86868b', fontFamily: 'monospace' }}>{value}</Text>
+      ),
     },
     {
-      title: 'IP Address',
+      title: 'IP',
       dataIndex: 'ipAddress',
       key: 'ipAddress',
-      render: (value: string | null) => value ?? '-',
-      width: 140,
+      width: 120,
+      render: (value: string | null) => (
+        <Text style={{ fontSize: 12, color: '#86868b', fontFamily: 'monospace' }}>
+          {value ?? '--'}
+        </Text>
+      ),
     },
   ];
 
   const expandedRowRender = (record: AuditLog) => (
     <Row gutter={16}>
       <Col span={12}>
-        <Typography.Text strong>Old Values:</Typography.Text>
+        <Text style={{ fontWeight: 600, fontSize: 12, color: '#6e6e73', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          Old values
+        </Text>
         <pre
           style={{
-            background: '#f5f5f5',
-            padding: 12,
-            borderRadius: 4,
-            maxHeight: 300,
+            background: '#f8f9fa',
+            padding: 16,
+            borderRadius: 8,
+            maxHeight: 280,
             overflow: 'auto',
             fontSize: 12,
+            fontFamily: "'SF Mono', 'Fira Code', monospace",
+            marginTop: 8,
+            border: '1px solid #e5e5ea',
+            color: '#1d1d1f',
           }}
         >
           {formatJson(record.oldValues)}
         </pre>
       </Col>
       <Col span={12}>
-        <Typography.Text strong>New Values:</Typography.Text>
+        <Text style={{ fontWeight: 600, fontSize: 12, color: '#6e6e73', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          New values
+        </Text>
         <pre
           style={{
-            background: '#f5f5f5',
-            padding: 12,
-            borderRadius: 4,
-            maxHeight: 300,
+            background: '#f8f9fa',
+            padding: 16,
+            borderRadius: 8,
+            maxHeight: 280,
             overflow: 'auto',
             fontSize: 12,
+            fontFamily: "'SF Mono', 'Fira Code', monospace",
+            marginTop: 8,
+            border: '1px solid #e5e5ea',
+            color: '#1d1d1f',
           }}
         >
           {formatJson(record.newValues)}
@@ -144,79 +179,82 @@ export default function AuditLogsPage() {
 
   return (
     <div>
-      <Title level={3}>Audit Logs</Title>
+      {/* Page header */}
+      <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
+        <div>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Audit Logs</h2>
+          <Text style={{ fontSize: 13, color: '#86868b' }}>Track every change made across the system.</Text>
+        </div>
+      </Flex>
 
-      <Row gutter={16} style={{ marginBottom: 16 }}>
-        <Col span={6}>
+      {/* Filters */}
+      <div
+        style={{
+          background: '#ffffff',
+          borderRadius: 12,
+          border: '1px solid #e5e5ea',
+          padding: '16px 20px',
+          marginBottom: 16,
+        }}
+      >
+        <Flex gap={12} wrap="wrap">
           <RangePicker
-            style={{ width: '100%' }}
-            onChange={(dates) =>
-              setDateRange(dates as [Dayjs | null, Dayjs | null] | null)
-            }
-            placeholder={['Start Date', 'End Date']}
+            style={{ minWidth: 240 }}
+            onChange={(dates) => setDateRange(dates as [Dayjs | null, Dayjs | null] | null)}
+            placeholder={['Start date', 'End date']}
           />
-        </Col>
-        <Col span={5}>
           <Input
-            placeholder="Entity Name"
+            placeholder="Entity name"
             value={entityName}
-            onChange={(e) => {
-              setEntityName(e.target.value);
-              setPage(1);
-            }}
+            onChange={(e) => { setEntityName(e.target.value); setPage(1); }}
             allowClear
+            style={{ width: 160 }}
           />
-        </Col>
-        <Col span={4}>
           <Select
             placeholder="Action"
             value={action}
-            onChange={(value) => {
-              setAction(value);
-              setPage(1);
-            }}
+            onChange={(value) => { setAction(value); setPage(1); }}
             allowClear
-            style={{ width: '100%' }}
+            style={{ width: 120 }}
             options={[
               { label: 'Create', value: 'Create' },
               { label: 'Update', value: 'Update' },
               { label: 'Delete', value: 'Delete' },
             ]}
           />
-        </Col>
-        <Col span={5}>
           <Input
             placeholder="User ID"
             value={userId}
-            onChange={(e) => {
-              setUserId(e.target.value);
-              setPage(1);
-            }}
+            onChange={(e) => { setUserId(e.target.value); setPage(1); }}
             allowClear
+            style={{ width: 160 }}
           />
-        </Col>
-      </Row>
+        </Flex>
+      </div>
 
-      <Table<AuditLog>
-        rowKey="id"
-        columns={columns}
-        dataSource={data?.items ?? []}
-        loading={isLoading}
-        onChange={handleTableChange}
-        expandable={{
-          expandedRowRender,
-          rowExpandable: (record) =>
-            record.oldValues !== null || record.newValues !== null,
-        }}
-        pagination={{
-          current: page,
-          pageSize,
-          total: data?.totalCount ?? 0,
-          showSizeChanger: true,
-          showTotal: (total) => `Total ${total} records`,
-        }}
-        scroll={{ x: 1100 }}
-      />
+      {/* Table */}
+      <div style={{ background: '#ffffff', borderRadius: 12, border: '1px solid #e5e5ea', overflow: 'hidden' }}>
+        <Table<AuditLog>
+          rowKey="id"
+          columns={columns}
+          dataSource={data?.items ?? []}
+          loading={isLoading}
+          onChange={handleTableChange}
+          expandable={{
+            expandedRowRender,
+            rowExpandable: (record) => record.oldValues !== null || record.newValues !== null,
+          }}
+          pagination={{
+            current: page,
+            pageSize,
+            total: data?.totalCount ?? 0,
+            showSizeChanger: true,
+            showTotal: (total) => <Text style={{ fontSize: 13, color: '#86868b' }}>{total} events</Text>,
+            style: { padding: '0 16px' },
+          }}
+          scroll={{ x: 1000 }}
+        />
+      </div>
     </div>
   );
 }

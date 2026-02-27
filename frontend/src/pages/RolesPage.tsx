@@ -11,6 +11,7 @@ import {
   Checkbox,
   message,
   Spin,
+  Flex,
 } from 'antd';
 import {
   PlusOutlined,
@@ -27,7 +28,7 @@ import { permissionsApi } from '../api/permissionsApi';
 import type { Role } from '../types';
 import PermissionGate from '../components/PermissionGate';
 
-const { Title } = Typography;
+const { Text } = Typography;
 
 interface RoleFormValues {
   name: string;
@@ -51,7 +52,6 @@ export default function RolesPage() {
     queryFn: () => permissionsApi.getPermissions(),
   });
 
-  // Group permissions by module
   const permissionGroups = useMemo(() => {
     if (!permissionsQuery.data) return {};
     const groups: Record<string, string[]> = {};
@@ -67,16 +67,12 @@ export default function RolesPage() {
   const createMutation = useMutation({
     mutationFn: (data: CreateRoleRequest) => rolesApi.createRole(data),
     onSuccess: () => {
-      message.success('Role created successfully');
+      message.success('Role created');
       queryClient.invalidateQueries({ queryKey: ['roles'] });
       closeModal();
     },
     onError: (error: AxiosError<{ message?: string; title?: string }>) => {
-      const msg =
-        error.response?.data?.message ||
-        error.response?.data?.title ||
-        'Failed to create role';
-      message.error(msg);
+      message.error(error.response?.data?.message || error.response?.data?.title || 'Failed to create role');
     },
   });
 
@@ -84,23 +80,19 @@ export default function RolesPage() {
     mutationFn: ({ id, data }: { id: string; data: UpdateRoleRequest }) =>
       rolesApi.updateRole(id, data),
     onSuccess: () => {
-      message.success('Role updated successfully');
+      message.success('Role updated');
       queryClient.invalidateQueries({ queryKey: ['roles'] });
       closeModal();
     },
     onError: (error: AxiosError<{ message?: string; title?: string }>) => {
-      const msg =
-        error.response?.data?.message ||
-        error.response?.data?.title ||
-        'Failed to update role';
-      message.error(msg);
+      message.error(error.response?.data?.message || error.response?.data?.title || 'Failed to update role');
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => rolesApi.deleteRole(id),
     onSuccess: () => {
-      message.success('Role deleted successfully');
+      message.success('Role deleted');
       queryClient.invalidateQueries({ queryKey: ['roles'] });
     },
     onError: () => {
@@ -136,11 +128,7 @@ export default function RolesPage() {
       if (editingRole) {
         updateMutation.mutate({
           id: editingRole.id,
-          data: {
-            name: values.name,
-            description: values.description,
-            permissionIds: values.permissionIds ?? [],
-          },
+          data: { name: values.name, description: values.description, permissionIds: values.permissionIds ?? [] },
         });
       } else {
         createMutation.mutate({
@@ -150,7 +138,7 @@ export default function RolesPage() {
         });
       }
     } catch {
-      // form validation failed
+      // validation
     }
   };
 
@@ -160,9 +148,9 @@ export default function RolesPage() {
       return;
     }
     Modal.confirm({
-      title: 'Delete Role',
+      title: 'Delete role',
       icon: <ExclamationCircleOutlined />,
-      content: `Are you sure you want to delete role "${role.name}"?`,
+      content: `This will permanently delete "${role.name}". This action cannot be undone.`,
       okText: 'Delete',
       okType: 'danger',
       onOk: () => deleteMutation.mutateAsync(role.id),
@@ -171,54 +159,65 @@ export default function RolesPage() {
 
   const columns: ColumnsType<Role> = [
     {
-      title: 'Name',
-      dataIndex: 'name',
+      title: 'Role',
       key: 'name',
+      render: (_, record) => (
+        <div>
+          <div style={{ fontWeight: 500, color: '#1d1d1f', fontSize: 13 }}>
+            {record.name}
+          </div>
+          <div style={{ fontSize: 12, color: '#86868b' }}>{record.description}</div>
+        </div>
+      ),
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-      ellipsis: true,
-    },
-    {
-      title: 'System Role',
+      title: 'Type',
       dataIndex: 'isSystemRole',
       key: 'isSystemRole',
+      width: 100,
       render: (value: boolean) =>
-        value ? <Tag color="gold">System</Tag> : <Tag>Custom</Tag>,
+        value ? (
+          <Tag style={{ background: '#fff7ed', color: '#f59e0b', border: 'none', fontWeight: 500 }}>System</Tag>
+        ) : (
+          <Tag style={{ background: '#f5f5f7', color: '#86868b', border: 'none', fontWeight: 500 }}>Custom</Tag>
+        ),
     },
     {
-      title: 'Permission Count',
+      title: 'Permissions',
       dataIndex: 'permissionCount',
       key: 'permissionCount',
+      width: 120,
+      render: (count: number) => (
+        <Text style={{ fontSize: 13, color: '#6e6e73' }}>{count}</Text>
+      ),
       sorter: (a, b) => a.permissionCount - b.permissionCount,
     },
     {
-      title: 'Actions',
+      title: '',
       key: 'actions',
+      width: 100,
+      align: 'right',
       render: (_, record) => (
-        <Space>
+        <Space size={0}>
           <PermissionGate permission="Role.Update">
             <Button
-              type="link"
+              type="text"
+              size="small"
               icon={<EditOutlined />}
               onClick={() => openEditModal(record)}
-            >
-              Edit
-            </Button>
+              style={{ color: '#86868b' }}
+            />
           </PermissionGate>
           <PermissionGate permission="Role.Delete">
             <Button
-              type="link"
+              type="text"
+              size="small"
               danger
               icon={<DeleteOutlined />}
               disabled={record.isSystemRole}
               onClick={() => handleDelete(record)}
-            >
-              Delete
-            </Button>
+            />
           </PermissionGate>
         </Space>
       ),
@@ -229,79 +228,91 @@ export default function RolesPage() {
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 16,
-        }}
-      >
-        <Title level={3} style={{ margin: 0 }}>
-          Roles
-        </Title>
+      <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
+        <div>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Roles</h2>
+          <Text style={{ fontSize: 13, color: '#86868b' }}>Define roles and assign permissions.</Text>
+        </div>
         <PermissionGate permission="Role.Create">
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={openCreateModal}
-          >
-            New Role
+          <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
+            Add role
           </Button>
         </PermissionGate>
+      </Flex>
+
+      <div
+        style={{
+          background: '#ffffff',
+          borderRadius: 12,
+          border: '1px solid #e5e5ea',
+          overflow: 'hidden',
+        }}
+      >
+        <Table<Role>
+          rowKey="id"
+          columns={columns}
+          dataSource={rolesQuery.data ?? []}
+          loading={rolesQuery.isLoading}
+          pagination={{ showSizeChanger: true, style: { padding: '0 16px' } }}
+        />
       </div>
 
-      <Table<Role>
-        rowKey="id"
-        columns={columns}
-        dataSource={rolesQuery.data ?? []}
-        loading={rolesQuery.isLoading}
-        pagination={{ showSizeChanger: true }}
-      />
-
       <Modal
-        title={editingRole ? 'Edit Role' : 'New Role'}
+        title={editingRole ? 'Edit role' : 'New role'}
         open={modalOpen}
         onOk={handleModalOk}
         onCancel={closeModal}
         confirmLoading={isMutating}
-        width={700}
+        width={640}
         destroyOnClose
+        okText={editingRole ? 'Save changes' : 'Create'}
       >
         <Form<RoleFormValues>
           form={form}
           layout="vertical"
           initialValues={{ permissionIds: [] }}
+          requiredMark={false}
         >
           <Form.Item
             name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Role name is required' }]}
+            label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Name</Text>}
+            rules={[{ required: true, message: 'Required' }]}
           >
-            <Input placeholder="Role name" />
+            <Input placeholder="e.g. Editor, Viewer" />
           </Form.Item>
 
           <Form.Item
             name="description"
-            label="Description"
-            rules={[{ required: true, message: 'Description is required' }]}
+            label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Description</Text>}
+            rules={[{ required: true, message: 'Required' }]}
           >
-            <Input.TextArea rows={2} placeholder="Role description" />
+            <Input.TextArea rows={2} placeholder="What can this role do?" />
           </Form.Item>
 
-          <Form.Item name="permissionIds" label="Permissions">
+          <Form.Item
+            name="permissionIds"
+            label={<Text style={{ fontWeight: 500, fontSize: 13 }}>Permissions</Text>}
+          >
             {permissionsQuery.isLoading ? (
               <Spin />
             ) : (
               <Checkbox.Group style={{ width: '100%' }}>
                 {Object.entries(permissionGroups).map(([module, perms]) => (
-                  <div key={module} style={{ marginBottom: 12 }}>
-                    <Typography.Text strong style={{ display: 'block', marginBottom: 4 }}>
+                  <div
+                    key={module}
+                    style={{
+                      marginBottom: 16,
+                      padding: '12px 16px',
+                      background: '#f8f9fa',
+                      borderRadius: 8,
+                    }}
+                  >
+                    <Text style={{ fontWeight: 600, fontSize: 12, color: '#6e6e73', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       {module}
-                    </Typography.Text>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    </Text>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 8 }}>
                       {perms.map((perm) => (
-                        <Checkbox key={perm} value={perm}>
+                        <Checkbox key={perm} value={perm} style={{ fontSize: 13 }}>
                           {perm.substring(perm.indexOf('.') + 1)}
                         </Checkbox>
                       ))}
