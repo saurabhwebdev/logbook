@@ -155,6 +155,7 @@ export default function ReportsPage() {
             <Select options={[
               { label: 'Excel', value: 'Excel' },
               { label: 'CSV', value: 'Csv' },
+              { label: 'PDF', value: 'PDF' },
             ]} />
           </Form.Item>
         </Form>

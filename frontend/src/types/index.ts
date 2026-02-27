@@ -64,6 +64,16 @@ export interface AuditLog {
   timestamp: string;
 }
 
+export interface UserActivity {
+  id: number;
+  action: string;
+  entityName: string;
+  entityId: string;
+  oldValues: string | null;
+  newValues: string | null;
+  timestamp: string;
+}
+
 export interface Tenant {
   id: string;
   name: string;

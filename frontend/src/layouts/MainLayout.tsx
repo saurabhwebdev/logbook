@@ -28,6 +28,7 @@ import {
   ExperimentOutlined,
   FormatPainterOutlined,
   QuestionCircleOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -35,6 +36,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTenantTheme } from '../contexts/ThemeContext';
 import HelpDrawer from '../components/HelpDrawer';
 import UserAvatar from '../components/UserAvatar';
+import GlobalSearch from '../components/GlobalSearch';
 
 const { Sider, Content } = Layout;
 const { Text } = Typography;
@@ -49,6 +51,7 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/roles': 'Roles',
   '/departments': 'Departments',
   '/audit-logs': 'AuditLogs',
+  '/activity': 'Activity',
   '/tenants': 'Tenants',
   '/settings': 'Settings',
   '/feature-flags': 'FeatureFlags',
@@ -122,6 +125,11 @@ export default function MainLayout() {
         key: '/audit-logs',
         icon: <FileSearchOutlined />,
         label: 'Audit Logs',
+      });
+      items.push({
+        key: '/activity',
+        icon: <ClockCircleOutlined />,
+        label: 'My Activity',
       });
     }
 
@@ -240,6 +248,7 @@ export default function MainLayout() {
       roles: 'Roles',
       departments: 'Departments',
       'audit-logs': 'Audit Logs',
+      activity: 'My Activity',
       tenants: 'Tenants',
       settings: 'Settings',
       'feature-flags': 'Feature Flags',
@@ -486,8 +495,9 @@ export default function MainLayout() {
             />
           </ConfigProvider>
 
-          {/* Right side — help + user dropdown */}
+          {/* Right side — search + help + user dropdown */}
           <Flex align="center" gap={16}>
+          <GlobalSearch />
           <QuestionCircleOutlined
             onClick={openHelp}
             style={{ fontSize: 18, color: '#86868b', cursor: 'pointer', transition: 'color 0.2s' }}

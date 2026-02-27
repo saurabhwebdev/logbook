@@ -3,6 +3,9 @@ using CoreEngine.Application.Common.Interfaces;
 using ClosedXML.Excel;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 using System.Text;
 
 namespace CoreEngine.Application.Features.Reports.Commands.ExportReport;
@@ -24,10 +27,12 @@ public class ExportReportCommandHandler : IRequestHandler<ExportReportCommand, E
 
         var (headers, rows) = await GetEntityData(report.EntityType, ct);
 
-        if (report.ExportFormat == "Csv")
-            return GenerateCsv(headers, rows, report.Name);
-
-        return GenerateExcel(headers, rows, report.Name);
+        return report.ExportFormat switch
+        {
+            "Csv" => GenerateCsv(headers, rows, report.Name),
+            "PDF" => GeneratePdf(headers, rows, report.Name),
+            _ => GenerateExcel(headers, rows, report.Name)
+        };
     }
 
     private async Task<(List<string> Headers, List<List<string>> Rows)> GetEntityData(string entityType, CancellationToken ct)
@@ -135,5 +140,88 @@ public class ExportReportCommandHandler : IRequestHandler<ExportReportCommand, E
         if (value.Contains(',') || value.Contains('"') || value.Contains('\n'))
             return $"\"{value.Replace("\"", "\"\"")}\"";
         return value;
+    }
+
+    private static ExportResultDto GeneratePdf(List<string> headers, List<List<string>> rows, string reportName)
+    {
+        QuestPDF.Settings.License = LicenseType.Community;
+
+        var document = Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4.Landscape());
+                page.Margin(2, QuestPDF.Infrastructure.Unit.Centimetre);
+                page.PageColor(Colors.White);
+                page.DefaultTextStyle(x => x.FontSize(10).FontFamily("Arial"));
+
+                // Header
+                page.Header().Element(ComposeHeader);
+
+                // Content
+                page.Content().Element(container => ComposeContent(container, headers, rows));
+
+                // Footer with page numbers
+                page.Footer().AlignCenter().Text(x =>
+                {
+                    x.Span("Page ");
+                    x.CurrentPageNumber();
+                    x.Span(" of ");
+                    x.TotalPages();
+                });
+            });
+        });
+
+        void ComposeHeader(IContainer container)
+        {
+            container.Column(column =>
+            {
+                column.Item().Text(reportName).FontSize(16).Bold().FontColor(Colors.Blue.Darken2);
+                column.Item().Text($"Generated on {DateTime.UtcNow:MMMM dd, yyyy HH:mm} UTC").FontSize(9).FontColor(Colors.Grey.Darken1);
+                column.Item().PaddingBottom(10).LineHorizontal(1).LineColor(Colors.Grey.Lighten1);
+            });
+        }
+
+        void ComposeContent(IContainer container, List<string> headers, List<List<string>> rows)
+        {
+            container.Table(table =>
+            {
+                // Define columns
+                table.ColumnsDefinition(columns =>
+                {
+                    foreach (var _ in headers)
+                    {
+                        columns.RelativeColumn();
+                    }
+                });
+
+                // Header row
+                table.Header(header =>
+                {
+                    foreach (var headerText in headers)
+                    {
+                        header.Cell().Element(CellStyle).Background(Colors.Grey.Lighten2).Text(headerText).Bold().FontSize(9);
+                    }
+                });
+
+                // Data rows
+                foreach (var row in rows)
+                {
+                    foreach (var cell in row)
+                    {
+                        table.Cell().Element(CellStyle).Text(cell ?? "").FontSize(9);
+                    }
+                }
+
+                static IContainer CellStyle(IContainer container)
+                {
+                    return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5);
+                }
+            });
+        }
+
+        var pdfBytes = document.GeneratePdf();
+        var fileName = $"{reportName.Replace(" ", "_")}_{DateTime.UtcNow:yyyyMMdd}.pdf";
+        return new ExportResultDto(pdfBytes, "application/pdf", fileName);
     }
 }

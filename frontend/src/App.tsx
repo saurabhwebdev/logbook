@@ -26,6 +26,7 @@ import HelpPage from './pages/HelpPage';
 import HelpArticleViewPage from './pages/HelpArticleViewPage';
 import HelpFormPage from './pages/HelpFormPage';
 import ProfilePage from './pages/ProfilePage';
+import ActivityFeedPage from './pages/ActivityFeedPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -92,6 +93,7 @@ function ThemedApp() {
             <Route element={<MainLayout />}>
               <Route index element={<DashboardPage />} />
               <Route path="profile" element={<ProfilePage />} />
+              <Route path="activity" element={<ActivityFeedPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="users/new" element={<UserFormPage />} />
               <Route path="users/:id/edit" element={<UserFormPage />} />

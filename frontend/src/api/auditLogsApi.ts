@@ -1,5 +1,5 @@
 import apiClient from './axios';
-import type { AuditLog, PaginatedResult } from '../types';
+import type { AuditLog, PaginatedResult, UserActivity } from '../types';
 
 export interface GetAuditLogsParams {
   pageNumber: number;
@@ -18,6 +18,14 @@ export const auditLogsApi = {
     const response = await apiClient.get<PaginatedResult<AuditLog>>(
       '/auditlogs',
       { params }
+    );
+    return response.data;
+  },
+
+  getUserActivity: async (limit: number = 50): Promise<UserActivity[]> => {
+    const response = await apiClient.get<UserActivity[]>(
+      '/auditlogs/my-activity',
+      { params: { limit } }
     );
     return response.data;
   },
