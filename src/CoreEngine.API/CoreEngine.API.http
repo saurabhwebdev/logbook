@@ -1,0 +1,6 @@
+@CoreEngine.API_HostAddress = http://localhost:5034
+
+GET {{CoreEngine.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
