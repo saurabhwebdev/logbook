@@ -319,6 +319,23 @@ export default function MainLayout() {
   return (
     <Layout style={{ minHeight: '100vh', background: '#f8f9fa' }}>
       {/* Sidebar */}
+      <style>
+        {`
+          .sidebar-scroll::-webkit-scrollbar {
+            width: 6px;
+          }
+          .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #e5e5ea;
+            border-radius: 3px;
+          }
+          .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+            background: #d1d1d6;
+          }
+        `}
+      </style>
       <Sider
         collapsible
         collapsed={collapsed}
@@ -326,6 +343,7 @@ export default function MainLayout() {
         width={SIDEBAR_WIDTH}
         collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
         trigger={null}
+        className="sidebar-scroll"
         style={{
           overflow: 'auto',
           height: '100vh',
@@ -397,20 +415,27 @@ export default function MainLayout() {
         {/* Sidebar footer — collapse toggle */}
         <Flex
           align="center"
-          justify="center"
+          justify={collapsed ? 'center' : 'flex-start'}
+          gap={10}
           style={{
             height: 48,
+            padding: collapsed ? '0' : '0 20px',
             borderTop: '1px solid #f2f2f7',
             cursor: 'pointer',
             color: sidebarTextColor,
-            transition: 'color 0.2s',
+            transition: 'all 0.2s',
           }}
           onClick={() => setCollapsed(!collapsed)}
         >
           {collapsed ? (
             <MenuUnfoldOutlined style={{ fontSize: 16 }} />
           ) : (
-            <MenuFoldOutlined style={{ fontSize: 16 }} />
+            <>
+              <MenuFoldOutlined style={{ fontSize: 16 }} />
+              <Text style={{ fontSize: 13, color: sidebarTextColor, fontWeight: 500 }}>
+                Collapse
+              </Text>
+            </>
           )}
         </Flex>
       </Sider>
