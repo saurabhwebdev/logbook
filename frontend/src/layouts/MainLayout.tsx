@@ -291,10 +291,9 @@ export default function MainLayout() {
     },
     { type: 'divider' },
     {
-      key: 'settings',
-      icon: <SettingOutlined />,
-      label: 'Settings',
-      disabled: true,
+      key: 'profile',
+      icon: <UserOutlined />,
+      label: 'My Profile',
     },
     {
       key: 'logout',
@@ -311,6 +310,8 @@ export default function MainLayout() {
   const handleUserMenuClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'logout') {
       logout();
+    } else if (key === 'profile') {
+      navigate('/profile');
     }
   };
 
