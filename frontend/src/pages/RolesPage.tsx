@@ -13,6 +13,7 @@ import {
   Spin,
   Flex,
 } from 'antd';
+import EmptyState from '../components/EmptyState';
 import {
   PlusOutlined,
   EditOutlined,
@@ -24,6 +25,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { rolesApi } from '../api/rolesApi';
 import type { CreateRoleRequest, UpdateRoleRequest } from '../api/rolesApi';
+import { useAuth } from '../contexts/AuthContext';
 import { permissionsApi } from '../api/permissionsApi';
 import type { Role } from '../types';
 import PermissionGate from '../components/PermissionGate';
@@ -38,6 +40,7 @@ interface RoleFormValues {
 
 export default function RolesPage() {
   const queryClient = useQueryClient();
+  const { hasPermission } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingRole, setEditingRole] = useState<Role | null>(null);
   const [form] = Form.useForm<RoleFormValues>();
@@ -253,6 +256,24 @@ export default function RolesPage() {
           columns={columns}
           dataSource={rolesQuery.data ?? []}
           loading={rolesQuery.isLoading}
+          locale={{
+            emptyText: (
+              <EmptyState
+                title="No roles yet"
+                description="Create your first role to define permissions and access levels for users in your organization."
+                size={180}
+                action={
+                  hasPermission('Role.Create')
+                    ? {
+                        label: 'Create First Role',
+                        onClick: () => setModalOpen(true),
+                        icon: <PlusOutlined />,
+                      }
+                    : undefined
+                }
+              />
+            ),
+          }}
           pagination={{ showSizeChanger: true, style: { padding: '0 16px' } }}
         />
       </div>

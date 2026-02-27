@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { filesApi } from '../api/filesApi';
 import type { FileMetadata } from '../types';
+import EmptyState from '../components/EmptyState';
 
 const { Text } = Typography;
 const { Search } = Input;
@@ -148,7 +149,35 @@ export default function FilesPage() {
       </div>
 
       <div style={{ background: '#ffffff', borderRadius: 12, border: '1px solid #e5e5ea', overflow: 'hidden' }}>
-        <Table<FileMetadata> rowKey="id" columns={columns} dataSource={filtered} loading={isLoading} pagination={{ showSizeChanger: true, style: { padding: '0 16px' } }} />
+        <Table<FileMetadata>
+          rowKey="id"
+          columns={columns}
+          dataSource={filtered}
+          loading={isLoading}
+          locale={{
+            emptyText: (
+              <EmptyState
+                title={search ? "No files found" : "No files yet"}
+                description={
+                  search
+                    ? "No files match your search criteria. Try adjusting your search terms."
+                    : "Upload your first file to get started with file management."
+                }
+                size={180}
+                action={
+                  !search
+                    ? {
+                        label: 'Upload First File',
+                        onClick: () => setUploadOpen(true),
+                        icon: <UploadOutlined />,
+                      }
+                    : undefined
+                }
+              />
+            ),
+          }}
+          pagination={{ showSizeChanger: true, style: { padding: '0 16px' } }}
+        />
       </div>
 
       <Modal title="Upload File" open={uploadOpen} onCancel={() => setUploadOpen(false)} onOk={handleUpload} confirmLoading={uploadMutation.isPending} okText="Upload">

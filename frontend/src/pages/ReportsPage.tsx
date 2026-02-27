@@ -7,11 +7,14 @@ import dayjs from 'dayjs';
 import { reportsApi } from '../api/reportsApi';
 import { useTenantTheme } from '../contexts/ThemeContext';
 import type { ReportDefinition } from '../types';
+import { useAuth } from '../contexts/AuthContext';
+import EmptyState from '../components/EmptyState';
 
 const { Text } = Typography;
 
 export default function ReportsPage() {
   const { theme } = useTenantTheme();
+  const { hasPermission } = useAuth();
   const primaryColor = theme?.primaryColor || '#0071e3';
   const [createOpen, setCreateOpen] = useState(false);
   const [form] = Form.useForm();
@@ -128,7 +131,31 @@ export default function ReportsPage() {
       </Flex>
 
       <div style={{ background: '#ffffff', borderRadius: 12, border: '1px solid #e5e5ea', overflow: 'hidden' }}>
-        <Table<ReportDefinition> rowKey="id" columns={columns} dataSource={data ?? []} loading={isLoading} pagination={false} />
+        <Table<ReportDefinition>
+          rowKey="id"
+          columns={columns}
+          dataSource={data ?? []}
+          loading={isLoading}
+          locale={{
+            emptyText: (
+              <EmptyState
+                title="No reports yet"
+                description="Create your first report to export data from any entity in the system."
+                size={180}
+                action={
+                  hasPermission('Report.Create')
+                    ? {
+                        label: 'Create First Report',
+                        onClick: () => setCreateOpen(true),
+                        icon: <PlusOutlined />,
+                      }
+                    : undefined
+                }
+              />
+            ),
+          }}
+          pagination={false}
+        />
       </div>
 
       <Modal title="New Report" open={createOpen} onCancel={() => setCreateOpen(false)} onOk={handleCreate} confirmLoading={createMutation.isPending} okText="Create">
