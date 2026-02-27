@@ -40,6 +40,37 @@ public static class Permissions
         public const string Update = "Tenant.Update";
     }
 
+    public static class Configuration
+    {
+        public const string Read = "Configuration.Read";
+        public const string Update = "Configuration.Update";
+    }
+
+    public static class FeatureFlags
+    {
+        public const string Read = "FeatureFlag.Read";
+        public const string Update = "FeatureFlag.Update";
+    }
+
+    public static class Notifications
+    {
+        public const string Read = "Notification.Read";
+        public const string Send = "Notification.Send";
+    }
+
+    public static class StateMachine
+    {
+        public const string Read = "StateMachine.Read";
+        public const string Manage = "StateMachine.Manage";
+        public const string Transition = "StateMachine.Transition";
+    }
+
+    public static class BackgroundJobs
+    {
+        public const string Read = "BackgroundJob.Read";
+        public const string Manage = "BackgroundJob.Manage";
+    }
+
     /// <summary>
     /// Collects all permission strings via reflection for seeding.
     /// </summary>

@@ -112,7 +112,7 @@ public static class DatabaseSeeder
             }
         }
 
-        // Admin role - User, Role, Department, AuditLog.Read, Tenant.Read permissions
+        // Admin role - User, Role, Department, AuditLog.Read, Tenant.Read + Phase 2 read permissions
         var adminPermissionFilter = new HashSet<string>
         {
             Permissions.Users.Create,
@@ -128,7 +128,19 @@ public static class DatabaseSeeder
             Permissions.Departments.Update,
             Permissions.Departments.Delete,
             Permissions.AuditLogs.Read,
-            Permissions.Tenants.Read
+            Permissions.Tenants.Read,
+            // Phase 2
+            Permissions.Configuration.Read,
+            Permissions.Configuration.Update,
+            Permissions.FeatureFlags.Read,
+            Permissions.FeatureFlags.Update,
+            Permissions.Notifications.Read,
+            Permissions.Notifications.Send,
+            Permissions.StateMachine.Read,
+            Permissions.StateMachine.Manage,
+            Permissions.StateMachine.Transition,
+            Permissions.BackgroundJobs.Read,
+            Permissions.BackgroundJobs.Manage,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -226,6 +238,115 @@ public static class DatabaseSeeder
                 RoleId = superAdminRole.Id
             });
 
+            await context.SaveChangesAsync();
+        }
+
+        // 5. Seed Phase 2 defaults
+        await SeedPhase2Defaults(context);
+    }
+
+    private static async Task SeedPhase2Defaults(ApplicationDbContext context)
+    {
+        // Default system configurations
+        var existingConfigs = await context.SystemConfigurations
+            .IgnoreQueryFilters()
+            .Where(c => c.TenantId == DefaultTenantId)
+            .ToListAsync();
+
+        if (!existingConfigs.Any())
+        {
+            var defaultConfigs = new[]
+            {
+                new SystemConfiguration { Key = "App.Name", Value = "CoreEngine", Category = "General", Description = "Application display name", DataType = "String", TenantId = DefaultTenantId },
+                new SystemConfiguration { Key = "App.PageSize", Value = "25", Category = "General", Description = "Default page size for lists", DataType = "Int", TenantId = DefaultTenantId },
+                new SystemConfiguration { Key = "Email.FromAddress", Value = "noreply@coreengine.local", Category = "Email", Description = "Default sender email", DataType = "String", TenantId = DefaultTenantId },
+                new SystemConfiguration { Key = "Email.FromName", Value = "CoreEngine", Category = "Email", Description = "Default sender name", DataType = "String", TenantId = DefaultTenantId },
+                new SystemConfiguration { Key = "Session.TimeoutMinutes", Value = "60", Category = "Security", Description = "Session timeout in minutes", DataType = "Int", TenantId = DefaultTenantId },
+                new SystemConfiguration { Key = "Password.MinLength", Value = "8", Category = "Security", Description = "Minimum password length", DataType = "Int", TenantId = DefaultTenantId },
+            };
+
+            foreach (var cfg in defaultConfigs)
+            {
+                cfg.CreatedAt = DateTime.UtcNow;
+                cfg.CreatedBy = AppConstants.SystemUser;
+            }
+
+            context.SystemConfigurations.AddRange(defaultConfigs);
+            await context.SaveChangesAsync();
+        }
+
+        // Default feature flags
+        var existingFlags = await context.FeatureFlags
+            .IgnoreQueryFilters()
+            .Where(f => f.TenantId == DefaultTenantId)
+            .ToListAsync();
+
+        if (!existingFlags.Any())
+        {
+            var defaultFlags = new[]
+            {
+                new FeatureFlag { Name = "Notifications.Email", Description = "Enable email notifications", IsEnabled = false, TenantId = DefaultTenantId },
+                new FeatureFlag { Name = "Notifications.InApp", Description = "Enable in-app notifications", IsEnabled = true, TenantId = DefaultTenantId },
+                new FeatureFlag { Name = "AuditLog.DetailedDiff", Description = "Show detailed field-level diffs in audit logs", IsEnabled = true, TenantId = DefaultTenantId },
+                new FeatureFlag { Name = "StateMachine.Enabled", Description = "Enable state machine transitions", IsEnabled = true, TenantId = DefaultTenantId },
+                new FeatureFlag { Name = "BackgroundJobs.Enabled", Description = "Enable background job processing", IsEnabled = true, TenantId = DefaultTenantId },
+            };
+
+            foreach (var flag in defaultFlags)
+            {
+                flag.CreatedAt = DateTime.UtcNow;
+                flag.CreatedBy = AppConstants.SystemUser;
+            }
+
+            context.FeatureFlags.AddRange(defaultFlags);
+            await context.SaveChangesAsync();
+        }
+
+        // Sample state definitions (Task entity as example)
+        var existingStates = await context.StateDefinitions
+            .IgnoreQueryFilters()
+            .Where(s => s.TenantId == DefaultTenantId && s.EntityType == "Task")
+            .ToListAsync();
+
+        if (!existingStates.Any())
+        {
+            var states = new[]
+            {
+                new StateDefinition { EntityType = "Task", StateName = "Draft", IsInitial = true, IsFinal = false, Color = "#86868b", SortOrder = 0, TenantId = DefaultTenantId },
+                new StateDefinition { EntityType = "Task", StateName = "Open", IsInitial = false, IsFinal = false, Color = "#0071e3", SortOrder = 1, TenantId = DefaultTenantId },
+                new StateDefinition { EntityType = "Task", StateName = "InProgress", IsInitial = false, IsFinal = false, Color = "#ff9500", SortOrder = 2, TenantId = DefaultTenantId },
+                new StateDefinition { EntityType = "Task", StateName = "Review", IsInitial = false, IsFinal = false, Color = "#af52de", SortOrder = 3, TenantId = DefaultTenantId },
+                new StateDefinition { EntityType = "Task", StateName = "Done", IsInitial = false, IsFinal = true, Color = "#34c759", SortOrder = 4, TenantId = DefaultTenantId },
+                new StateDefinition { EntityType = "Task", StateName = "Cancelled", IsInitial = false, IsFinal = true, Color = "#ff3b30", SortOrder = 5, TenantId = DefaultTenantId },
+            };
+
+            foreach (var s in states)
+            {
+                s.CreatedAt = DateTime.UtcNow;
+                s.CreatedBy = AppConstants.SystemUser;
+            }
+
+            context.StateDefinitions.AddRange(states);
+            await context.SaveChangesAsync();
+
+            var transitions = new[]
+            {
+                new StateTransitionDefinition { EntityType = "Task", FromState = "Draft", ToState = "Open", TriggerName = "Submit", Description = "Submit draft for work", TenantId = DefaultTenantId },
+                new StateTransitionDefinition { EntityType = "Task", FromState = "Open", ToState = "InProgress", TriggerName = "Start", Description = "Begin working", TenantId = DefaultTenantId },
+                new StateTransitionDefinition { EntityType = "Task", FromState = "InProgress", ToState = "Review", TriggerName = "RequestReview", Description = "Submit for review", TenantId = DefaultTenantId },
+                new StateTransitionDefinition { EntityType = "Task", FromState = "Review", ToState = "InProgress", TriggerName = "Rework", Description = "Send back for rework", TenantId = DefaultTenantId },
+                new StateTransitionDefinition { EntityType = "Task", FromState = "Review", ToState = "Done", TriggerName = "Approve", Description = "Approve and complete", TenantId = DefaultTenantId },
+                new StateTransitionDefinition { EntityType = "Task", FromState = "Open", ToState = "Cancelled", TriggerName = "Cancel", Description = "Cancel task", TenantId = DefaultTenantId },
+                new StateTransitionDefinition { EntityType = "Task", FromState = "InProgress", ToState = "Cancelled", TriggerName = "Cancel", Description = "Cancel task", TenantId = DefaultTenantId },
+            };
+
+            foreach (var t in transitions)
+            {
+                t.CreatedAt = DateTime.UtcNow;
+                t.CreatedBy = AppConstants.SystemUser;
+            }
+
+            context.StateTransitionDefinitions.AddRange(transitions);
             await context.SaveChangesAsync();
         }
     }

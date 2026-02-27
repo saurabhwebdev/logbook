@@ -37,6 +37,14 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
+    // Phase 2
+    public DbSet<SystemConfiguration> SystemConfigurations => Set<SystemConfiguration>();
+    public DbSet<FeatureFlag> FeatureFlags => Set<FeatureFlag>();
+    public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<StateDefinition> StateDefinitions => Set<StateDefinition>();
+    public DbSet<StateTransitionDefinition> StateTransitionDefinitions => Set<StateTransitionDefinition>();
+    public DbSet<StateTransitionLog> StateTransitionLogs => Set<StateTransitionLog>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

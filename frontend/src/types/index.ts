@@ -70,6 +70,68 @@ export interface Tenant {
   createdAt: string;
 }
 
+// Phase 2 types
+export interface SystemConfiguration {
+  id: string;
+  key: string;
+  value: string;
+  category: string;
+  description: string | null;
+  dataType: string;
+}
+
+export interface FeatureFlag {
+  id: string;
+  name: string;
+  description: string | null;
+  isEnabled: boolean;
+}
+
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: string;
+  link: string | null;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export interface StateDefinition {
+  id: string;
+  entityType: string;
+  stateName: string;
+  isInitial: boolean;
+  isFinal: boolean;
+  color: string | null;
+  sortOrder: number;
+}
+
+export interface StateTransitionDefinition {
+  id: string;
+  entityType: string;
+  fromState: string;
+  toState: string;
+  triggerName: string;
+  requiredPermission: string | null;
+  description: string | null;
+}
+
+export interface TransitionLog {
+  id: string;
+  fromState: string;
+  toState: string;
+  triggerName: string;
+  performedBy: string | null;
+  comments: string | null;
+  transitionedAt: string;
+}
+
+export interface StateDefinitionsResponse {
+  states: StateDefinition[];
+  transitions: StateTransitionDefinition[];
+}
+
 export interface PaginatedResult<T> {
   items: T[];
   pageNumber: number;

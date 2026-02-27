@@ -18,6 +18,9 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
+  FlagOutlined,
+  BellOutlined,
+  NodeIndexOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -81,6 +84,37 @@ export default function MainLayout() {
         key: '/tenants',
         icon: <BankOutlined />,
         label: 'Tenants',
+      });
+    }
+
+    // Phase 2 navigation
+    if (hasPermission('Configuration.Read')) {
+      items.push({
+        key: '/settings',
+        icon: <SettingOutlined />,
+        label: 'Settings',
+      });
+    }
+
+    if (hasPermission('FeatureFlag.Read')) {
+      items.push({
+        key: '/feature-flags',
+        icon: <FlagOutlined />,
+        label: 'Feature Flags',
+      });
+    }
+
+    items.push({
+      key: '/notifications',
+      icon: <BellOutlined />,
+      label: 'Notifications',
+    });
+
+    if (hasPermission('StateMachine.Read')) {
+      items.push({
+        key: '/state-machine',
+        icon: <NodeIndexOutlined />,
+        label: 'State Machine',
       });
     }
 

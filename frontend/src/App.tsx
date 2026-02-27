@@ -12,6 +12,10 @@ import RolesPage from './pages/RolesPage';
 import DepartmentsPage from './pages/DepartmentsPage';
 import AuditLogsPage from './pages/AuditLogsPage';
 import TenantsPage from './pages/TenantsPage';
+import SettingsPage from './pages/SettingsPage';
+import FeatureFlagsPage from './pages/FeatureFlagsPage';
+import NotificationsPage from './pages/NotificationsPage';
+import StateMachinePage from './pages/StateMachinePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -83,6 +87,10 @@ export default function App() {
                   <Route path="departments" element={<DepartmentsPage />} />
                   <Route path="audit-logs" element={<AuditLogsPage />} />
                   <Route path="tenants" element={<TenantsPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                  <Route path="feature-flags" element={<FeatureFlagsPage />} />
+                  <Route path="notifications" element={<NotificationsPage />} />
+                  <Route path="state-machine" element={<StateMachinePage />} />
                 </Route>
               </Route>
             </Routes>

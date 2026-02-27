@@ -15,5 +15,13 @@ public interface IApplicationDbContext
     DbSet<RefreshToken> RefreshTokens { get; }
     DbSet<AuditLog> AuditLogs { get; }
 
+    // Phase 2
+    DbSet<SystemConfiguration> SystemConfigurations { get; }
+    DbSet<FeatureFlag> FeatureFlags { get; }
+    DbSet<Notification> Notifications { get; }
+    DbSet<StateDefinition> StateDefinitions { get; }
+    DbSet<StateTransitionDefinition> StateTransitionDefinitions { get; }
+    DbSet<StateTransitionLog> StateTransitionLogs { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -63,12 +63,12 @@ Instead of building everything from scratch or coupling to a single framework (l
 ### Phase 2 — Core Engines
 | # | Module | Status | Implementation |
 |---|--------|--------|----------------|
-| 6 | **State Machine** | Phase 2 | Stateless library wrapped with persistence, audit trail, permission checks. Generic for any entity lifecycle. |
-| 5 | **Workflow Engine** | Phase 2 | Elsa v3 with custom activities (Approval, Notify, StateTransition). Multi-level approvals, amount/role routing, SLA timers. |
-| 4 | **Notifications** | Phase 2 | MassTransit v8 event bus + templates + channels (email via MailKit, in-app via SignalR, SMS pluggable). |
-| 11 | **Background Jobs** | Phase 2 | Hangfire with SQL Server persistence. Tenant-aware jobs. Built-in cleanup and escalation jobs. |
-| 15 | **Feature Flags** | Phase 2 | Microsoft.FeatureManagement with custom TenantFeatureFilter. Per-tenant module enable/disable. |
-| 8 | **Configuration** | Phase 2 | DB-driven key-value config per tenant. Cached with invalidation. Categories: General, Approval, Notification, Security. |
+| 6 | **State Machine** | DONE | DB-driven state definitions + transition definitions per entity type. Transition log for audit trail. Permission-gated triggers. Sample "Task" lifecycle seeded (Draft → Open → InProgress → Review → Done/Cancelled). |
+| 5 | **Workflow Engine** | PLANNED | Elsa v3 with custom activities (Approval, Notify, StateTransition). Multi-level approvals, amount/role routing, SLA timers. |
+| 4 | **Notifications** | DONE | In-app notification entity with recipient, type (Info/Success/Warning/Error), read tracking. CQRS handlers for send, mark-read, mark-all-read. API + frontend bell icon page. |
+| 11 | **Background Jobs** | PLANNED | Hangfire with SQL Server persistence. Tenant-aware jobs. Permissions defined (BackgroundJob.Read/Manage). |
+| 15 | **Feature Flags** | DONE | DB-driven per-tenant feature flags with toggle API. Seeded defaults: Notifications.Email, Notifications.InApp, AuditLog.DetailedDiff, StateMachine.Enabled, BackgroundJobs.Enabled. Frontend toggle UI. |
+| 8 | **Configuration** | DONE | DB-driven key-value config per tenant. Categories (General, Email, Security). Seeded defaults: App.Name, App.PageSize, Email.FromAddress, Email.FromName, Session.TimeoutMinutes, Password.MinLength. Frontend settings page with edit modal. |
 
 ### Phase 3 — Domain Proof + Integration
 | # | Module | Status | Implementation |

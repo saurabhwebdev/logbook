@@ -4,6 +4,8 @@ import {
   TeamOutlined,
   ApartmentOutlined,
   FileSearchOutlined,
+  FlagOutlined,
+  BellOutlined,
 } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +14,8 @@ import { usersApi } from '../api/usersApi';
 import { rolesApi } from '../api/rolesApi';
 import { departmentsApi } from '../api/departmentsApi';
 import { auditLogsApi } from '../api/auditLogsApi';
+import { featureFlagsApi } from '../api/featureFlagsApi';
+import { notificationsApi } from '../api/notificationsApi';
 
 const { Text } = Typography;
 
@@ -95,6 +99,16 @@ export default function DashboardPage() {
     queryFn: () => auditLogsApi.getAuditLogs({ pageNumber: 1, pageSize: 1 }),
   });
 
+  const featureFlagsQuery = useQuery({
+    queryKey: ['featureFlags'],
+    queryFn: () => featureFlagsApi.getAll(),
+  });
+
+  const notificationsQuery = useQuery({
+    queryKey: ['notifications', 'dashboard'],
+    queryFn: () => notificationsApi.getMy(true),
+  });
+
   const isLoading =
     usersQuery.isLoading ||
     rolesQuery.isLoading ||
@@ -164,6 +178,24 @@ export default function DashboardPage() {
               icon={<FileSearchOutlined />}
               color="#af52de"
               onClick={() => navigate('/audit-logs')}
+            />
+          </Col>
+          <Col xs={24} sm={12} lg={6}>
+            <StatCard
+              label="Feature Flags"
+              value={featureFlagsQuery.data?.length ?? 0}
+              icon={<FlagOutlined />}
+              color="#ff3b30"
+              onClick={() => navigate('/feature-flags')}
+            />
+          </Col>
+          <Col xs={24} sm={12} lg={6}>
+            <StatCard
+              label="Unread Notifications"
+              value={notificationsQuery.data?.length ?? 0}
+              icon={<BellOutlined />}
+              color="#ff9500"
+              onClick={() => navigate('/notifications')}
             />
           </Col>
         </Row>
