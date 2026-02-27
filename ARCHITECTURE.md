@@ -38,7 +38,7 @@ Instead of building everything from scratch or coupling to a single framework (l
 
 | Need | Library | License |
 |------|---------|---------|
-| Multi-Tenancy | Finbuckle.MultiTenant | Apache-2.0 |
+| Multi-Tenancy | Custom EF Core Global Query Filters | N/A |
 | State Machine | Stateless | Apache-2.0 |
 | Workflow Engine | Elsa Workflows v3 | MIT |
 | Background Jobs | Hangfire | LGPL-3.0 |
@@ -55,10 +55,10 @@ Instead of building everything from scratch or coupling to a single framework (l
 ### Phase 1 — Foundation
 | # | Module | Status | Implementation |
 |---|--------|--------|----------------|
-| 1 | **Multi-Tenancy** | Phase 1 | Finbuckle.MultiTenant for resolution + EF Core filters. TenantId on every scoped entity. Header + subdomain strategies. |
-| 2 | **IAM** | Phase 1 | ASP.NET Core Identity base + custom Permission entity (Module.Action format). JWT with permission claims. Users, Roles, Departments. |
-| 3 | **Audit Logging** | Phase 1 | SaveChangesAsync override (audit fields) + AuditableEntityInterceptor (old/new values). Immutable AuditLog table. |
-| 14 | **Security (core)** | Phase 1 | RBAC middleware, soft delete pattern, login tracking, JWT session management. |
+| 1 | **Multi-Tenancy** | DONE | Custom EF Core global query filters + TenantResolutionMiddleware. TenantId on every scoped entity. X-Tenant-Id header strategy. |
+| 2 | **IAM** | DONE | Custom Permission entity (Module.Action format). JWT with permission claims. Users, Roles, Departments CRUD. |
+| 3 | **Audit Logging** | DONE | SaveChangesAsync override (audit fields) + AuditableEntityInterceptor (old/new values). Immutable AuditLog table. |
+| 14 | **Security (core)** | DONE | RBAC middleware, soft delete pattern, login tracking, JWT session management. |
 
 ### Phase 2 — Core Engines
 | # | Module | Status | Implementation |
@@ -90,7 +90,7 @@ Instead of building everything from scratch or coupling to a single framework (l
 - **CQRS** via MediatR (commands and queries separated)
 - **Repository + Unit of Work** (generic, EF Core backed)
 - **Pipeline Behaviors** (validation, logging, exception handling)
-- **Global Query Filters** (tenant isolation + soft delete via Finbuckle + custom)
+- **Global Query Filters** (tenant isolation + soft delete via custom EF Core filters)
 - **Permission-based Auth** (flat catalog: "User.Create", "Role.Delete", etc.)
 - **Domain Events** (MassTransit pub/sub for loose coupling between modules)
 - **State Pattern** (Stateless library for entity lifecycle management)
@@ -109,10 +109,21 @@ Instead of building everything from scratch or coupling to a single framework (l
 ## Frontend Architecture
 ```
 frontend/src/
-├── core/           # Auth, API client, tenant context, layouts
-├── modules/        # Domain-specific pages (auth, dashboard, users, roles)
-└── shared/         # Reusable components, hooks, utilities
+├── api/            # Axios client + per-entity API modules
+├── components/     # PermissionGate, ProtectedRoute
+├── contexts/       # AuthContext (JWT + permissions)
+├── layouts/        # AuthLayout (split-panel login), MainLayout (sidebar + topbar)
+├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants
+└── types/          # TypeScript interfaces for all domain models
 ```
+
+### Design System
+- **Font**: Inter (Google Fonts)
+- **Palette**: Apple-inspired neutrals (#1d1d1f text, #86868b secondary, #e5e5ea borders)
+- **Primary**: #0071e3 (blue), accents: #34c759 (green), #ff9500 (orange), #af52de (purple)
+- **Cards**: 12px border-radius, 1px #e5e5ea border, no box-shadow
+- **Tables**: Uppercase 11px headers, text-only action buttons, dot-status indicators
+- **Theme**: Ant Design ConfigProvider overrides in App.tsx
 - **State**: React Query for server state, React Context for auth/tenant
 - **HTTP**: Axios with JWT + tenant header interceptors, auto token refresh
 - **Routing**: react-router-dom with ProtectedRoute guard
