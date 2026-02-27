@@ -285,3 +285,60 @@ export interface BackgroundJobStats {
   recurringJobsCount: number;
   deletedJobs: number;
 }
+
+// Workflow Engine types
+export interface WorkflowDefinition {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  configurationJson: string;
+  version: number;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface WorkflowInstance {
+  id: string;
+  workflowDefinitionId: string;
+  workflowDefinitionName: string;
+  entityType: string;
+  entityId: string;
+  status: string;
+  currentStepName: string;
+  createdAt: string;
+  completedAt?: string;
+}
+
+export interface WorkflowTask {
+  id: string;
+  workflowInstanceId: string;
+  taskName: string;
+  taskType: string;
+  assignedToUserId: string;
+  assignedToUserName: string;
+  status: string;
+  priority: number;
+  dueDate?: string;
+  completedAt?: string;
+  completedByUserName?: string;
+  comments?: string;
+  createdAt: string;
+  workflowDefinitionName: string;
+  entityType: string;
+  entityId: string;
+}
+
+export interface WorkflowStatistics {
+  totalDefinitions: number;
+  activeInstances: number;
+  completedToday: number;
+  pendingTasks: number;
+}
+
+export interface UserPresence {
+  userId: string;
+  userName: string;
+  isOnline: boolean;
+  lastSeen: string;
+}

@@ -128,6 +128,29 @@ public static class Permissions
         public const string Send = "Email.Send";
     }
 
+    // Workflow Engine
+    public static class WorkflowDefinitions
+    {
+        public const string Create = "WorkflowDefinition.Create";
+        public const string Read = "WorkflowDefinition.Read";
+        public const string Update = "WorkflowDefinition.Update";
+        public const string Delete = "WorkflowDefinition.Delete";
+    }
+
+    public static class Workflows
+    {
+        public const string Start = "Workflow.Start";
+        public const string View = "Workflow.View";
+        public const string Cancel = "Workflow.Cancel";
+    }
+
+    public static class WorkflowTasks
+    {
+        public const string View = "WorkflowTask.View";
+        public const string Complete = "WorkflowTask.Complete";
+        public const string Reassign = "WorkflowTask.Reassign";
+    }
+
     /// <summary>
     /// Collects all permission strings via reflection for seeding.
     /// </summary>

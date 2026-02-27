@@ -297,7 +297,7 @@ namespace CoreEngine.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailQueues");
+                    b.ToTable("EmailQueues", (string)null);
                 });
 
             modelBuilder.Entity("CoreEngine.Domain.Entities.EmailTemplate", b =>
@@ -344,7 +344,7 @@ namespace CoreEngine.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailTemplates");
+                    b.ToTable("EmailTemplates", (string)null);
                 });
 
             modelBuilder.Entity("CoreEngine.Domain.Entities.FeatureFlag", b =>

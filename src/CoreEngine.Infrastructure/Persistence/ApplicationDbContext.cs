@@ -59,6 +59,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
     public DbSet<EmailQueue> EmailQueues => Set<EmailQueue>();
 
+    // Workflow Engine
+    public DbSet<WorkflowDefinition> WorkflowDefinitions => Set<WorkflowDefinition>();
+    public DbSet<WorkflowInstance> WorkflowInstances => Set<WorkflowInstance>();
+    public DbSet<WorkflowTask> WorkflowTasks => Set<WorkflowTask>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

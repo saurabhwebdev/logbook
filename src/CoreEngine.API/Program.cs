@@ -26,6 +26,9 @@ builder.Host.UseSerilog((context, config) => config
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// SignalR
+builder.Services.AddSignalR();
+
 // CORS
 builder.Services.AddCors(options =>
 {
@@ -147,5 +150,9 @@ RecurringJob.AddOrUpdate<CleanupAuditLogsJob>(
     "0 2 * * *"); // Daily at 2 AM
 
 app.MapControllers();
+
+// SignalR Hubs
+app.MapHub<CoreEngine.API.Hubs.NotificationHub>("/hubs/notifications");
+app.MapHub<CoreEngine.API.Hubs.PresenceHub>("/hubs/presence");
 
 app.Run();

@@ -270,6 +270,9 @@ public static class DatabaseSeeder
 
         // 7. Seed Help articles
         await SeedHelpArticles(context);
+
+        // 8. Seed Workflow Definitions
+        await SeedWorkflowDefinitionsAsync(context);
     }
 
     private static async Task SeedPhase2Defaults(ApplicationDbContext context)
@@ -853,6 +856,66 @@ SuperAdmin users can create new tenants from the Tenants page."
         }
 
         context.EmailTemplates.AddRange(templates);
+        await context.SaveChangesAsync();
+    }
+
+    // 11. Seed Workflow Definitions
+    private static async Task SeedWorkflowDefinitionsAsync(ApplicationDbContext context)
+    {
+        var existingDefinitions = await context.WorkflowDefinitions
+            .IgnoreQueryFilters()
+            .Where(d => d.TenantId == DefaultTenantId)
+            .ToListAsync();
+
+        if (existingDefinitions.Any())
+            return;
+
+        var definitions = new[]
+        {
+            new WorkflowDefinition
+            {
+                Name = "Purchase Order Approval",
+                Description = "Multi-level approval workflow for purchase orders",
+                Category = "Approval",
+                ConfigurationJson = @"{
+  ""Steps"": [
+    { ""Name"": ""Submit"", ""Type"": ""Start"" },
+    { ""Name"": ""ManagerApproval"", ""Type"": ""Approval"" },
+    { ""Name"": ""DirectorApproval"", ""Type"": ""Approval"" },
+    { ""Name"": ""Complete"", ""Type"": ""End"" }
+  ]
+}",
+                IsActive = true,
+                Version = 1,
+                TenantId = DefaultTenantId
+            },
+            new WorkflowDefinition
+            {
+                Name = "Leave Request Approval",
+                Description = "Employee leave request approval workflow",
+                Category = "Approval",
+                ConfigurationJson = @"{
+  ""Steps"": [
+    { ""Name"": ""Submit"", ""Type"": ""Start"" },
+    { ""Name"": ""ManagerApproval"", ""Type"": ""Approval"" },
+    { ""Name"": ""HRApproval"", ""Type"": ""Approval"" },
+    { ""Name"": ""Complete"", ""Type"": ""End"" }
+  ]
+}",
+                IsActive = true,
+                Version = 1,
+                TenantId = DefaultTenantId
+            }
+        };
+
+        foreach (var definition in definitions)
+        {
+            definition.Id = Guid.NewGuid();
+            definition.CreatedAt = DateTime.UtcNow;
+            definition.CreatedBy = AppConstants.SystemUser;
+        }
+
+        context.WorkflowDefinitions.AddRange(definitions);
         await context.SaveChangesAsync();
     }
 }

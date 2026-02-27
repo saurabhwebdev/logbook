@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ConfigProvider } from 'antd';
 import { AuthProvider } from './contexts/AuthContext';
+import { SignalRProvider } from './contexts/SignalRContext';
 import { ThemeProvider, useTenantTheme } from './contexts/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import MainLayout from './layouts/MainLayout';
@@ -30,6 +31,9 @@ import ActivityFeedPage from './pages/ActivityFeedPage';
 import EmailTemplatesPage from './pages/EmailTemplatesPage';
 import EmailQueuePage from './pages/EmailQueuePage';
 import BackgroundJobsPage from './pages/BackgroundJobsPage';
+import MyTasksPage from './pages/MyTasksPage';
+import WorkflowsPage from './pages/WorkflowsPage';
+import WorkflowDefinitionsPage from './pages/WorkflowDefinitionsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -90,7 +94,8 @@ function ThemedApp() {
       }}
     >
       <AuthProvider>
-        <Routes>
+        <SignalRProvider>
+          <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout />}>
@@ -120,9 +125,13 @@ function ThemedApp() {
               <Route path="email-templates" element={<EmailTemplatesPage />} />
               <Route path="email-queue" element={<EmailQueuePage />} />
               <Route path="background-jobs" element={<BackgroundJobsPage />} />
+              <Route path="my-tasks" element={<MyTasksPage />} />
+              <Route path="workflows" element={<WorkflowsPage />} />
+              <Route path="workflow-definitions" element={<WorkflowDefinitionsPage />} />
             </Route>
           </Route>
-        </Routes>
+          </Routes>
+        </SignalRProvider>
       </AuthProvider>
     </ConfigProvider>
   );

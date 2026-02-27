@@ -120,14 +120,31 @@ Instead of building everything from scratch or coupling to a single framework (l
 - Roles: SuperAdmin (all permissions), Admin (subset), User (basic)
 - Permissions: Auto-generated from PermissionConstants via reflection
 
+## Custom Workflow Engine
+- **WorkflowDefinition**: JSON-based workflow templates with name, description, category, steps configuration
+- **WorkflowInstance**: Running workflow instances linked to entities (PurchaseOrder, LeaveRequest, etc.)
+- **WorkflowTask**: Individual approval/review tasks assigned to users with priority and due dates
+- **WorkflowService**: Simple step-by-step execution engine that parses JSON configuration
+- **Task Lifecycle**: Pending → Approved/Rejected → Auto-advance to next step
+- **Features**: Multi-level approvals, task reassignment, comments, priority levels, due dates
+- **Integration**: Triggers notifications and emails on task assignment
+
+## Real-time Notifications (SignalR)
+- **NotificationHub**: Send notifications to specific users or broadcast to all
+- **PresenceHub**: Track user online/offline status with auto-cleanup of stale connections
+- **UserPresenceService**: In-memory tracking (ConcurrentDictionary) of online users
+- **Authentication**: JWT-based hub authentication
+- **Auto-reconnect**: Frontend handles connection drops gracefully
+- **Features**: Real-time task assignments, notification updates, presence indicators, dashboard live updates
+
 ## Frontend Architecture
 ```
 frontend/src/
 ├── api/            # Axios client + per-entity API modules
-├── components/     # PermissionGate, ProtectedRoute
-├── contexts/       # AuthContext (JWT + permissions)
+├── components/     # PermissionGate, ProtectedRoute, EmptyState, PresenceIndicator
+├── contexts/       # AuthContext (JWT + permissions), ThemeContext, SignalRContext
 ├── layouts/        # AuthLayout (split-panel login), MainLayout (sidebar + topbar)
-├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants, Settings, FeatureFlags, Notifications, StateMachine, Files, Reports, ApiIntegration, DemoTasks, Theming, Help, EmailTemplates, EmailQueue, BackgroundJobs
+├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants, Settings, FeatureFlags, Notifications, StateMachine, Files, Reports, ApiIntegration, DemoTasks, Theming, Help, EmailTemplates, EmailQueue, BackgroundJobs, MyTasks, Workflows, WorkflowDefinitions
 └── types/          # TypeScript interfaces for all domain models
 ```
 
@@ -141,8 +158,9 @@ frontend/src/
 - **State**: React Query for server state, React Context for auth/tenant
 - **HTTP**: Axios with JWT + tenant header interceptors, auto token refresh
 - **Routing**: react-router-dom with ProtectedRoute guard
-- **Real-time**: SignalR for notifications (Phase 2)
-- **i18n**: react-i18next (Phase 4)
+- **Real-time**: @microsoft/signalr for notifications and presence tracking
+- **Animations**: lottie-react for professional empty states
+- **i18n**: react-i18next (Phase 4 - future)
 
 ## How Domain Modules Plug In
 Any new domain module (procurement, CRM, etc.) follows this pattern:

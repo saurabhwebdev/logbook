@@ -37,5 +37,10 @@ public interface IApplicationDbContext
     DbSet<EmailTemplate> EmailTemplates { get; }
     DbSet<EmailQueue> EmailQueues { get; }
 
+    // Workflow Engine
+    DbSet<WorkflowDefinition> WorkflowDefinitions { get; }
+    DbSet<WorkflowInstance> WorkflowInstances { get; }
+    DbSet<WorkflowTask> WorkflowTasks { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

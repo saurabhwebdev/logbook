@@ -44,6 +44,8 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddSingleton<IFileStorageService, LocalFileStorageService>();
         services.AddScoped<IEmailService, SmtpEmailService>();
+        services.AddScoped<IWorkflowService, WorkflowService>();
+        services.AddSingleton<IUserPresenceService, UserPresenceService>();
 
         // HTTP context accessor (required by CurrentUserService)
         services.AddHttpContextAccessor();

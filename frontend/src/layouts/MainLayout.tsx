@@ -32,6 +32,8 @@ import {
   MailOutlined,
   SendOutlined,
   ScheduleOutlined,
+  CheckSquareOutlined,
+  ControlOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -69,6 +71,9 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/email-templates': 'EmailTemplates',
   '/email-queue': 'EmailQueue',
   '/background-jobs': 'BackgroundJobs',
+  '/my-tasks': 'MyTasks',
+  '/workflows': 'Workflows',
+  '/workflow-definitions': 'WorkflowDefinitions',
 };
 
 export default function MainLayout() {
@@ -169,6 +174,31 @@ export default function MainLayout() {
       icon: <BellOutlined />,
       label: 'Notifications',
     });
+
+    // Workflow Engine
+    if (hasPermission('WorkflowTask.View')) {
+      items.push({
+        key: '/my-tasks',
+        icon: <CheckSquareOutlined />,
+        label: 'My Tasks',
+      });
+    }
+
+    if (hasPermission('Workflow.View')) {
+      items.push({
+        key: '/workflows',
+        icon: <ApartmentOutlined />,
+        label: 'Workflows',
+      });
+    }
+
+    if (hasPermission('WorkflowDefinition.Read')) {
+      items.push({
+        key: '/workflow-definitions',
+        icon: <ControlOutlined />,
+        label: 'Workflow Definitions',
+      });
+    }
 
     if (hasPermission('StateMachine.Read')) {
       items.push({
