@@ -251,3 +251,37 @@ export interface UpdateUserRequest {
   status: string;
   roleIds: string[];
 }
+
+export interface EmailTemplate {
+  id: string;
+  name: string;
+  subject: string;
+  htmlBody: string;
+  plainTextBody?: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type EmailStatus = 0 | 1 | 2; // 0 = Pending, 1 = Sent, 2 = Failed
+
+export interface EmailQueue {
+  id: string;
+  to: string;
+  subject: string;
+  status: EmailStatus;
+  sentAt?: string;
+  failureReason?: string;
+  retryCount: number;
+  createdAt: string;
+}
+
+export interface BackgroundJobStats {
+  succeededJobs: number;
+  failedJobs: number;
+  processingJobs: number;
+  scheduledJobs: number;
+  enqueuedJobs: number;
+  serversCount: number;
+  recurringJobsCount: number;
+  deletedJobs: number;
+}

@@ -27,6 +27,9 @@ import HelpArticleViewPage from './pages/HelpArticleViewPage';
 import HelpFormPage from './pages/HelpFormPage';
 import ProfilePage from './pages/ProfilePage';
 import ActivityFeedPage from './pages/ActivityFeedPage';
+import EmailTemplatesPage from './pages/EmailTemplatesPage';
+import EmailQueuePage from './pages/EmailQueuePage';
+import BackgroundJobsPage from './pages/BackgroundJobsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -114,6 +117,9 @@ function ThemedApp() {
               <Route path="help/new" element={<HelpFormPage />} />
               <Route path="help/:slug" element={<HelpArticleViewPage />} />
               <Route path="help/:id/edit" element={<HelpFormPage />} />
+              <Route path="email-templates" element={<EmailTemplatesPage />} />
+              <Route path="email-queue" element={<EmailQueuePage />} />
+              <Route path="background-jobs" element={<BackgroundJobsPage />} />
             </Route>
           </Route>
         </Routes>

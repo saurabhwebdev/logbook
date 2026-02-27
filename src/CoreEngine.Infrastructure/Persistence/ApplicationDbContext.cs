@@ -55,6 +55,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     // Help Module
     public DbSet<HelpArticle> HelpArticles => Set<HelpArticle>();
 
+    // Email Module
+    public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
+    public DbSet<EmailQueue> EmailQueues => Set<EmailQueue>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

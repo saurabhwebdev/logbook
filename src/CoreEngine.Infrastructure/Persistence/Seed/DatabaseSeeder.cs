@@ -265,7 +265,10 @@ public static class DatabaseSeeder
         // 5. Seed Phase 2 defaults
         await SeedPhase2Defaults(context);
 
-        // 6. Seed Help articles
+        // 6. Seed Email Templates
+        await SeedEmailTemplates(context);
+
+        // 7. Seed Help articles
         await SeedHelpArticles(context);
     }
 
@@ -285,6 +288,11 @@ public static class DatabaseSeeder
                 new SystemConfiguration { Key = "App.PageSize", Value = "25", Category = "General", Description = "Default page size for lists", DataType = "Int", TenantId = DefaultTenantId },
                 new SystemConfiguration { Key = "Email.FromAddress", Value = "noreply@coreengine.local", Category = "Email", Description = "Default sender email", DataType = "String", TenantId = DefaultTenantId },
                 new SystemConfiguration { Key = "Email.FromName", Value = "CoreEngine", Category = "Email", Description = "Default sender name", DataType = "String", TenantId = DefaultTenantId },
+                new SystemConfiguration { Key = "Email.SmtpHost", Value = "smtp.gmail.com", Category = "Email", Description = "SMTP server hostname", DataType = "String", TenantId = DefaultTenantId },
+                new SystemConfiguration { Key = "Email.SmtpPort", Value = "587", Category = "Email", Description = "SMTP server port", DataType = "Int", TenantId = DefaultTenantId },
+                new SystemConfiguration { Key = "Email.SmtpUsername", Value = "", Category = "Email", Description = "SMTP username", DataType = "String", TenantId = DefaultTenantId },
+                new SystemConfiguration { Key = "Email.SmtpPassword", Value = "", Category = "Email", Description = "SMTP password", DataType = "String", TenantId = DefaultTenantId },
+                new SystemConfiguration { Key = "Email.SmtpEnableSsl", Value = "true", Category = "Email", Description = "Enable SSL for SMTP", DataType = "Bool", TenantId = DefaultTenantId },
                 new SystemConfiguration { Key = "Session.TimeoutMinutes", Value = "60", Category = "Security", Description = "Session timeout in minutes", DataType = "Int", TenantId = DefaultTenantId },
                 new SystemConfiguration { Key = "Password.MinLength", Value = "8", Category = "Security", Description = "Minimum password length", DataType = "Int", TenantId = DefaultTenantId },
             };
@@ -732,6 +740,119 @@ SuperAdmin users can create new tenants from the Tenants page."
         }
 
         context.HelpArticles.AddRange(articles);
+        await context.SaveChangesAsync();
+    }
+
+    private static async Task SeedEmailTemplates(ApplicationDbContext context)
+    {
+        var existingTemplates = await context.EmailTemplates
+            .IgnoreQueryFilters()
+            .Where(t => t.TenantId == DefaultTenantId)
+            .ToListAsync();
+
+        if (existingTemplates.Any())
+            return;
+
+        var templates = new[]
+        {
+            new EmailTemplate
+            {
+                Name = "WelcomeEmail",
+                Subject = "Welcome to {{appName}}",
+                HtmlBody = @"<html>
+<body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+    <h2>Welcome, {{userName}}!</h2>
+    <p>Thank you for joining <strong>{{appName}}</strong>. We're excited to have you on board.</p>
+    <p>Your account has been successfully created with the email: <strong>{{email}}</strong></p>
+    <p>Click the link below to get started:</p>
+    <p><a href='{{link}}' style='background-color: #0071e3; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Get Started</a></p>
+    <br/>
+    <p>Best regards,<br/>The {{appName}} Team</p>
+</body>
+</html>",
+                PlainTextBody = "Welcome, {{userName}}!\n\nThank you for joining {{appName}}. Your account has been created with email: {{email}}.\n\nGet started here: {{link}}\n\nBest regards,\nThe {{appName}} Team",
+                IsActive = true,
+                TenantId = DefaultTenantId
+            },
+            new EmailTemplate
+            {
+                Name = "PasswordReset",
+                Subject = "Reset Your Password - {{appName}}",
+                HtmlBody = @"<html>
+<body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+    <h2>Password Reset Request</h2>
+    <p>Hi {{userName}},</p>
+    <p>We received a request to reset your password for your {{appName}} account.</p>
+    <p>Click the link below to reset your password:</p>
+    <p><a href='{{link}}' style='background-color: #0071e3; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Reset Password</a></p>
+    <p>This link will expire in 1 hour.</p>
+    <p>If you didn't request a password reset, please ignore this email.</p>
+    <br/>
+    <p>Best regards,<br/>The {{appName}} Team</p>
+</body>
+</html>",
+                PlainTextBody = "Hi {{userName}},\n\nWe received a request to reset your password.\n\nReset your password here: {{link}}\n\nThis link expires in 1 hour.\n\nBest regards,\nThe {{appName}} Team",
+                IsActive = true,
+                TenantId = DefaultTenantId
+            },
+            new EmailTemplate
+            {
+                Name = "TaskAssignment",
+                Subject = "New Task Assigned: {{taskTitle}}",
+                HtmlBody = @"<html>
+<body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+    <h2>You've Been Assigned a New Task</h2>
+    <p>Hi {{userName}},</p>
+    <p>A new task has been assigned to you:</p>
+    <div style='background-color: #f5f5f7; padding: 15px; border-radius: 8px; margin: 15px 0;'>
+        <h3 style='margin-top: 0;'>{{taskTitle}}</h3>
+        <p><strong>Assigned by:</strong> {{assignedBy}}</p>
+        <p><strong>Due Date:</strong> {{dueDate}}</p>
+    </div>
+    <p>Click below to view the task details:</p>
+    <p><a href='{{link}}' style='background-color: #0071e3; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>View Task</a></p>
+    <br/>
+    <p>Best regards,<br/>The {{appName}} Team</p>
+</body>
+</html>",
+                PlainTextBody = "Hi {{userName}},\n\nA new task has been assigned to you:\n\nTask: {{taskTitle}}\nAssigned by: {{assignedBy}}\nDue Date: {{dueDate}}\n\nView task: {{link}}\n\nBest regards,\nThe {{appName}} Team",
+                IsActive = true,
+                TenantId = DefaultTenantId
+            },
+            new EmailTemplate
+            {
+                Name = "ApprovalRequest",
+                Subject = "Approval Required: {{requestTitle}}",
+                HtmlBody = @"<html>
+<body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+    <h2>Approval Request</h2>
+    <p>Hi {{userName}},</p>
+    <p>Your approval is required for the following request:</p>
+    <div style='background-color: #f5f5f7; padding: 15px; border-radius: 8px; margin: 15px 0;'>
+        <h3 style='margin-top: 0;'>{{requestTitle}}</h3>
+        <p><strong>Submitted by:</strong> {{submittedBy}}</p>
+        <p><strong>Submitted on:</strong> {{date}}</p>
+    </div>
+    <p>Please review and take action:</p>
+    <p><a href='{{link}}' style='background-color: #34c759; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;'>Approve</a>
+       <a href='{{rejectLink}}' style='background-color: #ff3b30; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Reject</a></p>
+    <br/>
+    <p>Best regards,<br/>The {{appName}} Team</p>
+</body>
+</html>",
+                PlainTextBody = "Hi {{userName}},\n\nYour approval is required:\n\nRequest: {{requestTitle}}\nSubmitted by: {{submittedBy}}\nDate: {{date}}\n\nReview here: {{link}}\n\nBest regards,\nThe {{appName}} Team",
+                IsActive = true,
+                TenantId = DefaultTenantId
+            }
+        };
+
+        foreach (var template in templates)
+        {
+            template.CreatedAt = DateTime.UtcNow;
+            template.CreatedBy = AppConstants.SystemUser;
+        }
+
+        context.EmailTemplates.AddRange(templates);
         await context.SaveChangesAsync();
     }
 }

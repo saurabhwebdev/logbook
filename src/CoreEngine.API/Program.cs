@@ -3,8 +3,11 @@ using CoreEngine.API.Middleware;
 using CoreEngine.Application;
 using CoreEngine.Application.Common.Interfaces;
 using CoreEngine.Infrastructure;
+using CoreEngine.Infrastructure.BackgroundJobs;
 using CoreEngine.Infrastructure.Persistence;
 using CoreEngine.Infrastructure.Persistence.Seed;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -44,6 +47,27 @@ builder.Services.AddRateLimiter(options =>
     });
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
+
+// Hangfire
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"),
+        new SqlServerStorageOptions
+        {
+            CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+            SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+            QueuePollInterval = TimeSpan.Zero,
+            UseRecommendedIsolationLevel = true,
+            DisableGlobalLocks = true
+        }));
+
+builder.Services.AddHangfireServer();
+
+// Background Jobs
+builder.Services.AddScoped<ProcessEmailQueueJob>();
+builder.Services.AddScoped<CleanupAuditLogsJob>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -104,6 +128,24 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseMiddleware<TenantResolutionMiddleware>();
 app.UseAuthorization();
+
+// Hangfire Dashboard
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new HangfireAuthorizationFilter() }
+});
+
+// Schedule recurring jobs
+RecurringJob.AddOrUpdate<ProcessEmailQueueJob>(
+    "process-email-queue",
+    job => job.Execute(),
+    "* * * * *"); // Every minute
+
+RecurringJob.AddOrUpdate<CleanupAuditLogsJob>(
+    "cleanup-audit-logs",
+    job => job.Execute(),
+    "0 2 * * *"); // Daily at 2 AM
+
 app.MapControllers();
 
 app.Run();

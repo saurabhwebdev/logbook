@@ -65,8 +65,8 @@ Instead of building everything from scratch or coupling to a single framework (l
 |---|--------|--------|----------------|
 | 6 | **State Machine** | DONE | DB-driven state definitions + transition definitions per entity type. Transition log for audit trail. Permission-gated triggers. Sample "Task" lifecycle seeded (Draft → Open → InProgress → Review → Done/Cancelled). |
 | 5 | **Workflow Engine** | PLANNED | Elsa v3 with custom activities (Approval, Notify, StateTransition). Multi-level approvals, amount/role routing, SLA timers. |
-| 4 | **Notifications** | DONE | In-app notification entity with recipient, type (Info/Success/Warning/Error), read tracking. CQRS handlers for send, mark-read, mark-all-read. API + frontend bell icon page. |
-| 11 | **Background Jobs** | PLANNED | Hangfire with SQL Server persistence. Tenant-aware jobs. Permissions defined (BackgroundJob.Read/Manage). |
+| 4 | **Notifications** | DONE | In-app notification entity with recipient, type (Info/Success/Warning/Error), read tracking. CQRS handlers for send, mark-read, mark-all-read. API + frontend bell icon page. Email notifications via MailKit SMTP service integrated with EmailTemplate system. |
+| 11 | **Background Jobs** | DONE | Hangfire 1.8.23 with SQL Server persistence. ProcessEmailQueueJob (every minute), CleanupAuditLogsJob (daily 2 AM). Dashboard at /hangfire with permission-based auth. Manual trigger endpoints for admin. EmailQueue entity with retry logic (max 3 attempts). |
 | 15 | **Feature Flags** | DONE | DB-driven per-tenant feature flags with toggle API. Seeded defaults: Notifications.Email, Notifications.InApp, AuditLog.DetailedDiff, StateMachine.Enabled, BackgroundJobs.Enabled. Frontend toggle UI. |
 | 8 | **Configuration** | DONE | DB-driven key-value config per tenant. Categories (General, Email, Security). Seeded defaults: App.Name, App.PageSize, Email.FromAddress, Email.FromName, Session.TimeoutMinutes, Password.MinLength. Frontend settings page with edit modal. |
 
@@ -86,6 +86,12 @@ Instead of building everything from scratch or coupling to a single framework (l
 | — | **Dashboard (real data)** | DONE | Single aggregation query counting all modules (Users, Roles, Departments, AuditLogs, Files, Reports, DemoTasks, FeatureFlags, ApiKeys). 9 stat cards + recent activity timeline. |
 | — | **Report Export** | DONE | Excel export via ClosedXML (.xlsx) and CSV export. Entity-type-based data querying (User, Department, Role, AuditLog, DemoTask). Column selection from report definition. |
 | 12 | **Localization** | SKIPPED | Not needed for initial framework — teams start English-only. Can be added later. |
+
+### Email Module
+| # | Module | Status | Implementation |
+|---|--------|--------|----------------|
+| — | **Email Templates** | DONE | EmailTemplate entity with Name, Subject, HtmlBody, PlainTextBody, IsActive. Variable substitution: {{userName}}, {{email}}, {{link}}, {{date}}, etc. Full CRUD API + UI. Seeded templates: WelcomeEmail, PasswordReset, TaskAssignment, ApprovalRequest. |
+| — | **Email Queue** | DONE | EmailQueue entity with To, Subject, Status (Pending/Sent/Failed), RetryCount (max 3), SentAt, FailureReason. SmtpEmailService using MailKit with SystemConfiguration-based SMTP settings (Host, Port, Username, Password, EnableSSL). Queue/Send endpoints. Frontend with status filtering, email preview modal. |
 
 ### Help Module
 | # | Module | Status | Implementation |
@@ -121,7 +127,7 @@ frontend/src/
 ├── components/     # PermissionGate, ProtectedRoute
 ├── contexts/       # AuthContext (JWT + permissions)
 ├── layouts/        # AuthLayout (split-panel login), MainLayout (sidebar + topbar)
-├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants, Settings, FeatureFlags, Notifications, StateMachine, Files, Reports, ApiIntegration, DemoTasks, Theming, Help
+├── pages/          # Dashboard, Users, Roles, Departments, AuditLogs, Tenants, Settings, FeatureFlags, Notifications, StateMachine, Files, Reports, ApiIntegration, DemoTasks, Theming, Help, EmailTemplates, EmailQueue, BackgroundJobs
 └── types/          # TypeScript interfaces for all domain models
 ```
 

@@ -29,6 +29,9 @@ import {
   FormatPainterOutlined,
   QuestionCircleOutlined,
   ClockCircleOutlined,
+  MailOutlined,
+  SendOutlined,
+  ScheduleOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -63,6 +66,9 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/demo-tasks': 'DemoTasks',
   '/theming': 'Theming',
   '/help': 'Help',
+  '/email-templates': 'EmailTemplates',
+  '/email-queue': 'EmailQueue',
+  '/background-jobs': 'BackgroundJobs',
 };
 
 export default function MainLayout() {
@@ -211,6 +217,31 @@ export default function MainLayout() {
         key: '/theming',
         icon: <FormatPainterOutlined />,
         label: 'Theming',
+      });
+    }
+
+    // Email Module
+    if (hasPermission('EmailTemplate.Read')) {
+      items.push({
+        key: '/email-templates',
+        icon: <MailOutlined />,
+        label: 'Email Templates',
+      });
+    }
+
+    if (hasPermission('Email.Read')) {
+      items.push({
+        key: '/email-queue',
+        icon: <SendOutlined />,
+        label: 'Email Queue',
+      });
+    }
+
+    if (hasPermission('BackgroundJob.Read')) {
+      items.push({
+        key: '/background-jobs',
+        icon: <ScheduleOutlined />,
+        label: 'Background Jobs',
       });
     }
 

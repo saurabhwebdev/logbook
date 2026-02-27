@@ -33,5 +33,9 @@ public interface IApplicationDbContext
     // Help Module
     DbSet<HelpArticle> HelpArticles { get; }
 
+    // Email Module
+    DbSet<EmailTemplate> EmailTemplates { get; }
+    DbSet<EmailQueue> EmailQueues { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

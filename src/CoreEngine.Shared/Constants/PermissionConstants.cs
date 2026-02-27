@@ -113,6 +113,21 @@ public static class Permissions
         public const string Delete = "Help.Delete";
     }
 
+    // Email Module
+    public static class EmailTemplates
+    {
+        public const string Create = "EmailTemplate.Create";
+        public const string Read = "EmailTemplate.Read";
+        public const string Update = "EmailTemplate.Update";
+        public const string Delete = "EmailTemplate.Delete";
+    }
+
+    public static class Emails
+    {
+        public const string Read = "Email.Read";
+        public const string Send = "Email.Send";
+    }
+
     /// <summary>
     /// Collects all permission strings via reflection for seeding.
     /// </summary>
