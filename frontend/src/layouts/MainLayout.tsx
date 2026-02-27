@@ -498,20 +498,32 @@ export default function MainLayout() {
             padding: 28,
             minHeight: 'calc(100vh - 56px)',
             position: 'relative',
-            overflow: 'hidden',
           }}
         >
           {/* Subtle background glow */}
           <div
             style={{
-              position: 'absolute',
-              top: '10%',
+              position: 'fixed',
+              top: '20%',
               left: '50%',
-              width: '80%',
-              height: '60%',
-              transform: 'translate(-50%, 0)',
-              background: `radial-gradient(ellipse at center, ${primaryColor}08, transparent 70%)`,
-              filter: 'blur(80px)',
+              width: '800px',
+              height: '800px',
+              transform: 'translate(-50%, -50%)',
+              background: `radial-gradient(circle, ${primaryColor}20 0%, ${primaryColor}10 30%, transparent 70%)`,
+              filter: 'blur(60px)',
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              bottom: '10%',
+              right: '10%',
+              width: '600px',
+              height: '600px',
+              background: `radial-gradient(circle, ${primaryColor}15 0%, transparent 60%)`,
+              filter: 'blur(70px)',
               pointerEvents: 'none',
               zIndex: 0,
             }}
