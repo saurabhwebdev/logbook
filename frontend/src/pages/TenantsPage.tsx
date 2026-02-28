@@ -169,10 +169,7 @@ export default function TenantsPage() {
   return (
     <div>
       <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Tenants</h2>
-          <Text style={{ fontSize: 13, color: '#86868b' }}>Manage multi-tenant organizations.</Text>
-        </div>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Tenants</h2>
         <PermissionGate permission="Tenant.Create">
           <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
             Add tenant

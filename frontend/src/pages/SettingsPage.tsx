@@ -133,12 +133,7 @@ export default function SettingsPage() {
   return (
     <div>
       <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Settings</h2>
-          <Text style={{ fontSize: 13, color: '#86868b' }}>
-            System configuration key-value pairs.
-          </Text>
-        </div>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Settings</h2>
       </Flex>
 
       <div

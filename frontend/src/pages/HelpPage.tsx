@@ -51,12 +51,7 @@ export default function HelpPage() {
   return (
     <div>
       <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Help Center</h2>
-          <Text style={{ fontSize: 13, color: '#86868b' }}>
-            Browse documentation and guides for all modules.
-          </Text>
-        </div>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Help Center</h2>
         {hasPermission('Help.Create') && (
           <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/help/new')}>
             New Article

@@ -44,10 +44,7 @@ export default function ThemingPage() {
   return (
     <div>
       <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Theming</h2>
-          <Text style={{ fontSize: 13, color: '#86868b' }}>Customize your tenant branding and colors.</Text>
-        </div>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Theming</h2>
         <Button type="primary" icon={<SaveOutlined />} onClick={handleSave} loading={saveMutation.isPending}>
           Save Changes
         </Button>

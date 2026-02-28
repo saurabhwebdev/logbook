@@ -185,10 +185,7 @@ export default function AuditLogsPage() {
     <div>
       {/* Page header */}
       <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Audit Logs</h2>
-          <Text style={{ fontSize: 13, color: '#86868b' }}>Track every change made across the system.</Text>
-        </div>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Audit Logs</h2>
       </Flex>
 
       {/* Filters */}

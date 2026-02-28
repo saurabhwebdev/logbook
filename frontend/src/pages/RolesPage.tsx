@@ -232,10 +232,7 @@ export default function RolesPage() {
   return (
     <div>
       <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Roles</h2>
-          <Text style={{ fontSize: 13, color: '#86868b' }}>Define roles and assign permissions.</Text>
-        </div>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Roles</h2>
         <PermissionGate permission="Role.Create">
           <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
             Add role

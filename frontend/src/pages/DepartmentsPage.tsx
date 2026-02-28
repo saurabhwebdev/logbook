@@ -219,10 +219,7 @@ export default function DepartmentsPage() {
   return (
     <div>
       <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Departments</h2>
-          <Text style={{ fontSize: 13, color: '#86868b' }}>Organize your team into departments.</Text>
-        </div>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', margin: 0 }}>Departments</h2>
         <PermissionGate permission="Department.Create">
           <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
             Add department
