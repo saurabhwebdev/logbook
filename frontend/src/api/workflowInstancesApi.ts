@@ -25,18 +25,18 @@ export const workflowInstancesApi = {
     params.append('pageSize', String(pageSize));
 
     const { data } = await api.get<PaginatedResponse<WorkflowInstance>>(
-      `/workflow-instances?${params.toString()}`
+      `/WorkflowInstances?${params.toString()}`
     );
     return data;
   },
 
   getStatistics: async (): Promise<WorkflowStatistics> => {
-    const { data } = await api.get<WorkflowStatistics>('/workflow-instances/statistics');
+    const { data } = await api.get<WorkflowStatistics>('/WorkflowInstances/statistics');
     return data;
   },
 
   start: async (workflowDefinitionId: string, entityType: string, entityId: string): Promise<string> => {
-    const { data } = await api.post<string>('/workflow-instances', {
+    const { data } = await api.post<string>('/WorkflowInstances', {
       workflowDefinitionId,
       entityType,
       entityId,
@@ -45,6 +45,6 @@ export const workflowInstancesApi = {
   },
 
   cancel: async (instanceId: string): Promise<void> => {
-    await api.post(`/workflow-instances/${instanceId}/cancel`);
+    await api.post(`/WorkflowInstances/${instanceId}/cancel`);
   },
 };

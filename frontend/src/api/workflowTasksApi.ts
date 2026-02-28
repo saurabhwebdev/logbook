@@ -21,21 +21,21 @@ export const workflowTasksApi = {
     params.append('pageSize', String(pageSize));
 
     const { data } = await api.get<PaginatedResponse<WorkflowTask>>(
-      `/workflow-tasks/my-tasks?${params.toString()}`
+      `/WorkflowTasks/my-tasks?${params.toString()}`
     );
     return data;
   },
 
   getById: async (taskId: string): Promise<WorkflowTask> => {
-    const { data } = await api.get<WorkflowTask>(`/workflow-tasks/${taskId}`);
+    const { data } = await api.get<WorkflowTask>(`/WorkflowTasks/${taskId}`);
     return data;
   },
 
   complete: async (taskId: string, status: string, comments?: string): Promise<void> => {
-    await api.post(`/workflow-tasks/${taskId}/complete`, { status, comments });
+    await api.post(`/WorkflowTasks/${taskId}/complete`, { status, comments });
   },
 
   reassign: async (taskId: string, newAssigneeUserId: string): Promise<void> => {
-    await api.post(`/workflow-tasks/${taskId}/reassign`, { newAssigneeUserId });
+    await api.post(`/WorkflowTasks/${taskId}/reassign`, { newAssigneeUserId });
   },
 };

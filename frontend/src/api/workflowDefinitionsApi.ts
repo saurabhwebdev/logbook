@@ -24,13 +24,13 @@ export const workflowDefinitionsApi = {
     params.append('pageSize', String(pageSize));
 
     const { data } = await api.get<PaginatedResponse<WorkflowDefinition>>(
-      `/workflow-definitions?${params.toString()}`
+      `/WorkflowDefinitions?${params.toString()}`
     );
     return data;
   },
 
   create: async (definition: Partial<WorkflowDefinition>): Promise<string> => {
-    const { data } = await api.post<string>('/workflow-definitions', definition);
+    const { data } = await api.post<string>('/WorkflowDefinitions', definition);
     return data;
   },
 };
