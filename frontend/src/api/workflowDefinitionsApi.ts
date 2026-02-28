@@ -2,11 +2,10 @@ import api from './axios';
 import type { WorkflowDefinition } from '../types';
 
 export interface PaginatedResponse<T> {
-  items: T[];
+  items: T[];  // Backend returns 'Items' but gets lowercased in JSON
   pageNumber: number;
-  pageSize: number;
-  totalCount: number;
   totalPages: number;
+  totalCount: number;
 }
 
 export const workflowDefinitionsApi = {
