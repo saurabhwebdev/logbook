@@ -188,6 +188,16 @@ public static class Permissions
         public const string Amend = "RegisterEntry.Amend";
     }
 
+    // Safety & Incident Management
+    public static class SafetyIncidents
+    {
+        public const string Create = "SafetyIncident.Create";
+        public const string Read = "SafetyIncident.Read";
+        public const string Update = "SafetyIncident.Update";
+        public const string Delete = "SafetyIncident.Delete";
+        public const string Investigate = "SafetyIncident.Investigate";
+    }
+
     // Workflow Engine
     public static class WorkflowDefinitions
     {

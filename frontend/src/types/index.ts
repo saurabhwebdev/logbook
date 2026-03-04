@@ -492,3 +492,54 @@ export interface RegisterEntry {
   createdAt: string;
   amendmentCount: number;
 }
+
+// Safety & Incident Management
+export interface SafetyIncident {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  incidentNumber: string;
+  title: string;
+  incidentType: string;
+  severity: string;
+  incidentDateTime: string;
+  location: string;
+  description: string;
+  immediateActions: string | null;
+  reportedBy: string;
+  reportedAt: string;
+  injuredPersonName: string | null;
+  injuredPersonRole: string | null;
+  injuryType: string | null;
+  bodyPartAffected: string | null;
+  lostTimeDays: number | null;
+  isReportable: boolean;
+  regulatoryReference: string | null;
+  witnessNames: string | null;
+  rootCause: string | null;
+  contributingFactors: string | null;
+  correctiveActions: string | null;
+  correctiveActionDueDate: string | null;
+  correctiveActionCompletedDate: string | null;
+  status: string;
+  createdAt: string;
+  investigationCount: number;
+}
+
+export interface IncidentInvestigation {
+  id: string;
+  safetyIncidentId: string;
+  incidentTitle: string;
+  investigatorName: string;
+  investigationDate: string;
+  methodology: string;
+  findings: string;
+  rootCauseAnalysis: string | null;
+  recommendations: string | null;
+  preventiveMeasures: string | null;
+  evidenceReferences: string | null;
+  status: string;
+  createdAt: string;
+}

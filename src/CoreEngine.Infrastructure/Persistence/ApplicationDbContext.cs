@@ -77,6 +77,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<StatutoryRegister> StatutoryRegisters => Set<StatutoryRegister>();
     public DbSet<RegisterEntry> RegisterEntries => Set<RegisterEntry>();
 
+    // Safety & Incident Management
+    public DbSet<SafetyIncident> SafetyIncidents => Set<SafetyIncident>();
+    public DbSet<IncidentInvestigation> IncidentInvestigations => Set<IncidentInvestigation>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

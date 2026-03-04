@@ -55,5 +55,9 @@ public interface IApplicationDbContext
     DbSet<StatutoryRegister> StatutoryRegisters { get; }
     DbSet<RegisterEntry> RegisterEntries { get; }
 
+    // Safety & Incident Management
+    DbSet<SafetyIncident> SafetyIncidents { get; }
+    DbSet<IncidentInvestigation> IncidentInvestigations { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

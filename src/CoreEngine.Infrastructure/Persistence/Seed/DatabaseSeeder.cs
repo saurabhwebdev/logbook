@@ -191,6 +191,12 @@ public static class DatabaseSeeder
             Permissions.RegisterEntries.Create,
             Permissions.RegisterEntries.Read,
             Permissions.RegisterEntries.Amend,
+            // Safety & Incident Management
+            Permissions.SafetyIncidents.Create,
+            Permissions.SafetyIncidents.Read,
+            Permissions.SafetyIncidents.Update,
+            Permissions.SafetyIncidents.Delete,
+            Permissions.SafetyIncidents.Investigate,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -235,6 +241,7 @@ public static class DatabaseSeeder
             Permissions.ShiftHandovers.Read,
             Permissions.StatutoryRegisters.Read,
             Permissions.RegisterEntries.Read,
+            Permissions.SafetyIncidents.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);

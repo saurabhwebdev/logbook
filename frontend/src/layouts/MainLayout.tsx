@@ -37,6 +37,7 @@ import {
   GoldOutlined,
   SwapOutlined,
   BookOutlined,
+  AlertOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -136,6 +137,14 @@ export default function MainLayout() {
         key: '/statutory-registers',
         icon: <BookOutlined />,
         label: 'Statutory Registers',
+      });
+    }
+
+    if (hasPermission('SafetyIncident.Read')) {
+      items.push({
+        key: '/safety-incidents',
+        icon: <AlertOutlined />,
+        label: 'Safety & Incidents',
       });
     }
 
