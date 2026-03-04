@@ -128,6 +128,25 @@ public static class Permissions
         public const string Send = "Email.Send";
     }
 
+    // ===== Logbook Mining Modules =====
+
+    // Mine Site Management
+    public static class MineSites
+    {
+        public const string Create = "MineSite.Create";
+        public const string Read = "MineSite.Read";
+        public const string Update = "MineSite.Update";
+        public const string Delete = "MineSite.Delete";
+    }
+
+    public static class MineAreas
+    {
+        public const string Create = "MineArea.Create";
+        public const string Read = "MineArea.Read";
+        public const string Update = "MineArea.Update";
+        public const string Delete = "MineArea.Delete";
+    }
+
     // Workflow Engine
     public static class WorkflowDefinitions
     {

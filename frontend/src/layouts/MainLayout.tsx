@@ -34,6 +34,7 @@ import {
   ScheduleOutlined,
   CheckSquareOutlined,
   ControlOutlined,
+  GoldOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -74,6 +75,8 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/my-tasks': 'MyTasks',
   '/workflows': 'Workflows',
   '/workflow-definitions': 'WorkflowDefinitions',
+  // Logbook Mining Modules
+  '/mine-sites': 'MineSites',
 };
 
 export default function MainLayout() {
@@ -284,6 +287,15 @@ export default function MainLayout() {
       });
     }
 
+    // ===== Logbook Mining Modules =====
+    if (hasPermission('MineSite.Read')) {
+      items.push({
+        key: '/mine-sites',
+        icon: <GoldOutlined />,
+        label: 'Mine Sites',
+      });
+    }
+
     return items;
   }, [hasPermission]);
 
@@ -323,6 +335,8 @@ export default function MainLayout() {
       help: 'Help Center',
       new: 'New',
       edit: 'Edit',
+      // Logbook Mining Modules
+      'mine-sites': 'Mine Sites',
     };
 
     let currentPath = '';

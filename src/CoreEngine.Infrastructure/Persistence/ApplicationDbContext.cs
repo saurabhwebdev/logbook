@@ -64,6 +64,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<WorkflowInstance> WorkflowInstances => Set<WorkflowInstance>();
     public DbSet<WorkflowTask> WorkflowTasks => Set<WorkflowTask>();
 
+    // Logbook Mining Modules
+    public DbSet<MineSite> MineSites => Set<MineSite>();
+    public DbSet<MineArea> MineAreas => Set<MineArea>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

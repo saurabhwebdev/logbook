@@ -342,3 +342,53 @@ export interface UserPresence {
   isOnline: boolean;
   lastSeen: string;
 }
+
+// ===== Logbook Mining Modules =====
+
+export interface MineSite {
+  id: string;
+  name: string;
+  code: string | null;
+  mineType: string;
+  jurisdiction: string;
+  jurisdictionDetails: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  address: string | null;
+  country: string | null;
+  state: string | null;
+  mineralsMined: string | null;
+  operatingCompany: string | null;
+  miningLicenseNumber: string | null;
+  licenseExpiryDate: string | null;
+  operationalSince: string | null;
+  status: string;
+  emergencyContactName: string | null;
+  emergencyContactPhone: string | null;
+  nearestHospital: string | null;
+  nearestHospitalPhone: string | null;
+  nearestHospitalDistanceKm: number | null;
+  unitSystem: string;
+  timeZone: string;
+  shiftsPerDay: number;
+  shiftPattern: string | null;
+  createdAt: string;
+  areaCount: number;
+}
+
+export interface MineArea {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  name: string;
+  code: string | null;
+  areaType: string;
+  description: string | null;
+  elevation: number | null;
+  isActive: boolean;
+  parentAreaId: string | null;
+  parentAreaName: string | null;
+  sortOrder: number;
+  createdAt: string;
+  childAreaCount: number;
+}

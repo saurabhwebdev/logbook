@@ -161,6 +161,15 @@ public static class DatabaseSeeder
             Permissions.Help.Read,
             Permissions.Help.Update,
             Permissions.Help.Delete,
+            // Logbook Mining Modules
+            Permissions.MineSites.Create,
+            Permissions.MineSites.Read,
+            Permissions.MineSites.Update,
+            Permissions.MineSites.Delete,
+            Permissions.MineAreas.Create,
+            Permissions.MineAreas.Read,
+            Permissions.MineAreas.Update,
+            Permissions.MineAreas.Delete,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -198,6 +207,8 @@ public static class DatabaseSeeder
             Permissions.Users.Read,
             Permissions.Departments.Read,
             Permissions.Help.Read,
+            Permissions.MineSites.Read,
+            Permissions.MineAreas.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);

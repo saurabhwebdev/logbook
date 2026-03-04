@@ -34,6 +34,7 @@ import BackgroundJobsPage from './pages/BackgroundJobsPage';
 import MyTasksPage from './pages/MyTasksPage';
 import WorkflowsPage from './pages/WorkflowsPage';
 import WorkflowDefinitionsPage from './pages/WorkflowDefinitionsPage';
+import MineSitesPage from './pages/MineSitesPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -128,6 +129,8 @@ function ThemedApp() {
               <Route path="my-tasks" element={<MyTasksPage />} />
               <Route path="workflows" element={<WorkflowsPage />} />
               <Route path="workflow-definitions" element={<WorkflowDefinitionsPage />} />
+              {/* Logbook Mining Modules */}
+              <Route path="mine-sites" element={<MineSitesPage />} />
             </Route>
           </Route>
           </Routes>

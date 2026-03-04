@@ -42,5 +42,9 @@ public interface IApplicationDbContext
     DbSet<WorkflowInstance> WorkflowInstances { get; }
     DbSet<WorkflowTask> WorkflowTasks { get; }
 
+    // Logbook Mining Modules
+    DbSet<MineSite> MineSites { get; }
+    DbSet<MineArea> MineAreas { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
