@@ -114,6 +114,31 @@ export default function MainLayout() {
       },
     ];
 
+    // ===== Logbook Mining Modules (primary business modules) =====
+    if (hasPermission('MineSite.Read')) {
+      items.push({
+        key: '/mine-sites',
+        icon: <GoldOutlined />,
+        label: 'Mine Sites',
+      });
+    }
+
+    if (hasPermission('ShiftDefinition.Read')) {
+      items.push({
+        key: '/shift-management',
+        icon: <SwapOutlined />,
+        label: 'Shift Management',
+      });
+    }
+
+    if (hasPermission('StatutoryRegister.Read')) {
+      items.push({
+        key: '/statutory-registers',
+        icon: <BookOutlined />,
+        label: 'Statutory Registers',
+      });
+    }
+
     if (hasPermission('User.Read')) {
       items.push({
         key: '/users',
@@ -288,31 +313,6 @@ export default function MainLayout() {
         key: '/help',
         icon: <QuestionCircleOutlined />,
         label: 'Help Center',
-      });
-    }
-
-    // ===== Logbook Mining Modules =====
-    if (hasPermission('MineSite.Read')) {
-      items.push({
-        key: '/mine-sites',
-        icon: <GoldOutlined />,
-        label: 'Mine Sites',
-      });
-    }
-
-    if (hasPermission('ShiftDefinition.Read')) {
-      items.push({
-        key: '/shift-management',
-        icon: <SwapOutlined />,
-        label: 'Shift Management',
-      });
-    }
-
-    if (hasPermission('StatutoryRegister.Read')) {
-      items.push({
-        key: '/statutory-registers',
-        icon: <BookOutlined />,
-        label: 'Statutory Registers',
       });
     }
 
