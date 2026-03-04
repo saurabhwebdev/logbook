@@ -218,6 +218,33 @@ public static class Permissions
         public const string Maintain = "Equipment.Maintain";
     }
 
+    // Blasting & Explosives Management
+    public static class Blasting
+    {
+        public const string Create = "Blasting.Create";
+        public const string Read = "Blasting.Read";
+        public const string Update = "Blasting.Update";
+        public const string Delete = "Blasting.Delete";
+        public const string ManageExplosives = "Blasting.ManageExplosives";
+    }
+
+    // Production & Dispatch
+    public static class Production
+    {
+        public const string Create = "Production.Create";
+        public const string Read = "Production.Read";
+        public const string Update = "Production.Update";
+        public const string Delete = "Production.Delete";
+    }
+
+    public static class Dispatch
+    {
+        public const string Create = "Dispatch.Create";
+        public const string Read = "Dispatch.Read";
+        public const string Update = "Dispatch.Update";
+        public const string Delete = "Dispatch.Delete";
+    }
+
     // Personnel & Workforce Management
     public static class PersonnelMgmt
     {

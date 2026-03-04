@@ -72,5 +72,13 @@ public interface IApplicationDbContext
     DbSet<Personnel> Personnel { get; }
     DbSet<PersonnelCertification> PersonnelCertifications { get; }
 
+    // Blasting & Explosives Management
+    DbSet<BlastEvent> BlastEvents { get; }
+    DbSet<ExplosiveUsage> ExplosiveUsages { get; }
+
+    // Production & Dispatch
+    DbSet<ProductionLog> ProductionLogs { get; }
+    DbSet<DispatchRecord> DispatchRecords { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -685,6 +685,60 @@ export interface PersonnelRecord {
   createdAt: string;
 }
 
+// Blasting & Explosives Management
+export interface BlastEvent {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  blastNumber: string;
+  title: string;
+  blastType: string;
+  scheduledDateTime: string;
+  actualDateTime: string | null;
+  location: string;
+  drillingPattern: string | null;
+  numberOfHoles: number | null;
+  totalExplosivesKg: number | null;
+  explosiveType: string | null;
+  detonatorType: string | null;
+  status: string;
+  blastDesignNotes: string | null;
+  safetyRadius: number | null;
+  evacuationConfirmed: boolean;
+  sentryPostsConfirmed: boolean;
+  preBlastWarningGiven: boolean;
+  supervisorName: string;
+  licensedBlasterName: string;
+  vibrationReading: number | null;
+  airBlastReading: number | null;
+  postBlastInspection: string | null;
+  postBlastNotes: string | null;
+  fragmentationQuality: string | null;
+  misfireCount: number;
+  createdAt: string;
+  usageCount: number;
+}
+
+export interface ExplosiveUsage {
+  id: string;
+  blastEventId: string;
+  blastTitle: string;
+  explosiveName: string;
+  type: string;
+  batchNumber: string | null;
+  quantityIssued: number;
+  quantityUsed: number;
+  quantityReturned: number;
+  unit: string;
+  magazineSource: string | null;
+  issuedBy: string | null;
+  receivedBy: string | null;
+  notes: string | null;
+  createdAt: string;
+}
+
 export interface PersonnelCertification {
   id: string;
   personnelId: string;
@@ -696,6 +750,56 @@ export interface PersonnelCertification {
   expiryDate: string | null;
   status: string;
   category: string | null;
+  notes: string | null;
+  createdAt: string;
+}
+
+// Production & Dispatch
+export interface ProductionLog {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  shiftInstanceId: string | null;
+  logNumber: string;
+  date: string;
+  shiftName: string | null;
+  material: string;
+  sourceLocation: string | null;
+  destinationLocation: string | null;
+  quantityTonnes: number;
+  quantityBCM: number | null;
+  equipmentUsed: string | null;
+  operatorName: string | null;
+  haulingDistance: number | null;
+  loadCount: number | null;
+  status: string;
+  notes: string | null;
+  verifiedBy: string | null;
+  verifiedAt: string | null;
+  createdAt: string;
+}
+
+export interface DispatchRecord {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  dispatchNumber: string;
+  date: string;
+  vehicleNumber: string;
+  driverName: string | null;
+  material: string;
+  sourceLocation: string;
+  destinationLocation: string;
+  weighbridgeTicketNumber: string | null;
+  grossWeight: number | null;
+  tareWeight: number | null;
+  netWeight: number | null;
+  unit: string;
+  departureTime: string | null;
+  arrivalTime: string | null;
+  status: string;
   notes: string | null;
   createdAt: string;
 }

@@ -94,6 +94,14 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Personnel> Personnel => Set<Personnel>();
     public DbSet<PersonnelCertification> PersonnelCertifications => Set<PersonnelCertification>();
 
+    // Blasting & Explosives Management
+    public DbSet<BlastEvent> BlastEvents => Set<BlastEvent>();
+    public DbSet<ExplosiveUsage> ExplosiveUsages => Set<ExplosiveUsage>();
+
+    // Production & Dispatch
+    public DbSet<ProductionLog> ProductionLogs => Set<ProductionLog>();
+    public DbSet<DispatchRecord> DispatchRecords => Set<DispatchRecord>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

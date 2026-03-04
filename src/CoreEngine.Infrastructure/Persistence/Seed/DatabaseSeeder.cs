@@ -215,6 +215,21 @@ public static class DatabaseSeeder
             Permissions.PersonnelMgmt.Update,
             Permissions.PersonnelMgmt.Delete,
             Permissions.PersonnelMgmt.ManageCertifications,
+            // Blasting & Explosives Management
+            Permissions.Blasting.Create,
+            Permissions.Blasting.Read,
+            Permissions.Blasting.Update,
+            Permissions.Blasting.Delete,
+            Permissions.Blasting.ManageExplosives,
+            // Production & Dispatch
+            Permissions.Production.Create,
+            Permissions.Production.Read,
+            Permissions.Production.Update,
+            Permissions.Production.Delete,
+            Permissions.Dispatch.Create,
+            Permissions.Dispatch.Read,
+            Permissions.Dispatch.Update,
+            Permissions.Dispatch.Delete,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -263,6 +278,9 @@ public static class DatabaseSeeder
             Permissions.Inspections.Read,
             Permissions.EquipmentMgmt.Read,
             Permissions.PersonnelMgmt.Read,
+            Permissions.Blasting.Read,
+            Permissions.Production.Read,
+            Permissions.Dispatch.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);

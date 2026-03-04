@@ -41,6 +41,7 @@ import {
   AuditOutlined,
   ToolOutlined,
   IdcardOutlined,
+  ThunderboltOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -172,6 +173,14 @@ export default function MainLayout() {
         key: '/personnel',
         icon: <IdcardOutlined />,
         label: 'Personnel',
+      });
+    }
+
+    if (hasPermission('Blasting.Read')) {
+      items.push({
+        key: '/blasting',
+        icon: <ThunderboltOutlined />,
+        label: 'Blasting & Explosives',
       });
     }
 
@@ -399,6 +408,7 @@ export default function MainLayout() {
       inspections: 'Inspections',
       equipment: 'Equipment & CMMS',
       personnel: 'Personnel',
+      blasting: 'Blasting & Explosives',
     };
 
     let currentPath = '';

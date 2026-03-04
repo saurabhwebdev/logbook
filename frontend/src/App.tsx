@@ -41,6 +41,7 @@ import SafetyIncidentsPage from './pages/SafetyIncidentsPage';
 import InspectionsPage from './pages/InspectionsPage';
 import EquipmentPage from './pages/EquipmentPage';
 import PersonnelPage from './pages/PersonnelPage';
+import BlastingPage from './pages/BlastingPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -143,6 +144,7 @@ function ThemedApp() {
               <Route path="inspections" element={<InspectionsPage />} />
               <Route path="equipment" element={<EquipmentPage />} />
               <Route path="personnel" element={<PersonnelPage />} />
+              <Route path="blasting" element={<BlastingPage />} />
             </Route>
           </Route>
           </Routes>
