@@ -45,6 +45,7 @@ import {
   DatabaseOutlined,
   SafetyCertificateOutlined,
   CloudOutlined,
+  CompressOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -92,6 +93,7 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/production': 'Production',
   '/work-permits': 'WorkPermits',
   '/environmental': 'Environmental',
+  '/ventilation': 'Ventilation',
 };
 
 export default function MainLayout() {
@@ -211,6 +213,14 @@ export default function MainLayout() {
         key: '/environmental',
         icon: <CloudOutlined />,
         label: 'Environmental',
+      });
+    }
+
+    if (hasPermission('Ventilation.Read')) {
+      items.push({
+        key: '/ventilation',
+        icon: <CompressOutlined />,
+        label: 'Ventilation & Gas',
       });
     }
 
@@ -442,6 +452,7 @@ export default function MainLayout() {
       production: 'Production & Dispatch',
       'work-permits': 'Permit to Work',
       environmental: 'Environmental Monitoring',
+      ventilation: 'Ventilation & Gas',
     };
 
     let currentPath = '';

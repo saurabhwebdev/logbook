@@ -109,6 +109,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<EnvironmentalReading> EnvironmentalReadings => Set<EnvironmentalReading>();
     public DbSet<EnvironmentalIncident> EnvironmentalIncidents => Set<EnvironmentalIncident>();
 
+    // Ventilation & Gas Monitoring
+    public DbSet<VentilationReading> VentilationReadings => Set<VentilationReading>();
+    public DbSet<GasReading> GasReadings => Set<GasReading>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

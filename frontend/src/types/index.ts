@@ -853,6 +853,55 @@ export interface EnvironmentalIncident {
   createdAt: string;
 }
 
+// Ventilation & Gas Monitoring
+export interface VentilationReading {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  readingNumber: string;
+  locationDescription: string;
+  airflowVelocity: number | null;
+  airflowVolume: number | null;
+  temperature: number | null;
+  humidity: number | null;
+  barometricPressure: number | null;
+  readingDateTime: string;
+  recordedBy: string;
+  instrumentUsed: string | null;
+  doorStatus: string | null;
+  fanStatus: string | null;
+  ventilationStatus: string;
+  notes: string | null;
+  createdAt: string;
+}
+
+export interface GasReading {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  readingNumber: string;
+  gasType: string;
+  concentration: number;
+  unit: string;
+  thresholdTWA: number | null;
+  thresholdSTEL: number | null;
+  thresholdCeiling: number | null;
+  isExceedance: boolean;
+  locationDescription: string;
+  readingDateTime: string;
+  recordedBy: string;
+  instrumentId: string | null;
+  calibrationDate: string | null;
+  actionTaken: string | null;
+  status: string;
+  notes: string | null;
+  createdAt: string;
+}
+
 export interface WorkPermit {
   id: string;
   mineSiteId: string;

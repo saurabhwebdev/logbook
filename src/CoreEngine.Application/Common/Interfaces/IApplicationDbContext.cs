@@ -87,5 +87,9 @@ public interface IApplicationDbContext
     DbSet<EnvironmentalReading> EnvironmentalReadings { get; }
     DbSet<EnvironmentalIncident> EnvironmentalIncidents { get; }
 
+    // Ventilation & Gas Monitoring
+    DbSet<VentilationReading> VentilationReadings { get; }
+    DbSet<GasReading> GasReadings { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

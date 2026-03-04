@@ -265,6 +265,14 @@ public static class Permissions
         public const string ManageIncidents = "Environmental.ManageIncidents";
     }
 
+    // Ventilation & Gas Monitoring
+    public static class Ventilation
+    {
+        public const string Create = "Ventilation.Create";
+        public const string Read = "Ventilation.Read";
+        public const string Update = "Ventilation.Update";
+    }
+
     // Personnel & Workforce Management
     public static class PersonnelMgmt
     {
