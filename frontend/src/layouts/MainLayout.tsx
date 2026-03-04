@@ -42,6 +42,7 @@ import {
   ToolOutlined,
   IdcardOutlined,
   ThunderboltOutlined,
+  DatabaseOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -86,6 +87,7 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/mine-sites': 'MineSites',
   '/shift-management': 'ShiftManagement',
   '/statutory-registers': 'StatutoryRegisters',
+  '/production': 'Production',
 };
 
 export default function MainLayout() {
@@ -181,6 +183,14 @@ export default function MainLayout() {
         key: '/blasting',
         icon: <ThunderboltOutlined />,
         label: 'Blasting & Explosives',
+      });
+    }
+
+    if (hasPermission('Production.Read')) {
+      items.push({
+        key: '/production',
+        icon: <DatabaseOutlined />,
+        label: 'Production & Dispatch',
       });
     }
 
@@ -409,6 +419,7 @@ export default function MainLayout() {
       equipment: 'Equipment & CMMS',
       personnel: 'Personnel',
       blasting: 'Blasting & Explosives',
+      production: 'Production & Dispatch',
     };
 
     let currentPath = '';
