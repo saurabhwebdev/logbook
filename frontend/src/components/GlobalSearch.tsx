@@ -209,7 +209,7 @@ export default function GlobalSearch() {
       onSelect={handleSelect}
       onChange={setSearchValue}
       style={{ width: 280 }}
-      popupClassName="global-search-dropdown"
+      classNames={{ popup: { root: 'global-search-dropdown' } }}
       notFoundContent={loading ? <Spin size="small" /> : null}
     >
       <Input
