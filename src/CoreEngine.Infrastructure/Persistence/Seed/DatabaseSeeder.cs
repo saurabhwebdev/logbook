@@ -209,6 +209,12 @@ public static class DatabaseSeeder
             Permissions.EquipmentMgmt.Update,
             Permissions.EquipmentMgmt.Delete,
             Permissions.EquipmentMgmt.Maintain,
+            // Personnel & Workforce Management
+            Permissions.PersonnelMgmt.Create,
+            Permissions.PersonnelMgmt.Read,
+            Permissions.PersonnelMgmt.Update,
+            Permissions.PersonnelMgmt.Delete,
+            Permissions.PersonnelMgmt.ManageCertifications,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -256,6 +262,7 @@ public static class DatabaseSeeder
             Permissions.SafetyIncidents.Read,
             Permissions.Inspections.Read,
             Permissions.EquipmentMgmt.Read,
+            Permissions.PersonnelMgmt.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);

@@ -218,6 +218,16 @@ public static class Permissions
         public const string Maintain = "Equipment.Maintain";
     }
 
+    // Personnel & Workforce Management
+    public static class PersonnelMgmt
+    {
+        public const string Create = "Personnel.Create";
+        public const string Read = "Personnel.Read";
+        public const string Update = "Personnel.Update";
+        public const string Delete = "Personnel.Delete";
+        public const string ManageCertifications = "Personnel.ManageCertifications";
+    }
+
     // Workflow Engine
     public static class WorkflowDefinitions
     {

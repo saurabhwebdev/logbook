@@ -656,3 +656,46 @@ export interface MaintenanceRecord {
   notes: string | null;
   createdAt: string;
 }
+
+// Personnel & Workforce Management
+export interface PersonnelRecord {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  employeeNumber: string;
+  firstName: string;
+  lastName: string;
+  middleName: string | null;
+  role: string;
+  department: string | null;
+  designation: string | null;
+  employmentType: string;
+  dateOfJoining: string;
+  dateOfLeaving: string | null;
+  status: string;
+  contactPhone: string | null;
+  contactEmail: string | null;
+  emergencyContactName: string | null;
+  emergencyContactPhone: string | null;
+  bloodGroup: string | null;
+  medicalFitnessCertificate: string | null;
+  medicalFitnessExpiry: string | null;
+  notes: string | null;
+  certificationCount: number;
+  createdAt: string;
+}
+
+export interface PersonnelCertification {
+  id: string;
+  personnelId: string;
+  personnelName: string;
+  certificationName: string;
+  certificateNumber: string | null;
+  issuingAuthority: string | null;
+  issueDate: string;
+  expiryDate: string | null;
+  status: string;
+  category: string | null;
+  notes: string | null;
+  createdAt: string;
+}

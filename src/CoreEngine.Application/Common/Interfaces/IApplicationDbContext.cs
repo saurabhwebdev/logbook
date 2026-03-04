@@ -68,5 +68,9 @@ public interface IApplicationDbContext
     DbSet<Equipment> Equipment { get; }
     DbSet<MaintenanceRecord> MaintenanceRecords { get; }
 
+    // Personnel & Workforce Management
+    DbSet<Personnel> Personnel { get; }
+    DbSet<PersonnelCertification> PersonnelCertifications { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

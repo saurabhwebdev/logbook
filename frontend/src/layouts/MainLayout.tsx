@@ -40,6 +40,7 @@ import {
   AlertOutlined,
   AuditOutlined,
   ToolOutlined,
+  IdcardOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -163,6 +164,14 @@ export default function MainLayout() {
         key: '/equipment',
         icon: <ToolOutlined />,
         label: 'Equipment & CMMS',
+      });
+    }
+
+    if (hasPermission('Personnel.Read')) {
+      items.push({
+        key: '/personnel',
+        icon: <IdcardOutlined />,
+        label: 'Personnel',
       });
     }
 
@@ -389,6 +398,7 @@ export default function MainLayout() {
       'safety-incidents': 'Safety & Incidents',
       inspections: 'Inspections',
       equipment: 'Equipment & CMMS',
+      personnel: 'Personnel',
     };
 
     let currentPath = '';

@@ -90,6 +90,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Equipment> Equipment => Set<Equipment>();
     public DbSet<MaintenanceRecord> MaintenanceRecords => Set<MaintenanceRecord>();
 
+    // Personnel & Workforce Management
+    public DbSet<Personnel> Personnel => Set<Personnel>();
+    public DbSet<PersonnelCertification> PersonnelCertifications => Set<PersonnelCertification>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
