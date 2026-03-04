@@ -64,5 +64,9 @@ public interface IApplicationDbContext
     DbSet<Inspection> Inspections { get; }
     DbSet<InspectionFinding> InspectionFindings { get; }
 
+    // Equipment & Maintenance (CMMS)
+    DbSet<Equipment> Equipment { get; }
+    DbSet<MaintenanceRecord> MaintenanceRecords { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

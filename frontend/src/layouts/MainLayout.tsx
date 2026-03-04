@@ -39,6 +39,7 @@ import {
   BookOutlined,
   AlertOutlined,
   AuditOutlined,
+  ToolOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -154,6 +155,14 @@ export default function MainLayout() {
         key: '/inspections',
         icon: <AuditOutlined />,
         label: 'Inspections',
+      });
+    }
+
+    if (hasPermission('Equipment.Read')) {
+      items.push({
+        key: '/equipment',
+        icon: <ToolOutlined />,
+        label: 'Equipment & CMMS',
       });
     }
 
@@ -379,6 +388,7 @@ export default function MainLayout() {
       'statutory-registers': 'Statutory Registers',
       'safety-incidents': 'Safety & Incidents',
       inspections: 'Inspections',
+      equipment: 'Equipment & CMMS',
     };
 
     let currentPath = '';

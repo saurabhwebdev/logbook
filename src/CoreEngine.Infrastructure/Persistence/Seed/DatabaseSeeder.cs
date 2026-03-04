@@ -203,6 +203,12 @@ public static class DatabaseSeeder
             Permissions.Inspections.Update,
             Permissions.Inspections.Delete,
             Permissions.Inspections.ManageTemplates,
+            // Equipment & Maintenance (CMMS)
+            Permissions.EquipmentMgmt.Create,
+            Permissions.EquipmentMgmt.Read,
+            Permissions.EquipmentMgmt.Update,
+            Permissions.EquipmentMgmt.Delete,
+            Permissions.EquipmentMgmt.Maintain,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -249,6 +255,7 @@ public static class DatabaseSeeder
             Permissions.RegisterEntries.Read,
             Permissions.SafetyIncidents.Read,
             Permissions.Inspections.Read,
+            Permissions.EquipmentMgmt.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);

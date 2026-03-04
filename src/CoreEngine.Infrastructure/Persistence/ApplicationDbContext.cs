@@ -86,6 +86,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Inspection> Inspections => Set<Inspection>();
     public DbSet<InspectionFinding> InspectionFindings => Set<InspectionFinding>();
 
+    // Equipment & Maintenance (CMMS)
+    public DbSet<Equipment> Equipment => Set<Equipment>();
+    public DbSet<MaintenanceRecord> MaintenanceRecords => Set<MaintenanceRecord>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

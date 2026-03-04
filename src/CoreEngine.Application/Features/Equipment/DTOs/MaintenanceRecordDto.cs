@@ -1,0 +1,25 @@
+namespace CoreEngine.Application.Features.Equipment.DTOs;
+
+public record MaintenanceRecordDto(
+    Guid Id,
+    Guid EquipmentId,
+    string EquipmentName,
+    string AssetNumber,
+    string WorkOrderNumber,
+    string MaintenanceType,
+    string Priority,
+    string Title,
+    string? Description,
+    DateTime ScheduledDate,
+    DateTime? StartedAt,
+    DateTime? CompletedAt,
+    string? PerformedBy,
+    string Status,
+    double? DowntimeHours,
+    decimal? LaborCost,
+    decimal? PartsCost,
+    string? PartsUsed,
+    string? Findings,
+    string? ActionsTaken,
+    string? Notes,
+    DateTime CreatedAt);

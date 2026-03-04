@@ -208,6 +208,16 @@ public static class Permissions
         public const string ManageTemplates = "Inspection.ManageTemplates";
     }
 
+    // Equipment & Maintenance (CMMS)
+    public static class EquipmentMgmt
+    {
+        public const string Create = "Equipment.Create";
+        public const string Read = "Equipment.Read";
+        public const string Update = "Equipment.Update";
+        public const string Delete = "Equipment.Delete";
+        public const string Maintain = "Equipment.Maintain";
+    }
+
     // Workflow Engine
     public static class WorkflowDefinitions
     {

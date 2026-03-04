@@ -1,0 +1,28 @@
+namespace CoreEngine.Application.Features.Equipment.DTOs;
+
+public record EquipmentDto(
+    Guid Id,
+    Guid MineSiteId,
+    string MineSiteName,
+    Guid? MineAreaId,
+    string? MineAreaName,
+    string AssetNumber,
+    string Name,
+    string Category,
+    string? Make,
+    string? Model,
+    string? SerialNumber,
+    int? YearOfManufacture,
+    DateTime? PurchaseDate,
+    decimal? PurchaseCost,
+    string Status,
+    string? Location,
+    string? OperatorName,
+    double? HoursOperated,
+    double? NextServiceHours,
+    DateTime? NextServiceDate,
+    DateTime? LastServiceDate,
+    string? WarrantyInfo,
+    string? Notes,
+    int MaintenanceCount,
+    DateTime CreatedAt);

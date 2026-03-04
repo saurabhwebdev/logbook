@@ -602,3 +602,57 @@ export interface InspectionFinding {
   closureNotes: string | null;
   createdAt: string;
 }
+
+// Equipment & Maintenance (CMMS)
+export interface EquipmentItem {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  assetNumber: string;
+  name: string;
+  category: string;
+  make: string | null;
+  model: string | null;
+  serialNumber: string | null;
+  yearOfManufacture: number | null;
+  purchaseDate: string | null;
+  purchaseCost: number | null;
+  status: string;
+  location: string | null;
+  operatorName: string | null;
+  hoursOperated: number | null;
+  nextServiceHours: number | null;
+  nextServiceDate: string | null;
+  lastServiceDate: string | null;
+  warrantyInfo: string | null;
+  notes: string | null;
+  maintenanceCount: number;
+  createdAt: string;
+}
+
+export interface MaintenanceRecord {
+  id: string;
+  equipmentId: string;
+  equipmentName: string;
+  assetNumber: string;
+  workOrderNumber: string;
+  maintenanceType: string;
+  priority: string;
+  title: string;
+  description: string | null;
+  scheduledDate: string;
+  startedAt: string | null;
+  completedAt: string | null;
+  performedBy: string | null;
+  status: string;
+  downtimeHours: number | null;
+  laborCost: number | null;
+  partsCost: number | null;
+  partsUsed: string | null;
+  findings: string | null;
+  actionsTaken: string | null;
+  notes: string | null;
+  createdAt: string;
+}
