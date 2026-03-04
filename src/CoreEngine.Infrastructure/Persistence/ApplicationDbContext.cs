@@ -113,6 +113,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<VentilationReading> VentilationReadings => Set<VentilationReading>();
     public DbSet<GasReading> GasReadings => Set<GasReading>();
 
+    // Compliance & Regulatory
+    public DbSet<ComplianceRequirement> ComplianceRequirements => Set<ComplianceRequirement>();
+    public DbSet<ComplianceAudit> ComplianceAudits => Set<ComplianceAudit>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

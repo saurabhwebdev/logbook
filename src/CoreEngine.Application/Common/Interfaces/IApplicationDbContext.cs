@@ -91,5 +91,9 @@ public interface IApplicationDbContext
     DbSet<VentilationReading> VentilationReadings { get; }
     DbSet<GasReading> GasReadings { get; }
 
+    // Compliance & Regulatory
+    DbSet<ComplianceRequirement> ComplianceRequirements { get; }
+    DbSet<ComplianceAudit> ComplianceAudits { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

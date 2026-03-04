@@ -240,6 +240,12 @@ public static class DatabaseSeeder
             Permissions.Ventilation.Create,
             Permissions.Ventilation.Read,
             Permissions.Ventilation.Update,
+            // Compliance & Regulatory
+            Permissions.Compliance.Create,
+            Permissions.Compliance.Read,
+            Permissions.Compliance.Update,
+            Permissions.Compliance.Delete,
+            Permissions.Compliance.Audit,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -293,6 +299,7 @@ public static class DatabaseSeeder
             Permissions.Dispatch.Read,
             Permissions.Environmental.Read,
             Permissions.Ventilation.Read,
+            Permissions.Compliance.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);

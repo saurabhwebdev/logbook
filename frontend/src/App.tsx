@@ -46,6 +46,7 @@ import ProductionPage from './pages/ProductionPage';
 import WorkPermitsPage from './pages/WorkPermitsPage';
 import EnvironmentalPage from './pages/EnvironmentalPage';
 import VentilationPage from './pages/VentilationPage';
+import CompliancePage from './pages/CompliancePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -153,6 +154,7 @@ function ThemedApp() {
               <Route path="work-permits" element={<WorkPermitsPage />} />
               <Route path="environmental" element={<EnvironmentalPage />} />
               <Route path="ventilation" element={<VentilationPage />} />
+              <Route path="compliance" element={<CompliancePage />} />
             </Route>
           </Route>
           </Routes>

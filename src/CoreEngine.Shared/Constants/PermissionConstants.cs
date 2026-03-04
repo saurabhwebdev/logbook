@@ -273,6 +273,16 @@ public static class Permissions
         public const string Update = "Ventilation.Update";
     }
 
+    // Compliance & Regulatory
+    public static class Compliance
+    {
+        public const string Create = "Compliance.Create";
+        public const string Read = "Compliance.Read";
+        public const string Update = "Compliance.Update";
+        public const string Delete = "Compliance.Delete";
+        public const string Audit = "Compliance.Audit";
+    }
+
     // Personnel & Workforce Management
     public static class PersonnelMgmt
     {

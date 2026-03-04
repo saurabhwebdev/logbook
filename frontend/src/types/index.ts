@@ -902,6 +902,51 @@ export interface GasReading {
   createdAt: string;
 }
 
+// Compliance & Regulatory
+export interface ComplianceRequirement {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  code: string;
+  title: string;
+  jurisdiction: string;
+  category: string;
+  description: string;
+  regulatoryBody: string | null;
+  referenceDocument: string | null;
+  frequency: string;
+  dueDate: string | null;
+  lastCompletedDate: string | null;
+  nextDueDate: string | null;
+  responsibleRole: string | null;
+  status: string;
+  priority: string;
+  penaltyForNonCompliance: string | null;
+  notes: string | null;
+  isActive: boolean;
+  auditCount: number;
+  createdAt: string;
+}
+
+export interface ComplianceAudit {
+  id: string;
+  complianceRequirementId: string;
+  requirementTitle: string;
+  auditNumber: string;
+  auditDate: string;
+  auditorName: string;
+  auditType: string;
+  findings: string;
+  complianceStatus: string;
+  correctiveActions: string | null;
+  actionDueDate: string | null;
+  actionCompletedDate: string | null;
+  evidenceReferences: string | null;
+  status: string;
+  notes: string | null;
+  createdAt: string;
+}
+
 export interface WorkPermit {
   id: string;
   mineSiteId: string;
