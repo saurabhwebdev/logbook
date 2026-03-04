@@ -35,6 +35,7 @@ import {
   CheckSquareOutlined,
   ControlOutlined,
   GoldOutlined,
+  SwapOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -77,6 +78,7 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/workflow-definitions': 'WorkflowDefinitions',
   // Logbook Mining Modules
   '/mine-sites': 'MineSites',
+  '/shift-management': 'ShiftManagement',
 };
 
 export default function MainLayout() {
@@ -296,6 +298,14 @@ export default function MainLayout() {
       });
     }
 
+    if (hasPermission('ShiftDefinition.Read')) {
+      items.push({
+        key: '/shift-management',
+        icon: <SwapOutlined />,
+        label: 'Shift Management',
+      });
+    }
+
     return items;
   }, [hasPermission]);
 
@@ -337,6 +347,7 @@ export default function MainLayout() {
       edit: 'Edit',
       // Logbook Mining Modules
       'mine-sites': 'Mine Sites',
+      'shift-management': 'Shift Management',
     };
 
     let currentPath = '';

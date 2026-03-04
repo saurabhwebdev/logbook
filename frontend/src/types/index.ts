@@ -392,3 +392,60 @@ export interface MineArea {
   createdAt: string;
   childAreaCount: number;
 }
+
+// Shift Management
+export interface ShiftDefinition {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  name: string;
+  code: string | null;
+  startTime: string;
+  endTime: string;
+  shiftOrder: number;
+  color: string | null;
+  isActive: boolean;
+  createdAt: string;
+  instanceCount: number;
+}
+
+export interface ShiftInstance {
+  id: string;
+  shiftDefinitionId: string;
+  shiftDefinitionName: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  date: string;
+  supervisorName: string | null;
+  supervisorId: string | null;
+  status: string;
+  actualStartTime: string | null;
+  actualEndTime: string | null;
+  personnelCount: number | null;
+  weatherConditions: string | null;
+  notes: string | null;
+  createdAt: string;
+  handoverCount: number;
+}
+
+export interface ShiftHandover {
+  id: string;
+  outgoingShiftInstanceId: string;
+  outgoingShiftName: string;
+  incomingShiftInstanceId: string | null;
+  incomingShiftName: string | null;
+  mineSiteId: string;
+  mineSiteName: string;
+  handoverDateTime: string;
+  safetyIssues: string | null;
+  ongoingOperations: string | null;
+  pendingTasks: string | null;
+  equipmentStatus: string | null;
+  environmentalConditions: string | null;
+  generalRemarks: string | null;
+  handedOverBy: string | null;
+  receivedBy: string | null;
+  status: string;
+  acknowledgedAt: string | null;
+  createdAt: string;
+}

@@ -170,6 +170,19 @@ public static class DatabaseSeeder
             Permissions.MineAreas.Read,
             Permissions.MineAreas.Update,
             Permissions.MineAreas.Delete,
+            // Shift Management & Handover
+            Permissions.ShiftDefinitions.Create,
+            Permissions.ShiftDefinitions.Read,
+            Permissions.ShiftDefinitions.Update,
+            Permissions.ShiftDefinitions.Delete,
+            Permissions.ShiftInstances.Create,
+            Permissions.ShiftInstances.Read,
+            Permissions.ShiftInstances.Update,
+            Permissions.ShiftInstances.Delete,
+            Permissions.ShiftHandovers.Create,
+            Permissions.ShiftHandovers.Read,
+            Permissions.ShiftHandovers.Update,
+            Permissions.ShiftHandovers.Delete,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -209,6 +222,9 @@ public static class DatabaseSeeder
             Permissions.Help.Read,
             Permissions.MineSites.Read,
             Permissions.MineAreas.Read,
+            Permissions.ShiftDefinitions.Read,
+            Permissions.ShiftInstances.Read,
+            Permissions.ShiftHandovers.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);

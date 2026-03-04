@@ -147,6 +147,31 @@ public static class Permissions
         public const string Delete = "MineArea.Delete";
     }
 
+    // Shift Management & Handover
+    public static class ShiftDefinitions
+    {
+        public const string Create = "ShiftDefinition.Create";
+        public const string Read = "ShiftDefinition.Read";
+        public const string Update = "ShiftDefinition.Update";
+        public const string Delete = "ShiftDefinition.Delete";
+    }
+
+    public static class ShiftInstances
+    {
+        public const string Create = "ShiftInstance.Create";
+        public const string Read = "ShiftInstance.Read";
+        public const string Update = "ShiftInstance.Update";
+        public const string Delete = "ShiftInstance.Delete";
+    }
+
+    public static class ShiftHandovers
+    {
+        public const string Create = "ShiftHandover.Create";
+        public const string Read = "ShiftHandover.Read";
+        public const string Update = "ShiftHandover.Update";
+        public const string Delete = "ShiftHandover.Delete";
+    }
+
     // Workflow Engine
     public static class WorkflowDefinitions
     {

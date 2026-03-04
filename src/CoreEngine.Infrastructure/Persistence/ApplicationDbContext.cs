@@ -68,6 +68,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<MineSite> MineSites => Set<MineSite>();
     public DbSet<MineArea> MineAreas => Set<MineArea>();
 
+    // Shift Management & Handover
+    public DbSet<ShiftDefinition> ShiftDefinitions => Set<ShiftDefinition>();
+    public DbSet<ShiftInstance> ShiftInstances => Set<ShiftInstance>();
+    public DbSet<ShiftHandover> ShiftHandovers => Set<ShiftHandover>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

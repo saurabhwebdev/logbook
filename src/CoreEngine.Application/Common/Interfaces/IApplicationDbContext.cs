@@ -46,5 +46,10 @@ public interface IApplicationDbContext
     DbSet<MineSite> MineSites { get; }
     DbSet<MineArea> MineAreas { get; }
 
+    // Shift Management & Handover
+    DbSet<ShiftDefinition> ShiftDefinitions { get; }
+    DbSet<ShiftInstance> ShiftInstances { get; }
+    DbSet<ShiftHandover> ShiftHandovers { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

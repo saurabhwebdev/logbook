@@ -35,6 +35,7 @@ import MyTasksPage from './pages/MyTasksPage';
 import WorkflowsPage from './pages/WorkflowsPage';
 import WorkflowDefinitionsPage from './pages/WorkflowDefinitionsPage';
 import MineSitesPage from './pages/MineSitesPage';
+import ShiftManagementPage from './pages/ShiftManagementPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -131,6 +132,7 @@ function ThemedApp() {
               <Route path="workflow-definitions" element={<WorkflowDefinitionsPage />} />
               {/* Logbook Mining Modules */}
               <Route path="mine-sites" element={<MineSitesPage />} />
+              <Route path="shift-management" element={<ShiftManagementPage />} />
             </Route>
           </Route>
           </Routes>
