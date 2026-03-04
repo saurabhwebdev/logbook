@@ -1,7 +1,7 @@
 @echo off
-title CoreEngine - Launcher
+title Logbook - Launcher
 echo ============================================
-echo    CoreEngine - Starting Application
+echo    Logbook - Starting Application
 echo ============================================
 echo.
 echo  Backend API:   http://localhost:5034
@@ -13,7 +13,7 @@ echo ============================================
 echo  Starting backend (.NET 9)...
 echo ============================================
 
-start "CoreEngine API" cmd /k "cd /d C:\Webdev\coreengine && dotnet run --project src/CoreEngine.API --launch-profile http"
+start "Logbook API" cmd /k "cd /d C:\Webdev\coreenginelogbook && dotnet run --project src/CoreEngine.API --launch-profile http"
 
 echo  Waiting for backend to initialize...
 timeout /t 5 /nobreak >nul
@@ -22,7 +22,7 @@ echo ============================================
 echo  Starting frontend (React + Vite)...
 echo ============================================
 
-start "CoreEngine Frontend" cmd /k "cd /d C:\Webdev\coreengine\frontend && npm run dev"
+start "Logbook Frontend" cmd /k "cd /d C:\Webdev\coreenginelogbook\frontend && npm run dev"
 
 timeout /t 3 /nobreak >nul
 

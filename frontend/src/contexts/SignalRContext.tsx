@@ -45,9 +45,11 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) =>
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) return;
 
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5034';
+
     // Build notification hub connection
     const notifHub = new HubConnectionBuilder()
-      .withUrl(`${import.meta.env.VITE_API_BASE_URL}/hubs/notifications`, {
+      .withUrl(`${apiBaseUrl}/hubs/notifications`, {
         accessTokenFactory: () => accessToken,
       })
       .withAutomaticReconnect()
@@ -56,7 +58,7 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) =>
 
     // Build presence hub connection
     const presenceHub = new HubConnectionBuilder()
-      .withUrl(`${import.meta.env.VITE_API_BASE_URL}/hubs/presence`, {
+      .withUrl(`${apiBaseUrl}/hubs/presence`, {
         accessTokenFactory: () => accessToken,
       })
       .withAutomaticReconnect()

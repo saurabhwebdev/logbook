@@ -25,7 +25,7 @@ export default function HelpDrawer({ open, onClose, moduleKey }: HelpDrawerProps
       title={article?.title || 'Help'}
       open={open}
       onClose={onClose}
-      width={480}
+      size="large"
       styles={{ body: { padding: '16px 24px' } }}
     >
       {isLoading ? (
