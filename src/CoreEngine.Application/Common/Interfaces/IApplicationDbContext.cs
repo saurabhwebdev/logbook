@@ -80,5 +80,8 @@ public interface IApplicationDbContext
     DbSet<ProductionLog> ProductionLogs { get; }
     DbSet<DispatchRecord> DispatchRecords { get; }
 
+    // Permit to Work
+    DbSet<WorkPermit> WorkPermits { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

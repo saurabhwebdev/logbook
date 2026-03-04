@@ -803,3 +803,34 @@ export interface DispatchRecord {
   notes: string | null;
   createdAt: string;
 }
+
+export interface WorkPermit {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  permitNumber: string;
+  title: string;
+  permitType: string;
+  requestedBy: string;
+  requestDate: string;
+  startDateTime: string;
+  endDateTime: string;
+  location: string;
+  workDescription: string;
+  hazardsIdentified: string | null;
+  controlMeasures: string | null;
+  ppeRequired: string | null;
+  emergencyProcedures: string | null;
+  gasTestRequired: boolean;
+  gasTestResults: string | null;
+  status: string;
+  approvedBy: string | null;
+  approvedAt: string | null;
+  closedBy: string | null;
+  closedAt: string | null;
+  rejectionReason: string | null;
+  notes: string | null;
+  createdAt: string;
+}

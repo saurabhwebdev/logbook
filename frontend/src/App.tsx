@@ -43,6 +43,7 @@ import EquipmentPage from './pages/EquipmentPage';
 import PersonnelPage from './pages/PersonnelPage';
 import BlastingPage from './pages/BlastingPage';
 import ProductionPage from './pages/ProductionPage';
+import WorkPermitsPage from './pages/WorkPermitsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -147,6 +148,7 @@ function ThemedApp() {
               <Route path="personnel" element={<PersonnelPage />} />
               <Route path="blasting" element={<BlastingPage />} />
               <Route path="production" element={<ProductionPage />} />
+              <Route path="work-permits" element={<WorkPermitsPage />} />
             </Route>
           </Route>
           </Routes>

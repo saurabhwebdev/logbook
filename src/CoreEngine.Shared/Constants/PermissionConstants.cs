@@ -245,6 +245,16 @@ public static class Permissions
         public const string Delete = "Dispatch.Delete";
     }
 
+    // Permit to Work
+    public static class WorkPermits
+    {
+        public const string Create = "WorkPermit.Create";
+        public const string Read = "WorkPermit.Read";
+        public const string Update = "WorkPermit.Update";
+        public const string Delete = "WorkPermit.Delete";
+        public const string Approve = "WorkPermit.Approve";
+    }
+
     // Personnel & Workforce Management
     public static class PersonnelMgmt
     {

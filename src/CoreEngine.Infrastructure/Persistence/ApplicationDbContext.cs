@@ -102,6 +102,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<ProductionLog> ProductionLogs => Set<ProductionLog>();
     public DbSet<DispatchRecord> DispatchRecords => Set<DispatchRecord>();
 
+    // Permit to Work
+    public DbSet<WorkPermit> WorkPermits => Set<WorkPermit>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

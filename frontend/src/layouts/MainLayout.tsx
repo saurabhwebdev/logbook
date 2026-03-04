@@ -43,6 +43,7 @@ import {
   IdcardOutlined,
   ThunderboltOutlined,
   DatabaseOutlined,
+  SafetyCertificateOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -88,6 +89,7 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/shift-management': 'ShiftManagement',
   '/statutory-registers': 'StatutoryRegisters',
   '/production': 'Production',
+  '/work-permits': 'WorkPermits',
 };
 
 export default function MainLayout() {
@@ -191,6 +193,14 @@ export default function MainLayout() {
         key: '/production',
         icon: <DatabaseOutlined />,
         label: 'Production & Dispatch',
+      });
+    }
+
+    if (hasPermission('WorkPermit.Read')) {
+      items.push({
+        key: '/work-permits',
+        icon: <SafetyCertificateOutlined />,
+        label: 'Permit to Work',
       });
     }
 
@@ -420,6 +430,7 @@ export default function MainLayout() {
       personnel: 'Personnel',
       blasting: 'Blasting & Explosives',
       production: 'Production & Dispatch',
+      'work-permits': 'Permit to Work',
     };
 
     let currentPath = '';
