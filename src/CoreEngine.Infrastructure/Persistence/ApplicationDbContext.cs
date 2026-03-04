@@ -81,6 +81,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<SafetyIncident> SafetyIncidents => Set<SafetyIncident>();
     public DbSet<IncidentInvestigation> IncidentInvestigations => Set<IncidentInvestigation>();
 
+    // Inspection & Audit Management
+    public DbSet<InspectionTemplate> InspectionTemplates => Set<InspectionTemplate>();
+    public DbSet<Inspection> Inspections => Set<Inspection>();
+    public DbSet<InspectionFinding> InspectionFindings => Set<InspectionFinding>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

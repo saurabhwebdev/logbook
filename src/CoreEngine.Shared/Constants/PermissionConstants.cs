@@ -198,6 +198,16 @@ public static class Permissions
         public const string Investigate = "SafetyIncident.Investigate";
     }
 
+    // Inspection & Audit Management
+    public static class Inspections
+    {
+        public const string Create = "Inspection.Create";
+        public const string Read = "Inspection.Read";
+        public const string Update = "Inspection.Update";
+        public const string Delete = "Inspection.Delete";
+        public const string ManageTemplates = "Inspection.ManageTemplates";
+    }
+
     // Workflow Engine
     public static class WorkflowDefinitions
     {

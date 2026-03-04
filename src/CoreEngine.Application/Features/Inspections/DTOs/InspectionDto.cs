@@ -1,0 +1,26 @@
+namespace CoreEngine.Application.Features.Inspections.DTOs;
+
+public record InspectionDto(
+    Guid Id,
+    Guid InspectionTemplateId,
+    string TemplateName,
+    Guid MineSiteId,
+    string MineSiteName,
+    Guid? MineAreaId,
+    string? MineAreaName,
+    string InspectionNumber,
+    string Title,
+    DateTime ScheduledDate,
+    DateTime? CompletedDate,
+    string InspectorName,
+    string? InspectorRole,
+    string Status,
+    string? OverallRating,
+    string? Summary,
+    string? ChecklistResponsesJson,
+    string? WeatherConditions,
+    int? PersonnelPresent,
+    string? SignedOffBy,
+    DateTime? SignedOffAt,
+    int FindingCount,
+    DateTime CreatedAt);

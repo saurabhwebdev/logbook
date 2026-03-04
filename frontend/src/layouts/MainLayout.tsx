@@ -38,6 +38,7 @@ import {
   SwapOutlined,
   BookOutlined,
   AlertOutlined,
+  AuditOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -145,6 +146,14 @@ export default function MainLayout() {
         key: '/safety-incidents',
         icon: <AlertOutlined />,
         label: 'Safety & Incidents',
+      });
+    }
+
+    if (hasPermission('Inspection.Read')) {
+      items.push({
+        key: '/inspections',
+        icon: <AuditOutlined />,
+        label: 'Inspections',
       });
     }
 
@@ -368,6 +377,8 @@ export default function MainLayout() {
       'mine-sites': 'Mine Sites',
       'shift-management': 'Shift Management',
       'statutory-registers': 'Statutory Registers',
+      'safety-incidents': 'Safety & Incidents',
+      inspections: 'Inspections',
     };
 
     let currentPath = '';

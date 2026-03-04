@@ -59,5 +59,10 @@ public interface IApplicationDbContext
     DbSet<SafetyIncident> SafetyIncidents { get; }
     DbSet<IncidentInvestigation> IncidentInvestigations { get; }
 
+    // Inspection & Audit Management
+    DbSet<InspectionTemplate> InspectionTemplates { get; }
+    DbSet<Inspection> Inspections { get; }
+    DbSet<InspectionFinding> InspectionFindings { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

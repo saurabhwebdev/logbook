@@ -543,3 +543,62 @@ export interface IncidentInvestigation {
   status: string;
   createdAt: string;
 }
+
+// Inspection & Audit Management
+export interface InspectionTemplate {
+  id: string;
+  name: string;
+  code: string;
+  category: string;
+  description: string | null;
+  checklistJson: string | null;
+  frequency: string;
+  isActive: boolean;
+  sortOrder: number;
+  inspectionCount: number;
+  createdAt: string;
+}
+
+export interface Inspection {
+  id: string;
+  inspectionTemplateId: string;
+  templateName: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  inspectionNumber: string;
+  title: string;
+  scheduledDate: string;
+  completedDate: string | null;
+  inspectorName: string;
+  inspectorRole: string | null;
+  status: string;
+  overallRating: string | null;
+  summary: string | null;
+  checklistResponsesJson: string | null;
+  weatherConditions: string | null;
+  personnelPresent: number | null;
+  signedOffBy: string | null;
+  signedOffAt: string | null;
+  findingCount: number;
+  createdAt: string;
+}
+
+export interface InspectionFinding {
+  id: string;
+  inspectionId: string;
+  inspectionTitle: string;
+  findingNumber: string;
+  category: string;
+  severity: string;
+  description: string;
+  location: string | null;
+  recommendedAction: string | null;
+  assignedTo: string | null;
+  actionDueDate: string | null;
+  actionCompletedDate: string | null;
+  status: string;
+  closureNotes: string | null;
+  createdAt: string;
+}

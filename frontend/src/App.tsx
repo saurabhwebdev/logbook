@@ -38,6 +38,7 @@ import MineSitesPage from './pages/MineSitesPage';
 import ShiftManagementPage from './pages/ShiftManagementPage';
 import StatutoryRegistersPage from './pages/StatutoryRegistersPage';
 import SafetyIncidentsPage from './pages/SafetyIncidentsPage';
+import InspectionsPage from './pages/InspectionsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -137,6 +138,7 @@ function ThemedApp() {
               <Route path="shift-management" element={<ShiftManagementPage />} />
               <Route path="statutory-registers" element={<StatutoryRegistersPage />} />
               <Route path="safety-incidents" element={<SafetyIncidentsPage />} />
+              <Route path="inspections" element={<InspectionsPage />} />
             </Route>
           </Route>
           </Routes>
