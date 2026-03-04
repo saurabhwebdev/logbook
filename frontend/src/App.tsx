@@ -47,6 +47,7 @@ import WorkPermitsPage from './pages/WorkPermitsPage';
 import EnvironmentalPage from './pages/EnvironmentalPage';
 import VentilationPage from './pages/VentilationPage';
 import CompliancePage from './pages/CompliancePage';
+import GeotechnicalPage from './pages/GeotechnicalPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -155,6 +156,7 @@ function ThemedApp() {
               <Route path="environmental" element={<EnvironmentalPage />} />
               <Route path="ventilation" element={<VentilationPage />} />
               <Route path="compliance" element={<CompliancePage />} />
+              <Route path="geotechnical" element={<GeotechnicalPage />} />
             </Route>
           </Route>
           </Routes>

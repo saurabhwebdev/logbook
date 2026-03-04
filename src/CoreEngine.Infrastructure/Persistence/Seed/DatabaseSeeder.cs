@@ -246,6 +246,11 @@ public static class DatabaseSeeder
             Permissions.Compliance.Update,
             Permissions.Compliance.Delete,
             Permissions.Compliance.Audit,
+            // Geotechnical & Survey
+            Permissions.Geotechnical.Create,
+            Permissions.Geotechnical.Read,
+            Permissions.Geotechnical.Update,
+            Permissions.Geotechnical.Delete,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -300,6 +305,7 @@ public static class DatabaseSeeder
             Permissions.Environmental.Read,
             Permissions.Ventilation.Read,
             Permissions.Compliance.Read,
+            Permissions.Geotechnical.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);

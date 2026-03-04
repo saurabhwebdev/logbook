@@ -283,6 +283,15 @@ public static class Permissions
         public const string Audit = "Compliance.Audit";
     }
 
+    // Geotechnical & Survey
+    public static class Geotechnical
+    {
+        public const string Create = "Geotechnical.Create";
+        public const string Read = "Geotechnical.Read";
+        public const string Update = "Geotechnical.Update";
+        public const string Delete = "Geotechnical.Delete";
+    }
+
     // Personnel & Workforce Management
     public static class PersonnelMgmt
     {

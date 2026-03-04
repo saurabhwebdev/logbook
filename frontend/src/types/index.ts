@@ -947,6 +947,60 @@ export interface ComplianceAudit {
   createdAt: string;
 }
 
+// Geotechnical & Survey
+export interface GeotechnicalAssessment {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  assessmentNumber: string;
+  title: string;
+  assessmentType: string;
+  date: string;
+  assessorName: string;
+  location: string;
+  rockMassRating: number | null;
+  slopeAngle: number | null;
+  waterTableDepth: number | null;
+  groundCondition: string | null;
+  stabilityStatus: string;
+  recommendedActions: string | null;
+  monitoringRequired: boolean;
+  nextAssessmentDate: string | null;
+  notes: string | null;
+  status: string;
+  createdAt: string;
+}
+
+export interface SurveyRecord {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  surveyNumber: string;
+  title: string;
+  surveyType: string;
+  date: string;
+  surveyorName: string;
+  surveyorLicense: string | null;
+  location: string;
+  easting: number | null;
+  northing: number | null;
+  elevation: number | null;
+  datum: string | null;
+  coordinateSystem: string | null;
+  equipmentUsed: string | null;
+  accuracy: string | null;
+  volumeCalculated: number | null;
+  areaCalculated: number | null;
+  findings: string | null;
+  notes: string | null;
+  status: string;
+  createdAt: string;
+}
+
 export interface WorkPermit {
   id: string;
   mineSiteId: string;

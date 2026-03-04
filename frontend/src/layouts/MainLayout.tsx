@@ -47,6 +47,7 @@ import {
   CloudOutlined,
   CompressOutlined,
   FileDoneOutlined,
+  GlobalOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -96,6 +97,7 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/environmental': 'Environmental',
   '/ventilation': 'Ventilation',
   '/compliance': 'Compliance',
+  '/geotechnical': 'Geotechnical',
 };
 
 export default function MainLayout() {
@@ -231,6 +233,14 @@ export default function MainLayout() {
         key: '/compliance',
         icon: <FileDoneOutlined />,
         label: 'Compliance',
+      });
+    }
+
+    if (hasPermission('Geotechnical.Read')) {
+      items.push({
+        key: '/geotechnical',
+        icon: <GlobalOutlined />,
+        label: 'Geotechnical & Survey',
       });
     }
 
@@ -464,6 +474,7 @@ export default function MainLayout() {
       environmental: 'Environmental Monitoring',
       ventilation: 'Ventilation & Gas',
       compliance: 'Compliance & Regulatory',
+      geotechnical: 'Geotechnical & Survey',
     };
 
     let currentPath = '';

@@ -95,5 +95,9 @@ public interface IApplicationDbContext
     DbSet<ComplianceRequirement> ComplianceRequirements { get; }
     DbSet<ComplianceAudit> ComplianceAudits { get; }
 
+    // Geotechnical & Survey
+    DbSet<GeotechnicalAssessment> GeotechnicalAssessments { get; }
+    DbSet<SurveyRecord> SurveyRecords { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

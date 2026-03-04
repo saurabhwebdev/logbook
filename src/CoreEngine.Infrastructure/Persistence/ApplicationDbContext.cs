@@ -117,6 +117,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<ComplianceRequirement> ComplianceRequirements => Set<ComplianceRequirement>();
     public DbSet<ComplianceAudit> ComplianceAudits => Set<ComplianceAudit>();
 
+    // Geotechnical & Survey
+    public DbSet<GeotechnicalAssessment> GeotechnicalAssessments => Set<GeotechnicalAssessment>();
+    public DbSet<SurveyRecord> SurveyRecords => Set<SurveyRecord>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
