@@ -804,6 +804,55 @@ export interface DispatchRecord {
   createdAt: string;
 }
 
+// Environmental Monitoring
+export interface EnvironmentalReading {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  readingNumber: string;
+  readingType: string;
+  parameter: string;
+  value: number;
+  unit: string;
+  thresholdMin: number | null;
+  thresholdMax: number | null;
+  isExceedance: boolean;
+  readingDateTime: string;
+  monitoringStation: string | null;
+  instrumentUsed: string | null;
+  calibratedDate: string | null;
+  recordedBy: string;
+  weatherConditions: string | null;
+  notes: string | null;
+  status: string;
+  createdAt: string;
+}
+
+export interface EnvironmentalIncident {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  incidentNumber: string;
+  title: string;
+  incidentType: string;
+  severity: string;
+  occurredAt: string;
+  location: string;
+  description: string;
+  impactAssessment: string | null;
+  containmentActions: string | null;
+  remediationPlan: string | null;
+  reportedBy: string;
+  notifiedAuthority: boolean;
+  authorityReference: string | null;
+  status: string;
+  closedAt: string | null;
+  closureNotes: string | null;
+  createdAt: string;
+}
+
 export interface WorkPermit {
   id: string;
   mineSiteId: string;

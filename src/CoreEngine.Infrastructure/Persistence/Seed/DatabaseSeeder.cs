@@ -230,6 +230,12 @@ public static class DatabaseSeeder
             Permissions.Dispatch.Read,
             Permissions.Dispatch.Update,
             Permissions.Dispatch.Delete,
+            // Environmental Monitoring
+            Permissions.Environmental.Create,
+            Permissions.Environmental.Read,
+            Permissions.Environmental.Update,
+            Permissions.Environmental.Delete,
+            Permissions.Environmental.ManageIncidents,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -281,6 +287,7 @@ public static class DatabaseSeeder
             Permissions.Blasting.Read,
             Permissions.Production.Read,
             Permissions.Dispatch.Read,
+            Permissions.Environmental.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);

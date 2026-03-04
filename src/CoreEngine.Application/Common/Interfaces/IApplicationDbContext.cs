@@ -83,5 +83,9 @@ public interface IApplicationDbContext
     // Permit to Work
     DbSet<WorkPermit> WorkPermits { get; }
 
+    // Environmental Monitoring
+    DbSet<EnvironmentalReading> EnvironmentalReadings { get; }
+    DbSet<EnvironmentalIncident> EnvironmentalIncidents { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

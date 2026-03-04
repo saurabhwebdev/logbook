@@ -255,6 +255,16 @@ public static class Permissions
         public const string Approve = "WorkPermit.Approve";
     }
 
+    // Environmental Monitoring
+    public static class Environmental
+    {
+        public const string Create = "Environmental.Create";
+        public const string Read = "Environmental.Read";
+        public const string Update = "Environmental.Update";
+        public const string Delete = "Environmental.Delete";
+        public const string ManageIncidents = "Environmental.ManageIncidents";
+    }
+
     // Personnel & Workforce Management
     public static class PersonnelMgmt
     {

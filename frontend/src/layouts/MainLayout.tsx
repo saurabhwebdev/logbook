@@ -44,6 +44,7 @@ import {
   ThunderboltOutlined,
   DatabaseOutlined,
   SafetyCertificateOutlined,
+  CloudOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -90,6 +91,7 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/statutory-registers': 'StatutoryRegisters',
   '/production': 'Production',
   '/work-permits': 'WorkPermits',
+  '/environmental': 'Environmental',
 };
 
 export default function MainLayout() {
@@ -201,6 +203,14 @@ export default function MainLayout() {
         key: '/work-permits',
         icon: <SafetyCertificateOutlined />,
         label: 'Permit to Work',
+      });
+    }
+
+    if (hasPermission('Environmental.Read')) {
+      items.push({
+        key: '/environmental',
+        icon: <CloudOutlined />,
+        label: 'Environmental',
       });
     }
 
@@ -431,6 +441,7 @@ export default function MainLayout() {
       blasting: 'Blasting & Explosives',
       production: 'Production & Dispatch',
       'work-permits': 'Permit to Work',
+      environmental: 'Environmental Monitoring',
     };
 
     let currentPath = '';
