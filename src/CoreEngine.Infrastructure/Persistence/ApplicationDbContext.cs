@@ -73,6 +73,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<ShiftInstance> ShiftInstances => Set<ShiftInstance>();
     public DbSet<ShiftHandover> ShiftHandovers => Set<ShiftHandover>();
 
+    // Statutory Registers
+    public DbSet<StatutoryRegister> StatutoryRegisters => Set<StatutoryRegister>();
+    public DbSet<RegisterEntry> RegisterEntries => Set<RegisterEntry>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

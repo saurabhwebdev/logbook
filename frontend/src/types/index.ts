@@ -449,3 +449,46 @@ export interface ShiftHandover {
   acknowledgedAt: string | null;
   createdAt: string;
 }
+
+// Statutory Registers
+export interface StatutoryRegister {
+  id: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  name: string;
+  code: string | null;
+  registerType: string;
+  description: string | null;
+  jurisdiction: string;
+  isRequired: boolean;
+  retentionYears: number;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt: string;
+  entryCount: number;
+}
+
+export interface RegisterEntry {
+  id: string;
+  statutoryRegisterId: string;
+  registerName: string;
+  mineSiteId: string;
+  mineSiteName: string;
+  entryNumber: number;
+  entryDate: string;
+  shiftInstanceId: string | null;
+  mineAreaId: string | null;
+  mineAreaName: string | null;
+  subject: string;
+  details: string;
+  reportedBy: string;
+  witnessName: string | null;
+  actionTaken: string | null;
+  actionDueDate: string | null;
+  actionCompletedDate: string | null;
+  status: string;
+  amendmentOfEntryId: string | null;
+  amendmentReason: string | null;
+  createdAt: string;
+  amendmentCount: number;
+}

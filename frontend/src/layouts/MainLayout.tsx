@@ -36,6 +36,7 @@ import {
   ControlOutlined,
   GoldOutlined,
   SwapOutlined,
+  BookOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import type { MenuProps } from 'antd';
@@ -79,6 +80,7 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   // Logbook Mining Modules
   '/mine-sites': 'MineSites',
   '/shift-management': 'ShiftManagement',
+  '/statutory-registers': 'StatutoryRegisters',
 };
 
 export default function MainLayout() {
@@ -306,6 +308,14 @@ export default function MainLayout() {
       });
     }
 
+    if (hasPermission('StatutoryRegister.Read')) {
+      items.push({
+        key: '/statutory-registers',
+        icon: <BookOutlined />,
+        label: 'Statutory Registers',
+      });
+    }
+
     return items;
   }, [hasPermission]);
 
@@ -348,6 +358,7 @@ export default function MainLayout() {
       // Logbook Mining Modules
       'mine-sites': 'Mine Sites',
       'shift-management': 'Shift Management',
+      'statutory-registers': 'Statutory Registers',
     };
 
     let currentPath = '';

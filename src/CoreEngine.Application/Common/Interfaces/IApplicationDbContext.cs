@@ -51,5 +51,9 @@ public interface IApplicationDbContext
     DbSet<ShiftInstance> ShiftInstances { get; }
     DbSet<ShiftHandover> ShiftHandovers { get; }
 
+    // Statutory Registers
+    DbSet<StatutoryRegister> StatutoryRegisters { get; }
+    DbSet<RegisterEntry> RegisterEntries { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

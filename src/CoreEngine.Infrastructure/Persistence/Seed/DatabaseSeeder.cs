@@ -183,6 +183,14 @@ public static class DatabaseSeeder
             Permissions.ShiftHandovers.Read,
             Permissions.ShiftHandovers.Update,
             Permissions.ShiftHandovers.Delete,
+            // Statutory Registers
+            Permissions.StatutoryRegisters.Create,
+            Permissions.StatutoryRegisters.Read,
+            Permissions.StatutoryRegisters.Update,
+            Permissions.StatutoryRegisters.Delete,
+            Permissions.RegisterEntries.Create,
+            Permissions.RegisterEntries.Read,
+            Permissions.RegisterEntries.Amend,
         };
 
         var adminRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.Admin);
@@ -225,6 +233,8 @@ public static class DatabaseSeeder
             Permissions.ShiftDefinitions.Read,
             Permissions.ShiftInstances.Read,
             Permissions.ShiftHandovers.Read,
+            Permissions.StatutoryRegisters.Read,
+            Permissions.RegisterEntries.Read,
         };
 
         var userRole = existingRoles.FirstOrDefault(r => r.Name == RoleConstants.User);

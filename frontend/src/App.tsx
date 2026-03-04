@@ -36,6 +36,7 @@ import WorkflowsPage from './pages/WorkflowsPage';
 import WorkflowDefinitionsPage from './pages/WorkflowDefinitionsPage';
 import MineSitesPage from './pages/MineSitesPage';
 import ShiftManagementPage from './pages/ShiftManagementPage';
+import StatutoryRegistersPage from './pages/StatutoryRegistersPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -133,6 +134,7 @@ function ThemedApp() {
               {/* Logbook Mining Modules */}
               <Route path="mine-sites" element={<MineSitesPage />} />
               <Route path="shift-management" element={<ShiftManagementPage />} />
+              <Route path="statutory-registers" element={<StatutoryRegistersPage />} />
             </Route>
           </Route>
           </Routes>

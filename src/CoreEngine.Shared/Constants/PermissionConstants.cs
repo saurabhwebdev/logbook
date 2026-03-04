@@ -172,6 +172,22 @@ public static class Permissions
         public const string Delete = "ShiftHandover.Delete";
     }
 
+    // Statutory Registers
+    public static class StatutoryRegisters
+    {
+        public const string Create = "StatutoryRegister.Create";
+        public const string Read = "StatutoryRegister.Read";
+        public const string Update = "StatutoryRegister.Update";
+        public const string Delete = "StatutoryRegister.Delete";
+    }
+
+    public static class RegisterEntries
+    {
+        public const string Create = "RegisterEntry.Create";
+        public const string Read = "RegisterEntry.Read";
+        public const string Amend = "RegisterEntry.Amend";
+    }
+
     // Workflow Engine
     public static class WorkflowDefinitions
     {
