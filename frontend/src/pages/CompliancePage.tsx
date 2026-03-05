@@ -8,7 +8,7 @@ import { PlusOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-de
 import dayjs from 'dayjs';
 import { complianceApi } from '../api/complianceApi';
 import { mineSitesApi } from '../api/mineSitesApi';
-import type { ComplianceRequirement, ComplianceAudit } from '../types';
+import type { ComplianceRequirement } from '../types';
 import type {
   CreateComplianceRequirementRequest, UpdateComplianceRequirementRequest,
   CreateComplianceAuditRequest,
@@ -23,7 +23,6 @@ const statuses = ['Compliant', 'NonCompliant', 'PartiallyCompliant', 'Pending', 
 const priorities = ['Critical', 'High', 'Medium', 'Low'];
 const auditTypes = ['Internal', 'External', 'Regulatory', 'SelfAssessment'];
 const complianceStatuses = ['Compliant', 'NonCompliant', 'PartiallyCompliant', 'Observation'];
-const auditStatuses = ['Open', 'InProgress', 'Closed'];
 
 const statusColors: Record<string, string> = {
   Compliant: '#34c759', NonCompliant: '#ff3b30', PartiallyCompliant: '#ff9500',
